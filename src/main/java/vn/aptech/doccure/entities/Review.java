@@ -1,10 +1,11 @@
-package vn.aptech.entities;
+package vn.aptech.doccure.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "appointments")
-public class Appointment {
+@Table(name = "reviews")
+public class Review implements Serializable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

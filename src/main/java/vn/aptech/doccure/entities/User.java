@@ -1,6 +1,13 @@
-package vn.aptech.entities;
+package vn.aptech.doccure.entities;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -8,27 +15,36 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
-
+public class User extends AbstractEntity implements Serializable {
     @Column(name = "username", nullable = false, length = 50)
     private String username;
 
+    @NotEmpty(message = "{user.password.empty}")
     @Column(name = "password", nullable = false, length = 100)
     private String password;
+
+    /*
+     * Dùng annotation Transient báo cho Spring biết
+     * không mapping field database
+     */
+    @Transient
+    private String confirmPassword;
 
     @Column(name = "enabled", nullable = false)
     private Integer enabled;
 
-    @Column(name = "email", nullable = false, length = 100)
+    @Email
+    @NotEmpty(message = "{user.email.empty}")
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
+    @Size(min = 2, max = 30, message = "{user.name.length}")
+    @NotEmpty(message = "{name.required}")
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
 
+    @Size(min = 2, max = 30, message = "{user.name.length}")
+    @NotEmpty(message = "{name.required}")
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
@@ -41,9 +57,6 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
-
     @OneToMany(mappedBy = "doctor")
     private Set<Review> reviews = new LinkedHashSet<>();
 
@@ -53,29 +66,22 @@ public class User {
     @OneToMany(mappedBy = "doctor")
     private Set<DoctorTimeSlot> doctorTimeSlots = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<Authority> authorities = new LinkedHashSet<>();
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    private UserAddress userAddresses;
-
-    @OneToMany(mappedBy = "user")
-    private Set<PatientFavorite> patientFavorites = new LinkedHashSet<>();
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "patient")
     private Set<PatientBio> patientBios = new LinkedHashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "doctor_specialty",
-            joinColumns = @JoinColumn(name = "doctor_id"),
-            inverseJoinColumns = @JoinColumn(name = "specialty_id"))
+    @JoinTable(name = "doctor_specialty", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "specialty_id"))
     private Set<Speciality> specialities = new LinkedHashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "doctor_services",
-            joinColumns = @JoinColumn(name = "doctor_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id"))
+    @JoinTable(name = "doctor_services", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
     private Set<Service> services = new LinkedHashSet<>();
+
+    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     public Set<Service> getServices() {
         return services;
@@ -101,28 +107,12 @@ public class User {
         this.patientBios = patientBios;
     }
 
-    public Set<PatientFavorite> getPatientFavorites() {
-        return patientFavorites;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setPatientFavorites(Set<PatientFavorite> patientFavorites) {
-        this.patientFavorites = patientFavorites;
-    }
-
-    public UserAddress getUserAddresses() {
-        return userAddresses;
-    }
-
-    public void setUserAddresses(UserAddress userAddresses) {
-        this.userAddresses = userAddresses;
-    }
-
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Set<DoctorTimeSlot> getDoctorTimeSlots() {
@@ -147,14 +137,6 @@ public class User {
 
     public void setReviews(Set<Review> reviews) {
         this.reviews = reviews;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
     }
 
     public String getAvatar() {
@@ -218,7 +200,15 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = PASSWORD_ENCODER.encode(password);
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     public String getUsername() {
@@ -227,13 +217,5 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }

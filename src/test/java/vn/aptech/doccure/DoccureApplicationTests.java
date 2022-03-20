@@ -1,4 +1,4 @@
-package vn.aptech;
+package vn.aptech.doccure;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

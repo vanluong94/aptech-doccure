@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+### File cau hinh Moi truong khong commit len vi ly do bao mat ###
+*.env
