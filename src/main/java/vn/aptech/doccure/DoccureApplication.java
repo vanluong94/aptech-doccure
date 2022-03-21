@@ -12,12 +12,7 @@ import vn.aptech.doccure.storage.StorageService;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
-public class DoccureApplication extends SpringBootServletInitializer {
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(DoccureApplication.class);
-    }
+public class DoccureApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DoccureApplication.class, args);
@@ -30,5 +25,7 @@ public class DoccureApplication extends SpringBootServletInitializer {
             storageService.init();
         };
     }
+
+
 
 }

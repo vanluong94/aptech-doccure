@@ -7,15 +7,21 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import vn.aptech.doccure.service.UserService;
+import vn.aptech.doccure.service.impl.UserServiceImpl;
 
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
@@ -24,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -36,32 +42,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(a -> a
-                                .antMatchers(
-                                        "/",
-                                        "/assets/**",
-                                        "/files/**",
-                                        "/favicon.ico").permitAll()
-//                        .antMatchers("/admin/**").hasRole("ADMIN")
-                )
-                .formLogin()
-                .loginPage("/user/login")
-                .usernameParameter("email")
-                .permitAll()
-                .and()
-                .logout(l -> l
-//                        .logoutSuccessUrl("/").permitAll()
-                                .deleteCookies("my-remember-me-cookie")
-                                .permitAll()
-                )
-                .rememberMe()
-                .rememberMeCookieName("my-remember-me-cookie")
-                .tokenRepository(persistentTokenRepository())
-                .tokenValiditySeconds(24 * 60 * 60)
-                .and()
-                .exceptionHandling(e -> e
-                        .accessDeniedPage("/403")
-                );
+                .authorizeRequests()
+                .antMatchers("/",
+                        "/home",
+                        "/greeting",
+                        "/welcome",
+                        "/foo",
+                        "/assets/**",
+                        "/files/**",
+                        "/favicon.ico").permitAll()
+                .anyRequest().authenticated()
+                .and().formLogin().loginPage("/login").permitAll()
+                .and().logout(l -> l
+                        .logoutSuccessUrl("/").permitAll()
+                        .deleteCookies("my-remember-me-cookie").permitAll())
+                .rememberMe().rememberMeCookieName("my-remember-me-cookie")
+                .tokenRepository(persistentTokenRepository()).tokenValiditySeconds(24 * 60 * 60).and().exceptionHandling(e -> e.accessDeniedPage("/403"));
     }
 
     private PersistentTokenRepository persistentTokenRepository() {

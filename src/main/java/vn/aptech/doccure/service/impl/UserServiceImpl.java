@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByUsername(username);
         if (!user.isPresent()) {
-            throw new UsernameNotFoundException(email);
+            throw new UsernameNotFoundException(username);
         }
-        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), getAuthorities(user.get()));
+        return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), getAuthorities(user.get()));
     }
 
     private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
@@ -65,5 +65,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return false;
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (!user.isPresent()) {
+            throw new UsernameNotFoundException(username);
+        }
+        return user;
     }
 }

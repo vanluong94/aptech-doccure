@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("user")
+@RequestMapping("auth")
 public class UserController {
 
     @Autowired
@@ -48,11 +48,6 @@ public class UserController {
         return username;
     }
 
-    @GetMapping("login")
-    String login() {
-        return "auth/login";
-    }
-
     @GetMapping("logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -64,7 +59,7 @@ public class UserController {
 
     @GetMapping("signup")
     public ModelAndView register() {
-        ModelAndView modelAndView = new ModelAndView("auth/signup");
+        ModelAndView modelAndView = new ModelAndView("signup");
         modelAndView.addObject("user", new User());
         return modelAndView;
     }
@@ -74,11 +69,11 @@ public class UserController {
                            BindingResult result, RedirectAttributes redirect) {
         registerValidator.validate(user, result);
         if (result.hasErrors()) {
-            return "auth/signup";
+            return "signup";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
         redirect.addFlashAttribute("globalMessage", "Register successfully.");
-        return "redirect:/auth/login";
+        return "redirect:/login";
     }
 }

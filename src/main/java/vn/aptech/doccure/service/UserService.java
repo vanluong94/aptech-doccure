@@ -15,4 +15,8 @@ public interface UserService extends UserDetailsService {
     Optional<User> findById(Long id);
 
     boolean existByEmail(String email);
+
+    boolean existsByUsername(String username);
+
+    Optional<User> findByUsername(String username);
 }
