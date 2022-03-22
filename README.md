@@ -15,3 +15,6 @@ create table persistent_logins
     last_used timestamp   not null
 );
 ```
+
+## Skipping Tests with Maven 
+`mvn -DskipTests package`
