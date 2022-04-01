@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+    <div class="sidebar" id="sidebar" th:fragment="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul>
+                    <li class="menu-title">
+                        <span>Main</span>
+                    </li>
+                    <li class="active">
+                        <a href="index.html"><i class="fa fa-home"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="appointment-list.html"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="specialities.html">All Specialities</a></li>
+                            <li><a href="specialities-edit.html">Add new Speciality</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fa fa-medkit"></i> <span>Services</span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="service-list.html">All Services</a></li>
+                            <li><a href="service-edit.html">Add new Service</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="doctor-list.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                    </li>
+                    <li>
+                        <a href="patient-list.html"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fa fa-users"></i> <span>Users</span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="user-list.html">All Users</a></li>
+                            <li><a href="user-edit.html">Add new User</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="reviews.html"><i class="fa fa-star"></i> <span>Reviews</span></a>
+                    </li>
+                    <li>
+                        <a href="settings.html"><i class="fa fa-cogs"></i> <span>Settings</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

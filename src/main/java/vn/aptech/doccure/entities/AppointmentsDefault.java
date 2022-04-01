@@ -11,6 +11,9 @@ public class AppointmentsDefault {
     @JoinColumn(name = "doctor_id", nullable = false)
     private User doctor;
 
+    @Id
+    private Integer id;
+
     @Column(name = "weekday", nullable = false)
     private Integer weekday;
 
