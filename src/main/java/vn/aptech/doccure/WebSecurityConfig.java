@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/assets/**",
                         "/files/**",
                         "/favicon.ico").permitAll()
-                .anyRequest().authenticated()
+                // .anyRequest().authenticated() // tạm thời comment cái này vì nó đang bắt authenticate cho mọi request ngoại trừ các matchers đã exclude bên trên
                 .and().formLogin().loginPage("/login").permitAll()
                 .and().logout(l -> l
                         .logoutSuccessUrl("/").permitAll()
