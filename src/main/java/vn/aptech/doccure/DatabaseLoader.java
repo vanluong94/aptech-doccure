@@ -33,7 +33,6 @@ public class DatabaseLoader implements CommandLineRunner {
                 roleService.save(new Role(Constants.Roles.ROLE_ADMIN));
                 roleService.save(new Role(Constants.Roles.ROLE_DOCTOR));
                 roleService.save(new Role(Constants.Roles.ROLE_PATIENT));
-                roleService.save(new Role(Constants.Roles.ROLE_DOCTOR));
             }
 
             if (roleService.findByName(Constants.Roles.ROLE_PATIENT) == null) {
