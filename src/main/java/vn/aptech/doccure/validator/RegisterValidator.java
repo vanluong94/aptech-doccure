@@ -22,11 +22,11 @@ public class RegisterValidator implements Validator {
     public void validate(Object target, Errors errors) {
         User user = (User) target;
         if (!user.getPassword().equals(user.getConfirmPassword())) {
-            errors.rejectValue("confirmPassword", "label.password.confirm");
+            errors.rejectValue("confirmPassword", "Mật khẩu phải trùng nhau");
         }
 
         if (userService.existByEmail(user.getEmail())) {
-            errors.rejectValue("email", "label.email.exist");
+            errors.rejectValue("email", "Email đã tồn tại");
         }
     }
 }

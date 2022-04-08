@@ -46,19 +46,19 @@ class AuthController {
         return "redirect:/";
     }
 
-    @GetMapping("signup")
+    @GetMapping("register")
     public ModelAndView register() {
-        ModelAndView modelAndView = new ModelAndView("signup");
-        modelAndView.addObject("user", new User());
+        ModelAndView modelAndView = new ModelAndView("auth/register");
+        modelAndView.addObject("user", new User(1));
         return modelAndView;
     }
 
-    @PostMapping("signup")
+    @PostMapping("register")
     public String register(@Validated @ModelAttribute("user") User user,
                            BindingResult result, RedirectAttributes redirect) {
         registerValidator.validate(user, result);
         if (result.hasErrors()) {
-            return "signup";
+            return "auth/register";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
