@@ -31,8 +31,19 @@ public class DatabaseLoader implements CommandLineRunner {
             Iterable<Role> roleList = roleService.findAll();
             if (!roleList.iterator().hasNext()) {
                 roleService.save(new Role(Constants.Roles.ROLE_ADMIN));
-                roleService.save(new Role(Constants.Roles.ROLE_USER));
+                roleService.save(new Role(Constants.Roles.ROLE_DOCTOR));
+                roleService.save(new Role(Constants.Roles.ROLE_PATIENT));
             }
+
+            if (roleService.findByName(Constants.Roles.ROLE_PATIENT) == null) {
+                roleService.save(new Role(Constants.Roles.ROLE_PATIENT));
+                logger.info("INSERT ROLE PATIENT");
+            }
+            if (roleService.findByName(Constants.Roles.ROLE_DOCTOR) == null) {
+                roleService.save(new Role(Constants.Roles.ROLE_DOCTOR));
+                logger.info("INSERT ROLE DOCTOR");
+            }
+
             if (!userService.findByEmail("admin@gmail.com").isPresent()) {
                 User admin = new User();
                 Set<Role> roles = new HashSet<>();
@@ -51,17 +62,15 @@ public class DatabaseLoader implements CommandLineRunner {
                 logger.info("Inserting user record for " + admin.getEmail());
             }
             logger.info("-------------------------------");
-            if (!userService.findByEmail("user@gmail.com").isPresent()) {
+
+            if (!userService.findByEmail("sample_patient@gmail.com").isPresent()) {
                 User user = new User();
                 Set<Role> roles = new HashSet<>();
-                Role roleAdmin = new Role();
-                roleAdmin.setId(2L);
-                roleAdmin.setName(Constants.Roles.ROLE_USER);
-                roles.add(roleAdmin);
-                user.setFirstName("Nguyen Ba Tuan");
-                user.setLastName("Anh");
-                user.setEmail("user@gmail.com");
-                user.setUsername("anhnbt");
+                roles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
+                user.setFirstName("John");
+                user.setLastName("Doe");
+                user.setEmail("sample_patient@gmail.com");
+                user.setUsername("sample_patient");
                 user.setPassword("123456");
                 user.setRoles(roles);
                 user.setEnabled(1);
@@ -69,6 +78,23 @@ public class DatabaseLoader implements CommandLineRunner {
                 logger.info("Inserting user record for " + user.getEmail());
             }
             logger.info("-------------------------------");
+
+            if (!userService.findByEmail("sample_doctor@gmail.com").isPresent()) {
+                User user = new User();
+                Set<Role> roles = new HashSet<>();
+                roles.add(roleService.findByName(Constants.Roles.ROLE_DOCTOR));
+                user.setFirstName("Jane");
+                user.setLastName("Doe");
+                user.setEmail("sample_doctor@gmail.com");
+                user.setUsername("sample_doctor");
+                user.setPassword("123456");
+                user.setRoles(roles);
+                user.setEnabled(1);
+                userService.save(user);
+                logger.info("Inserting user record for " + user.getEmail());
+            }
+            logger.info("-------------------------------");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
