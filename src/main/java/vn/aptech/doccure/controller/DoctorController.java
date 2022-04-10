@@ -1,16 +1,17 @@
 package vn.aptech.doccure.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import vn.aptech.doccure.common.Constants;
 
-import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("dashboard")
-@RolesAllowed("ROLE_ADMIN")
-public class AdminController {
+@RequestMapping("doctor")
+public class DoctorController {
 
 }

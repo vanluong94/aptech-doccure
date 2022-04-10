@@ -56,14 +56,13 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(name = "avatar")
     private String avatar;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Review> reviews = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    @JoinTable(name = "appointments_default", joinColumns = @JoinColumn(name = "doctor_id"))
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AppointmentDefault> appointmentsDefault = new LinkedHashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
