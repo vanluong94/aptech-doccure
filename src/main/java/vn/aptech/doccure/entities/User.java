@@ -25,7 +25,7 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @NotEmpty(message = "{user.password.empty}")
+    @NotEmpty(message = "Mật khẩu là bắt buộc")
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
@@ -33,17 +33,17 @@ public class User extends AbstractEntity implements UserDetails {
     private Integer enabled;
 
     @Email
-    @NotEmpty(message = "{user.email.empty}")
+    @NotEmpty(message = "Email là bắt buộc")
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Size(min = 2, max = 30, message = "{user.name.length}")
-    @NotEmpty(message = "{name.required}")
+    @Size(min = 2, max = 30, message = "Tên từ 2 đên 30 kí tự")
+    @NotEmpty(message = "Tên là bắt buộc")
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
 
-    @Size(min = 2, max = 30, message = "{user.name.length}")
-    @NotEmpty(message = "{name.required}")
+    @Size(min = 2, max = 30, message = "Tên từ 2 đên 30 kí tự")
+    @NotEmpty(message = "Tên là bắt buộc")
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
@@ -81,7 +81,13 @@ public class User extends AbstractEntity implements UserDetails {
     @JoinTable(name = "doctor_services", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
     private Set<Service> services = new LinkedHashSet<>();
 
-    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+    public User() {
+    }
+
+    public User(Integer enabled, Set<Role> roles) {
+        this.enabled = enabled;
+        this.roles = roles;
+    }
 
     /*
      * Dùng annotation Transient báo cho Spring biết

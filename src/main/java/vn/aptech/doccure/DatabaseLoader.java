@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Role;
@@ -24,6 +26,8 @@ public class DatabaseLoader implements CommandLineRunner {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+
+    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Override
     public void run(String... strings) throws Exception {
@@ -55,7 +59,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 admin.setLastName("Anh");
                 admin.setEmail("admin@gmail.com");
                 admin.setUsername("admin");
-                admin.setPassword("admin");
+                admin.setPassword(PASSWORD_ENCODER.encode("admin"));
                 admin.setRoles(roles);
                 admin.setEnabled(1);
                 userService.save(admin);
@@ -71,7 +75,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 user.setLastName("Doe");
                 user.setEmail("sample_patient@gmail.com");
                 user.setUsername("sample_patient");
-                user.setPassword("123456");
+                user.setPassword(PASSWORD_ENCODER.encode("123456"));
                 user.setRoles(roles);
                 user.setEnabled(1);
                 userService.save(user);
@@ -87,7 +91,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 user.setLastName("Doe");
                 user.setEmail("sample_doctor@gmail.com");
                 user.setUsername("sample_doctor");
-                user.setPassword("123456");
+                user.setPassword(PASSWORD_ENCODER.encode("123456"));
                 user.setRoles(roles);
                 user.setEnabled(1);
                 userService.save(user);
