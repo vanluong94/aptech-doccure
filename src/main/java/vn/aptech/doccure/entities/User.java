@@ -83,8 +83,9 @@ public class User extends AbstractEntity implements Serializable {
     public User() {
     }
 
-    public User(Integer enabled) {
+    public User(Integer enabled, Set<Role> roles) {
         this.enabled = enabled;
+        this.roles = roles;
     }
 
     public Set<Service> getServices() {
