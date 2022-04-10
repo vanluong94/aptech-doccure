@@ -19,4 +19,6 @@ public interface UserService extends UserDetailsService {
     boolean existsByUsername(String username);
 
     Optional<User> findByUsername(String username);
+
+    User getCurrentUser();
 }
