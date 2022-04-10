@@ -170,7 +170,9 @@
                             <p class="text-muted mb-0" sec:authorize="hasRole('ROLE_DOCTOR')">Doctor</p>
                         </div>
                     </div>
-                    <a class="dropdown-item" href="patient-dashboard.html">Dashboard</a>
+                    <a class="dropdown-item" th:href="@{/dashboard}" sec:authorize="hasRole('ROLE_ADMIN')">Dashboard</a>
+                    <a class="dropdown-item" th:href="@{patient/dashboard}" sec:authorize="hasRole('ROLE_PATIENT')">Dashboard</a>
+                    <a class="dropdown-item" th:href="@{doctor/dashboard}" sec:authorize="hasRole('ROLE_DOCTOR')">Dashboard</a>
                     <a class="dropdown-item" href="doctor-patient-profile.html">Profile Settings</a>
                     <a class="dropdown-item" th:href="@{/logout}">Logout</a>
                 </div>
