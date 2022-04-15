@@ -12,15 +12,12 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
+@Table(name = "users")
 public class User extends AbstractEntity implements UserDetails {
     @Column(name = "username", nullable = false, length = 50)
     private String username;
@@ -56,20 +53,21 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(name = "avatar")
     private String avatar;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
     private Set<Review> reviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor")
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OrderBy("time_start ASC")
     private Set<AppointmentDefault> appointmentsDefault = new LinkedHashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "patient")
     private Set<PatientBio> patientBios = new LinkedHashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)

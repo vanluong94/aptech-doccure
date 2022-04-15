@@ -1,6 +1,7 @@
 package vn.aptech.doccure.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,6 +18,7 @@ public class HomeController {
     }
 
     @GetMapping("dashboard")
+    @Secured({"ROLE_ADMIN", "ROLE_DOCTOR", "ROLE_PATIENT"})
     public String dashboard(HttpServletRequest request) {
         if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
             return "pages/doctorDashboard";
