@@ -23,7 +23,7 @@
         <div class="dashboard-widget">
             <nav class="dashboard-menu">
                 <ul>
-                    <li class="active">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard' ? 'active' : ''}">
                         <a href="doctor-dashboard.html">
                             <i class="fas fa-columns"></i>
                             <span>Dashboard</span>
@@ -47,7 +47,7 @@
                             <span>My Patients</span>
                         </a>
                     </li>
-                    <li>
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/time-slots' ? 'active' : ''}">
                         <a th:href="@{/dashboard/time-slots}">
                             <i class="fas fa-hourglass-start"></i>
                             <span>Schedule Timings</span>
