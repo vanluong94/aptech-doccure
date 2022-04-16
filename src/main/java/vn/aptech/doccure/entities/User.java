@@ -17,7 +17,7 @@ import java.util.*;
 @Setter
 @Table(name = "users")
 public class User extends AbstractEntity implements UserDetails {
-    @Column(name = "username", nullable = false, length = 50)
+    @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
 
     @NotEmpty(message = "Mật khẩu là bắt buộc")
