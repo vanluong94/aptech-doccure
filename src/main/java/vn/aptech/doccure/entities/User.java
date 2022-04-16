@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -53,30 +51,36 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(name = "avatar")
     private String avatar;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
-    private Set<Review> reviews = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    private Set<Review> doctorReviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor")
-    private Set<Appointment> appointments = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private Set<Review> patientReviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    private Set<Appointment> doctorAppointments = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("time_start ASC")
-    private Set<AppointmentDefault> appointmentsDefault = new LinkedHashSet<>();
+    private Set<AppointmentDefault> doctorAppointmentsDefault = new LinkedHashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new LinkedHashSet<>();
+    @JoinTable(name = "doctor_specialty", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "specialty_id"))
+    private Set<Speciality> doctorSpecialities = new LinkedHashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "doctor_services", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
+    private Set<Service> doctorServices = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private Set<Appointment> patientAppointments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "patient")
     private Set<PatientBio> patientBios = new LinkedHashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "doctor_specialty", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "specialty_id"))
-    private Set<Speciality> specialities = new LinkedHashSet<>();
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "doctor_services", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
-    private Set<Service> services = new LinkedHashSet<>();
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new LinkedHashSet<>();
 
     public User() {
     }

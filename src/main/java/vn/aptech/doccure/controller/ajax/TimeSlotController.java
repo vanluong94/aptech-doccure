@@ -9,7 +9,6 @@ import vn.aptech.doccure.common.AjaxResponse;
 import vn.aptech.doccure.entities.AppointmentDefault;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.AppointmentDefaultRepository;
-import vn.aptech.doccure.repository.UserRepository;
 import vn.aptech.doccure.service.UserService;
 
 import java.util.*;
@@ -31,7 +30,7 @@ public class TimeSlotController {
         User doctor = (User) auth.getPrincipal();
 
         HashMap<String, Set<AppointmentDefault>> respData = new HashMap<>();
-        respData.put("timeSlots", doctor.getAppointmentsDefault());
+        respData.put("timeSlots", doctor.getDoctorAppointmentsDefault());
         return AjaxResponse.responseSuccess(respData, "success");
     }
 
@@ -68,13 +67,13 @@ public class TimeSlotController {
         }
 
         if (doctorTimeSlots.size() > 0) {
-            doctor.setAppointmentsDefault(doctorTimeSlots);
+            doctor.setDoctorAppointmentsDefault(doctorTimeSlots);
             apmtDefaultRepository.saveAll(doctorTimeSlots);
         } else if (timeSlots != null) {
             return AjaxResponse.responseFail(results, "Failed to save the time slots, please check again");
         }
 
-        results.put("timeSlots", doctor.getAppointmentsDefault());
+        results.put("timeSlots", doctor.getDoctorAppointmentsDefault());
 
         return AjaxResponse.responseSuccess(results,"success");
     }
