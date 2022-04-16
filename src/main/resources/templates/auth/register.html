@@ -28,7 +28,6 @@
                                     <h3>Doctor Register <a th:href="@{/register}">Not a Doctor?</a></h3>
                                 </div>
                                 <form action="#" th:action="@{/register}" th:object="${user}" method="post">
-                                    <input type="hidden" th:field="*{enabled}">
                                     <input type="hidden" name="roles"
                                            th:each="role : ${user.roles}"
                                            th:value="${role.id}"

@@ -25,7 +25,7 @@ public class User extends AbstractEntity implements UserDetails {
     private String password;
 
     @Column(name = "enabled", nullable = false)
-    private Integer enabled;
+    private Integer enabled = 1;
 
     @Email
     @NotEmpty(message = "Email là bắt buộc")
