@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import vn.aptech.doccure.common.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -50,6 +51,9 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "gender")
+    private Integer gender;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private Set<Review> doctorReviews = new LinkedHashSet<>();
@@ -112,5 +116,48 @@ public class User extends AbstractEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.getEnabled() == 1;
+    }
+
+    public boolean hasRole(String role) {
+        for (Role uRole : this.getRoles()) {
+            if (uRole.getName().equals(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setAvatar(String avatar) {
+        System.out.println("avatar: " + avatar);
+
+    }
+
+    public String getFullName() {
+        return this.getFirstName() + " " + this.getLastName();
+    }
+
+    public String getTheAvatar() {
+        if (this.getAvatar() != null && ! this.getAvatar().isEmpty()) {
+            return this.getAvatar();
+        } else {
+            String filename;
+            if (this.hasRole(Constants.Roles.ROLE_DOCTOR)) {
+                if (this.getGender().equals(Constants.Genders.MALE)) {
+                    filename = "avatar-doctor-male.png";
+                } else {
+                    filename = "avatar-doctor-female.png";
+                }
+            } else if (this.hasRole(Constants.Roles.ROLE_PATIENT)) {
+                if (this.getGender().equals(Constants.Genders.MALE)) {
+                    filename = "avatar-patient-male.png";
+                } else {
+                    filename = "avatar-patient-female.png";
+                }
+            } else {
+                filename = "avatar-admin.png";
+            }
+
+            return "/assets/img/" + filename;
+        }
     }
 }
