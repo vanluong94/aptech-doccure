@@ -13,7 +13,7 @@
                 </a>
                 <div class="profile-det-info">
                     <h3 th:text="${user.getFullName()}" class="mb-0"></h3>
-                    <p th:text="${user.username}" class="small text-secondary"></p>
+                    <p th:text="${'@' + user.username}" class="small text-secondary"></p>
                     <div class="patient-details">
                         <h5 class="mb-0">BDS, MDS - Oral & Maxillofacial Surgery</h5>
                     </div>
@@ -47,8 +47,8 @@
                             <span>My Patients</span>
                         </a>
                     </li>
-                    <li th:classappend="${#request.getRequestURI() == '/dashboard/time-slots' ? 'active' : ''}">
-                        <a th:href="@{/dashboard/time-slots}">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/time-slot-settings' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/time-slot-settings}">
                             <i class="fas fa-hourglass-start"></i>
                             <span>Schedule Timings</span>
                         </a>
@@ -60,7 +60,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="doctor-clinic-settings.html">
+                        <a th:href="@{/dashboard/clinic-settings}">
                             <i class="fas fa-clinic-medical"></i>
                             <span>Clinic Settings</span>
                         </a>

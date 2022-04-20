@@ -20,9 +20,9 @@ public class UserController {
     @Secured({"ROLE_ADMIN", "ROLE_DOCTOR", "ROLE_PATIENT"})
     public String dashboard(HttpServletRequest request) {
         if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
-            return "pages/doctorDashboard";
+            return "pages/dashboard/doctorDashboard";
         } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
-            return "pages/patientDashboard";
+            return "pages/dashboard/patientDashboard";
         } else if (request.isUserInRole(Constants.Roles.ROLE_ADMIN)) {
             return "admin/pages/dashboard";
         }
