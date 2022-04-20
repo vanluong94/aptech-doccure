@@ -23,7 +23,7 @@ const addLoadingOverlay = ($el) => {
         </div>
     </div>`);
 
-    if (!$el instanceof jQuery) {
+    if (!($el instanceof jQuery)) {
         $el = $($el);
     }
     
@@ -33,7 +33,7 @@ const addLoadingOverlay = ($el) => {
 }
 
 const removeLoadingOverlay = ($el) => {
-    if (!$el instanceof jQuery) {
+    if (!($el instanceof jQuery)) {
         $el = $($el);
     }
 

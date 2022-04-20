@@ -11,7 +11,7 @@ public class GeneralControllerAdvice {
 
     @ModelAttribute
     public void userModelAttribute(Authentication auth, Model model) {
-        if (auth.isAuthenticated()) {
+        if (auth != null && auth.isAuthenticated()) {
             model.addAttribute("user", (User) auth.getPrincipal());
         }
     }
