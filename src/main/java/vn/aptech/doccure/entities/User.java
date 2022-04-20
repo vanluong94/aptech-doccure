@@ -76,6 +76,10 @@ public class User extends AbstractEntity implements UserDetails {
     @JoinTable(name = "doctor_services", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
     private Set<Service> doctorServices = new LinkedHashSet<>();
 
+    @OneToOne(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private DoctorClinic doctorClinic = new DoctorClinic();
+
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private Set<Appointment> patientAppointments = new LinkedHashSet<>();
 
@@ -125,11 +129,6 @@ public class User extends AbstractEntity implements UserDetails {
             }
         }
         return false;
-    }
-
-    public void setAvatar(String avatar) {
-        System.out.println("avatar: " + avatar);
-
     }
 
     public String getFullName() {
