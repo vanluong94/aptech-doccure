@@ -6,4 +6,9 @@ public interface Constants {
         String ROLE_DOCTOR = "ROLE_DOCTOR";
         String ROLE_PATIENT = "ROLE_PATIENT";
     }
+
+    interface Genders {
+        int FEMALE = 0;
+        int MALE = 1;
+    }
 }

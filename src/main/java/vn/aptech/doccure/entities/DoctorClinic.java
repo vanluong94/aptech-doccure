@@ -1,20 +1,33 @@
 package vn.aptech.doccure.entities;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.web.multipart.MultipartFile;
+import vn.aptech.doccure.utils.JSONUtils;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "doctor_clinics")
+@Getter
+@Setter
 public class DoctorClinic {
     @Id
     @Column(name = "doctor_id", nullable = false)
-    private Integer id;
+    private Long doctorId;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "doctor_id", nullable = false)
-    private User users;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "doctor_id")
+    private User doctor;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -25,8 +38,8 @@ public class DoctorClinic {
     @Column(name = "lat", precision = 10, scale = 8)
     private BigDecimal lat;
 
-    @Column(name = "`long`", precision = 11, scale = 8)
-    private BigDecimal _long;
+    @Column(name = "lng", precision = 11, scale = 8)
+    private BigDecimal lng;
 
     @Column(name = "address_line_1", nullable = false)
     private String addressLine1;
@@ -46,110 +59,32 @@ public class DoctorClinic {
     @Column(name = "postal_code", nullable = false)
     private Integer postalCode;
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    @CreatedDate
+    @Column(name = "created_at")
+    private Instant createdAt = Instant.now();
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    @Column(name = "images")
+    private String images;
+
+    @Transient
+    private List<String> parsedImages = new ArrayList<>();
+
+    @Transient
+    private List<MultipartFile> postedImages = new ArrayList<>();
+
+    @Transient
+    private List<String> deletedImages = new ArrayList<>();
+
+    public void parseImages() {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        try {
+            this.parsedImages = jsonMapper.readValue(images, new TypeReference<List<String>>() {});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Integer getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getAddressLine2() {
-        return addressLine2;
-    }
-
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
-    }
-
-    public String getAddressLine1() {
-        return addressLine1;
-    }
-
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1 = addressLine1;
-    }
-
-    public BigDecimal get_long() {
-        return _long;
-    }
-
-    public void set_long(BigDecimal _long) {
-        this._long = _long;
-    }
-
-    public BigDecimal getLat() {
-        return lat;
-    }
-
-    public void setLat(BigDecimal lat) {
-        this.lat = lat;
-    }
-
-    public String getSpecialities() {
-        return specialities;
-    }
-
-    public void setSpecialities(String specialities) {
-        this.specialities = specialities;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public User getUsers() {
-        return users;
-    }
-
-    public void setUsers(User users) {
-        this.users = users;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void syncParsedImages() {
+        this.setImages(JSONUtils.stringify(this.getParsedImages()));
     }
 }

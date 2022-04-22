@@ -36,3 +36,4 @@ build/
 
 ### Exclude macos directory configuration file ###
 .DS_Store
+upload-dir

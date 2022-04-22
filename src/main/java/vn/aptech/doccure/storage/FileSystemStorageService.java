@@ -1,5 +1,6 @@
 package vn.aptech.doccure.storage;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,6 @@ public class FileSystemStorageService implements StorageService {
 			Path destinationFile = this.rootLocation.resolve(
 					Paths.get(file.getOriginalFilename()))
 					.normalize().toAbsolutePath();
-			log.info(String.valueOf(this.rootLocation.toAbsolutePath()));
 			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
 				// This is a security check
 				throw new StorageException(
@@ -49,6 +49,41 @@ public class FileSystemStorageService implements StorageService {
 				Files.copy(inputStream, destinationFile,
 					StandardCopyOption.REPLACE_EXISTING);
 			}
+		}
+		catch (IOException e) {
+			throw new StorageException("Failed to store file.", e);
+		}
+	}
+
+	@Override
+	public String storeUnderRandomName(MultipartFile file, String prefix) {
+		try {
+			if (file.isEmpty()) {
+				throw new StorageException("Failed to store empty file.");
+			}
+
+			String filename = RandomStringUtils.random(16, true, true) + file.getOriginalFilename().substring(
+					file.getOriginalFilename().lastIndexOf(".")
+			);
+			if (!prefix.isEmpty()) {
+				filename = prefix + "_" + filename;
+			}
+
+			Path destinationFile = this.rootLocation.resolve(
+							Paths.get(filename))
+					.normalize().toAbsolutePath();
+
+			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+				// This is a security check
+				throw new StorageException(
+						"Cannot store file outside current directory.");
+			}
+			try (InputStream inputStream = file.getInputStream()) {
+				Files.copy(inputStream, destinationFile,
+						StandardCopyOption.REPLACE_EXISTING);
+			}
+
+			return filename;
 		}
 		catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);
