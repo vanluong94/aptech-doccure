@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Doctor Clinic Settings - Doccure</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
+    <style>
+        #clinic_location_map {
+            width: 980px;
+            height: 500px;
+        }
+        .dropzone {
+            padding: 5em 2em;
+        }
+        
+        .dropzone > input[type="file"] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            cursor: pointer;
+            /* opacity: 0; */
+        }
+        
+        .dropzone .dropzone-message {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content" layout:fragment="layoutContent">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-12">
+                        <nav aria-label="breadcrumb" class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Profile Settings</li>
+                            </ol>
+                        </nav>
+                        <h2 class="breadcrumb-title">Profile Settings</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <!-- Page Content -->
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+                        <div th:replace="fragments/dashboard/doctorSidebar :: sidebar"></div>
+
+                    </div>
+                    <div class="col-md-7 col-lg-8 col-xl-9">
+                        <form id="clinicForm" th:action="@{/dashboard/clinic-settings/save}" th:object="${clinic}" method="post" enctype="multipart/form-data">
+
+                            <div th:if="${#fields.hasAnyErrors()}">
+                                <div class="alert alert-danger" th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+                            </div>
+
+                            <!-- Clinic Info -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Clinic Info</h4>
+                                    <div class="row form-row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Clinic Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" required th:field="*{name}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Clinic Specializations <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" required th:field="*{specialities}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Address Line 1 <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" required th:field="*{addressLine1}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Address Line 2</label>
+                                                <input type="text" class="form-control" th:field="*{addressLine2}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">City <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" required th:field="*{city}">
+                                            </div>
+                                        </div>
+    
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">State / Province <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" required th:field="*{state}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Country <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" required th:field="*{country}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Postal Code</label>
+                                                <input type="text" class="form-control" name="postal_code" th:field="*{postalCode}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Location</label>
+                                                <small class="text-muted font-italic">(Drop the pin where your clinic is located)</small>
+                                                <div id="clinic_location_map"></div>
+                                                <input type="hidden" id="clinicInputLat" th:field="*{lat}">
+                                                <input type="hidden" id="clinicInputLong" th:field="*{lng}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Clinic Images</label>
+                                                <div class="dropzone position-relative">
+                                                    <input type="file" id="clinicImageInput" multiple accept=".png,.jpeg,.jpg">
+                                                    <div class="dropzone-message display-5 position-absolute">Drop files here to upload</div>
+                                                </div>
+                                            </div>
+                                            <div class="upload-wrap" id="clinicUploadWrap">
+                                                <div class="upload-images uploaded-file" th:each="clinicImg : ${clinic.parsedImages}">
+                                                    <img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Clinic Image">
+                                                    <a href="javascript:void(0);" class="btn btn-icon btn-danger btn-sm btn-rm"><i class="far fa-trash-alt"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Clinic Info -->
+                            
+                            <div class="submit-section submit-btn-bottom">
+                                <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div layout:fragment="layoutExtra"></div>
+            <div layout:fragment="customScripts">
+                <script src="/assets/js/doctor-clinic.js"></script>
+                <script>
+                    const clinicForm = document.getElementById('clinicForm');
+                    const clinicFiles = {
+                        files: [],
+                        wrap: document.getElementById('clinicUploadWrap'),
+                        renderPreview() {
+                            for (let i in this.files) {
+                                let file = this.files[i];
+                                let imgUrl = window.URL.createObjectURL(file);
+
+                                let imgDelBtn = document.createElement('a');
+                                imgDelBtn.href = 'javascript:void(0);';
+                                imgDelBtn.classList.add('btn', 'btn-icon', 'btn-danger', 'btn-sm')
+                                imgDelBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
+
+                                let imgItem = document.createElement('div');
+                                imgItem.classList.add('upload-images');
+                                imgItem.innerHTML = `<img src="${imgUrl}" alt="Upload Image">`;
+                                imgItem.appendChild(imgDelBtn);
+
+                                let input = document.createElement('input');
+                                let container = new DataTransfer(); 
+                                container.items.add(file);
+
+                                input.name = `postedImages[${i}]`;
+                                input.type = 'file';
+                                input.files = container.files;
+                                input.classList.add('sr-only', 'sr-only-focusable');
+
+                                clinicForm.appendChild(input);
+
+                                imgDelBtn.onclick = () => {
+                                    imgItem.remove();
+                                    this.files = this.files.filter((_file) => _file != file)
+                                    clinicForm.querySelector(`input[name="postedImages[${i}]"]`).remove();
+                                }
+
+                                this.wrap.appendChild(imgItem);
+                            }
+                        },
+                    };
+                    
+                    clinicFiles.wrap.querySelectorAll('.uploaded-file').forEach((el) => {
+                        let removeBtn = el.querySelector('.btn-rm')
+                        if (removeBtn) {
+                            removeBtn.onclick = (e) => {
+                                e.preventDefault();
+                                el.remove();
+
+                                let input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = 'deletedImages[]';
+                                input.value = el.querySelector('img').dataset.image;
+                                clinicForm.appendChild(input);
+                            }
+                        }
+                    })
+
+                    document.getElementById('clinicImageInput').onchange = function() {
+                        for (let file of this.files) {
+                            clinicFiles.files.push(file);
+                        }
+                        clinicFiles.renderPreview();
+                        
+                        this.value = ''; //reset files
+                    }
+                </script>
+            </div>
+
+        </div>
+        <!-- /Page Content -->
+    </div>
+</body>
+</html>

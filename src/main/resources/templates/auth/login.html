@@ -18,7 +18,7 @@
                     <div class="account-content">
                         <div class="row align-items-center justify-content-center">
                             <div class="col-md-7 col-lg-6 login-left">
-                                <img src="assets/img/login-banner.png" class="img-fluid" alt="Doccure Login">
+                                <img src="/assets/img/login-banner.png" class="img-fluid" alt="Doccure Login">
                             </div>
                             <div class="col-md-12 col-lg-6 login-right">
                                 <div class="login-header">
@@ -41,17 +41,13 @@
                                         <input type="password" name="password" class="form-control floating">
                                         <label class="focus-label">Password</label>
                                     </div>
-                                    <div class="text-right">
-                                        <a class="forgot-link" th:href="@{/forgot-password}">Forgot Password ?</a>
-                                    </div>
-                                    <div class="form-group clearfix">
-                                        <label for="remember-me">
-                                            <input type="checkbox" name="remember-me" id="remember-me"> <span>Keep me logged in</span>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <label for="remember-me" class="mb-0 d-flex align-items-center">
+                                            <input type="checkbox" name="remember-me" id="remember-me"> <span class="ml-1" style="font-size: 13px;">Keep me logged in</span>
                                         </label>
-                                        <div class="float-right">
-                                            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-                                        </div>
+                                        <a class="forgot-link mb-0" th:href="@{/forgot-password}">Forgot Password ?</a>
                                     </div>
+                                    <button class="btn btn-primary btn-block btn-lg login-btn" type="submit">Sign in</button>
                                     <div class="login-or">
                                         <span class="or-line"></span>
                                         <span class="span-or">or</span>

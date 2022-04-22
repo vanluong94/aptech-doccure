@@ -121,55 +121,6 @@ Version      : 1.3
 		$(this).closest('.hours-cont').remove();
 		return false;
     });
-
-    $(".add-hours").on('click', function () {
-		
-		var hourscontent = `
-			<div class="row form-row hours-cont">
-				<div class="col-12 col-md-10">
-					<div class="row form-row">
-						<div class="col-12 col-md-3">
-							<div class="form-group">
-								<label>Available</label>
-								<div class="toggle-btn">
-									<input type="checkbox" class="checkbox" name="available" />
-									<div class="knobs">
-										<span>YES</span>
-									</div>
-									<div class="layer"></div>
-								</div>	
-							</div>
-						</div>
-						<div class="col-12 col-md-9">
-							<div class="row form-row">
-								<div class="col-12 col-md-6">
-									<div class="form-group">
-										<label>Start Time</label>
-										<input type="time" name="" id="" class="form-control">
-									</div> 
-								</div>
-								<div class="col-12 col-md-6">
-									<div class="form-group">
-										<label>End Time</label>
-										<input type="time" name="" id="" class="form-control">
-									</div> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-2">
-					<label class="d-md-block d-sm-none d-none">&nbsp;</label>
-					<a href="#" class="btn btn-danger trash">
-						<i class="far fa-trash-alt"></i>
-					</a>
-				</div>
-			</div>
-		`;
-		
-        $(".hours-info").append(hourscontent);
-        return false;
-    });
 	
 	// Content div min height set
 	

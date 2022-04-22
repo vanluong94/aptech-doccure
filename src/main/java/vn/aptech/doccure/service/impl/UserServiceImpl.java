@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,9 @@ public class UserServiceImpl implements UserService {
         if (!user.isPresent()) {
             throw new UsernameNotFoundException(username);
         }
-        return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), getAuthorities(user.get()));
+        User theUser = user.get();
+        theUser.setAuthorities(getAuthorities(theUser));
+        return theUser;
     }
 
     private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
@@ -79,5 +82,10 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException(username);
         }
         return user;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
