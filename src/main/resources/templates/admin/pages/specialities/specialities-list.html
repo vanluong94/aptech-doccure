@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="https://www.thymeleaf.org"
+<html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}"
+      layout:decorate="~{admin/layout}"
 >
 <head>
 
 </head>
-<body class="account-page">
-
-<div class="content" layout:fragment="layoutContent">
+<body>
+<div class="page-wrapper" layout:fragment="layoutContent">
     <div class="content container-fluid">
 
         <!-- Page Header -->
@@ -18,12 +16,12 @@
                 <div class="col-sm-7 col-auto">
                     <h3 class="page-title">Specialities</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Specialities</li>
                     </ul>
                 </div>
                 <div class="col-sm-5 col">
-                    <a href="specialities-edit.html" class="btn btn-primary float-right mt-2">Add</a>
+                    <a th:href="@{/admin/specialities/create}" class="btn btn-primary float-right mt-2">Add</a>
                 </div>
             </div>
         </div>

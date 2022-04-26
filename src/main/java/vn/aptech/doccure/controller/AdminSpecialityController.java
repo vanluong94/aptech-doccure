@@ -32,7 +32,7 @@ public class AdminSpecialityController {
     @GetMapping
     public ModelAndView showAll() {
         Iterable<Speciality> specialities = specialityService.findAll();
-        ModelAndView modelAndView = new ModelAndView("admin/specialities/specialities-list");
+        ModelAndView modelAndView = new ModelAndView("admin/pages/specialities/specialities-list");
         modelAndView.addObject("specialities", specialities);
         return modelAndView;
     }
@@ -40,7 +40,7 @@ public class AdminSpecialityController {
     @GetMapping("/create")
     public ModelAndView showCreateForm() {
         Speciality speciality = new Speciality();
-        ModelAndView modelAndView = new ModelAndView("admin/specialities/specialities-new");
+        ModelAndView modelAndView = new ModelAndView("admin/pages/specialities/specialities-new");
         modelAndView.addObject("speciality", speciality);
         return modelAndView;
     }
@@ -48,7 +48,7 @@ public class AdminSpecialityController {
     @PostMapping("/create")
     public String save(@Validated @ModelAttribute("speciality") Speciality speciality, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
-            return "admin/specialities/specialities-new";
+            return "admin/pages/specialities/specialities-new";
         }
         MultipartFile multipartFile = speciality.getImageData();
         String fileName = multipartFile.getOriginalFilename();
