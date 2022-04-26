@@ -119,11 +119,11 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.getEnabled() == 1;
+        return enabled == 1;
     }
 
     public boolean hasRole(String role) {
-        for (Role uRole : this.getRoles()) {
+        for (Role uRole : roles) {
             if (uRole.getName().equals(role)) {
                 return true;
             }
@@ -132,22 +132,22 @@ public class User extends AbstractEntity implements UserDetails {
     }
 
     public String getFullName() {
-        return this.getFirstName() + " " + this.getLastName();
+        return firstName + " " + lastName;
     }
 
     public String getTheAvatar() {
-        if (this.getAvatar() != null && ! this.getAvatar().isEmpty()) {
-            return this.getAvatar();
+        if (avatar != null && ! avatar.isEmpty()) {
+            return avatar;
         } else {
             String filename;
-            if (this.hasRole(Constants.Roles.ROLE_DOCTOR)) {
-                if (this.getGender().equals(Constants.Genders.MALE)) {
+            if (hasRole(Constants.Roles.ROLE_DOCTOR)) {
+                if (gender != null && gender.equals(Constants.Genders.MALE)) {
                     filename = "avatar-doctor-male.png";
                 } else {
                     filename = "avatar-doctor-female.png";
                 }
-            } else if (this.hasRole(Constants.Roles.ROLE_PATIENT)) {
-                if (this.getGender().equals(Constants.Genders.MALE)) {
+            } else if (hasRole(Constants.Roles.ROLE_PATIENT)) {
+                if (gender != null && gender.equals(Constants.Genders.MALE)) {
                     filename = "avatar-patient-male.png";
                 } else {
                     filename = "avatar-patient-female.png";
