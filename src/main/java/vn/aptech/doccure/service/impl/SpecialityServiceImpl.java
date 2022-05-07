@@ -1,6 +1,7 @@
 package vn.aptech.doccure.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.repository.SpecialityRepository;
@@ -12,25 +13,30 @@ import java.util.Optional;
 public class SpecialityServiceImpl implements SpecialityService {
 
     @Autowired
-    private SpecialityRepository specialityRepository;
+    private SpecialityRepository repo;
 
     @Override
     public Iterable<Speciality> findAll() {
-        return specialityRepository.findAll();
+        return repo.findAll();
+    }
+
+    @Override
+    public Iterable<Speciality> findAllByOrderByIdDesc() {
+        return repo.findAllByOrderByIdDesc();
     }
 
     @Override
     public Optional<Speciality> findById(Long id) {
-        return specialityRepository.findById(id);
+        return repo.findById(id);
     }
 
     @Override
     public Speciality save(Speciality speciality) {
-        return specialityRepository.save(speciality);
+        return repo.save(speciality);
     }
 
     @Override
     public void deleteById(Long id) {
-        specialityRepository.deleteById(id);
+        repo.deleteById(id);
     }
 }
