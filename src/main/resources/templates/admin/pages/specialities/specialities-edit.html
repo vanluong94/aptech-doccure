@@ -52,7 +52,7 @@
                                 <label class="col-form-label col-md-2">Image</label>
                                 <div class="col-md-10">
                                     <div class="d-flex">
-                                        <img src="#" th:src="'/files/' + ${speciality.image}" alt="" class="border p-2 mr-2" width="120">
+                                        <img src="#" th:src="'/files/' + ${speciality.image}" alt="" class="border p-2 mr-2" width="64">
                                         <input type="file" th:field="*{imageData}" class="form-control">
                                         <p th:if="${#fields.hasErrors('imageData')}" th:errors="*{imageData}" class="invalid-feedback">Image
                                             Error</p>
