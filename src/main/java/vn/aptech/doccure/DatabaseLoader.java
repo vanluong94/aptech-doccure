@@ -9,16 +9,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Role;
+import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.RoleService;
+import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.UserService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@Transactional
 public class DatabaseLoader implements CommandLineRunner {
 
     private final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
@@ -26,6 +30,9 @@ public class DatabaseLoader implements CommandLineRunner {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private ServiceService serviceService;
 
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
@@ -98,6 +105,10 @@ public class DatabaseLoader implements CommandLineRunner {
                 logger.info("Inserting user record for " + user.getEmail());
             }
             logger.info("-------------------------------");
+            logger.info("Services");
+            Service service = serviceService.save(new Service("Tooth cleaning"));
+            logger.info("Inserting service record for " + service.getName());
+
 
         } catch (Exception e) {
             e.printStackTrace();
