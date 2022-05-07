@@ -18,9 +18,9 @@ public class Speciality implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
-    @NotEmpty(message = "Email là bắt buộc")
+    @NotEmpty(message = "Name must not be null or empty!")
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
@@ -29,6 +29,9 @@ public class Speciality implements Serializable {
 
     @Column(name = "image")
     private String image;
+
+//    @ManyToMany(targetEntity = vn.aptech.doccure.entities.User.class, mappedBy = "specialities")
+//    private Set<User> users;
 
     @Transient
     private MultipartFile imageData;

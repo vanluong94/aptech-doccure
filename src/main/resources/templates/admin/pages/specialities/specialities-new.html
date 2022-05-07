@@ -47,16 +47,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-form-label col-md-2">Slug</label>
-                                <div class="col-md-10">
-                                    <input type="text" class="form-control" readonly th:field="*{slug}"/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label class="col-form-label col-md-2">Image</label>
                                 <div class="col-md-10">
                                     <div class="d-flex">
-                                        <img src="#" th:src="@{/assets/img/specialities/specialities-01.png}" alt="" class="border p-2 mr-2">
                                         <input type="file" th:field="*{imageData}" class="form-control">
                                         <p th:if="${#fields.hasErrors('imageData')}" th:errors="*{imageData}" class="invalid-feedback">Image
                                             Error</p>

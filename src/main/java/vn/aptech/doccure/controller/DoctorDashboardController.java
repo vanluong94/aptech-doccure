@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.entities.DoctorClinic;
+import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.DoctorClinicRepository;
+import vn.aptech.doccure.service.SpecialityService;
 import vn.aptech.doccure.storage.StorageService;
 
 import java.util.List;
@@ -29,7 +31,6 @@ public class DoctorDashboardController {
 
     @Autowired
     StorageService storageService;
-
     @GetMapping("time-slot-settings")
     public String timeSlotsPage() {
         return "pages/dashboard/doctorTimeSlots";
@@ -39,7 +40,7 @@ public class DoctorDashboardController {
     public ModelAndView clinicPage(Authentication auth) {
         ModelAndView modelAndView = new ModelAndView("pages/dashboard/doctorClinic");
         User doctor = (User) auth.getPrincipal();
-        DoctorClinic clinic = doctor.getDoctorClinic();
+        DoctorClinic clinic = doctor.getClinic();
         if (clinic == null) {
             clinic = new DoctorClinic();
 //            clinic.setName("Smile Cute Dental Care Center");
@@ -60,8 +61,8 @@ public class DoctorDashboardController {
         if (!result.hasErrors()) {
 
             User doctor = (User) auth.getPrincipal();
-            doctor.getDoctorClinic().parseImages();
-            List<String> images = doctor.getDoctorClinic().getParsedImages();
+            doctor.getClinic().parseImages();
+            List<String> images = doctor.getClinic().getParsedImages();
 
                 for (String img : clinic.getDeletedImages()) {
                     images.remove(img);
@@ -75,7 +76,7 @@ public class DoctorDashboardController {
             clinic.setParsedImages(images);
             clinic.syncParsedImages();
 
-            doctor.setDoctorClinic(clinic);
+            doctor.setClinic(clinic);
             clinic.setDoctor(doctor);
             clinic.setDoctorId(doctor.getId());
             doctorClinicRepository.save(clinic);
