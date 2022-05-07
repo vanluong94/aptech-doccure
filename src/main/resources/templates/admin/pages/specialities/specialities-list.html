@@ -30,6 +30,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
                         <div class="table-responsive">
                             <table class="datatable table table-hover table-center mb-0">
                                 <thead>
@@ -40,6 +41,11 @@
                                     <th class="text-right">Actions</th>
                                 </tr>
                                 </thead>
+                                <tbody th:if="${#lists.isEmpty(specialities)}">
+                                    <tr>
+                                        <td colspan="4">No data.</td>
+                                    </tr>
+                                </tbody>
                                 <tbody th:unless="${#lists.isEmpty(specialities)}">
                                 <tr th:each="speciality : ${specialities}">
                                     <th scope="row" th:text="${speciality.id}"></th>
@@ -61,7 +67,7 @@
                                                th:href="@{/admin/specialities/edit/{id}(id=${speciality.id})}"
                                                th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
                                             <button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
-                                                    data-target="#delete_modal"
+                                                    data-target="#confirmModal"
                                                     th:attr="data-whatever=${speciality.id}"
                                                     th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
                                             </button>
@@ -75,32 +81,27 @@
             </div>
         </div>
     </div>
-</div>
-<!-- /Page Wrapper -->
 
-<!-- Delete Modal -->
-<div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document" >
-        <div class="modal-content">
-            <!--	<div class="modal-header">
-                    <h5 class="modal-title">Delete</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>-->
-            <div class="modal-body">
-                <div class="form-content p-2">
-                    <h4 class="modal-title">Delete</h4>
-                    <p class="mb-4">Are you sure want to delete?</p>
-                    <button type="button" class="btn btn-primary">Save </button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+    <!-- Delete Modal -->
+    <div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document" >
+            <div class="modal-content">
+                <form action="#" th:action="@{/admin/specialities/delete}" method="post">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">Delete</h4>
+                        <p class="mb-4">Are you sure want to delete?</p>
+                        <input type="hidden" name="id" id="id">
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+    <!-- /Delete Modal -->
 </div>
-<!-- /Delete Modal -->
-</div>
-
+<!-- /Page Wrapper -->
 </body>
 </html>

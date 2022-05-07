@@ -32,6 +32,8 @@
                         <h4 class="card-title">Add new Speciality</h4>
                     </div>
                     <div class="card-body">
+                        <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+                        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
                         <form action="#" th:action="@{/admin/specialities/create}" th:object="${speciality}" method="post" enctype="multipart/form-data">
                             <div th:if="${#fields.hasAnyErrors()}">
                                 <ul>
