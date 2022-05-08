@@ -122,6 +122,9 @@ public class UserController {
             user.getClinic().setDoctor(user);
             user.getClinic().setDoctorId(user.getId());
 
+            user.getBio().setDoctor(user);
+            user.getBio().setDoctorId(user.getId());
+
             Set<Service> services = user.getServices();
             System.out.println("service size: ------------------ " + services.size());
             services.forEach(service -> {

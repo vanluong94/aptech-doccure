@@ -91,9 +91,12 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "doctor_services", joinColumns = {@JoinColumn(name = "doctor_id")}, inverseJoinColumns = {@JoinColumn(name = "service_id")})
     private Set<Service> services;
-    //
+
     @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private DoctorClinic clinic;
+
+    @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private DoctorBio bio;
     //
 //    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
 //    private Set<Appointment> patientAppointments = new LinkedHashSet<>();
