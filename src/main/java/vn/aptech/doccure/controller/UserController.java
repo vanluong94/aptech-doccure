@@ -86,7 +86,9 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
         Optional<User> newUser = userService.findByUsername(doctor.getUsername());
         if (newUser.isPresent()) {
-            newUser.get().getClinic().parseImages();
+            if (newUser.get().getClinic().getImages() != null) {
+                newUser.get().getClinic().parseImages();
+            }
             modelAndView.addObject("doctor", newUser.get());
         } else {
             // Ban chua dang nhap hoac tai khoan khong ton tai

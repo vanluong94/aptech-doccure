@@ -29,6 +29,9 @@ public class DoctorController {
         Optional<User> user = userService.findById(id);
         if (user.isPresent()) {
             modelAndView = new ModelAndView("/pages/doctor/doctor-profile");
+            if (user.get().getClinic().getImages() != null) {
+                user.get().getClinic().parseImages();
+            }
             modelAndView.addObject("doctor", user.get());
         } else {
             modelAndView = new ModelAndView("/pages/404");

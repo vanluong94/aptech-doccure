@@ -22,7 +22,7 @@
 							<div class="doctor-widget">
 								<div class="doc-info-left">
 									<div class="doctor-img">
-										<img src="#" th:src="'/files/' + ${doctor.theAvatar}" class="img-fluid" alt="User Image">
+										<img src="#" th:src="${doctor.theAvatar}" class="img-fluid" alt="User Image">
 									</div>
 									<div class="doc-info-cont">
 										<h4 class="doc-name" th:text="${doctor.fullName}">Dr. Darren Elder</h4>
@@ -46,25 +46,10 @@
 												locationBtn.scrollIntoView();
 												locationBtn.click();
 											})()">Get Directions</a></p>
-											<ul class="clinic-gallery">
+											<ul class="clinic-gallery" th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
 												<li>
-													<a href="assets/img/features/feature-01.jpg" data-fancybox="gallery">
-														<img src="assets/img/features/feature-01.jpg" alt="Feature">
-													</a>
-												</li>
-												<li>
-													<a href="assets/img/features/feature-02.jpg" data-fancybox="gallery">
-														<img  src="assets/img/features/feature-02.jpg" alt="Feature Image">
-													</a>
-												</li>
-												<li>
-													<a href="assets/img/features/feature-03.jpg" data-fancybox="gallery">
-														<img src="assets/img/features/feature-03.jpg" alt="Feature">
-													</a>
-												</li>
-												<li>
-													<a href="assets/img/features/feature-04.jpg" data-fancybox="gallery">
-														<img src="assets/img/features/feature-04.jpg" alt="Feature">
+													<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
+														<img src="/assets/img/features/feature-01.jpg" th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
 													</a>
 												</li>
 											</ul>
