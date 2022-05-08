@@ -144,7 +144,7 @@
                             <!-- Doctor Widget -->
                             <div class="profile-widget" th:each="doctor : ${doctors}">
                                 <div class="doc-img">
-                                    <a href="doctor-profile.html">
+                                    <a href="doctor-profile.html" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">
                                         <img class="img-fluid" src="#" th:src="'/files/' + ${doctor.theAvatar}" alt="User Image">
                                     </a>
                                     <a href="javascript:void(0)" class="fav-btn"> <i class="far fa-bookmark"></i>
@@ -169,7 +169,7 @@
                                         </li>
                                     </ul>
                                     <div class="row row-sm">
-                                        <div class="col-6"> <a href="doctor-profile.html" class="btn view-btn">View Profile</a>
+                                        <div class="col-6"> <a href="doctor-profile.html" class="btn view-btn" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">View Profile</a>
                                         </div>
                                         <div class="col-6"> <a href="booking.html" class="btn book-btn">Book Now</a>
                                         </div>
