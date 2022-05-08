@@ -5,7 +5,32 @@
 	  layout:decorate="~{layout}"
 >
 <head>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
+	<style>
+		#clinic_location_map {
+			width: 980px;
+			height: 500px;
+		}
+		.dropzone {
+			padding: 5em 2em;
+		}
 
+		.dropzone > input[type="file"] {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			cursor: pointer;
+			/* opacity: 0; */
+		}
+
+		.dropzone .dropzone-message {
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	</style>
 </head>
 <body>
 	<div class="page-content" layout:fragment="layoutContent">
@@ -29,89 +54,17 @@
 
 		<!-- Page Content -->
 		<div class="content">
-			<div class="row">
+			<div class="container-fluid">
+				<div class="row">
 				<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
 
-					<!-- Profile Sidebar -->
-					<div class="profile-sidebar">
-						<div class="widget-profile pro-widget-content">
-							<div class="profile-info-widget">
-								<a href="#" class="booking-doc-img">
-									<img src="#" th:src="'/files/' + ${doctor.theAvatar}" alt="User Image">
-								</a>
-								<div class="profile-det-info">
-									<h3 th:text="${doctor.fullName}"></h3>
-								</div>
-							</div>
-						</div>
-						<div class="dashboard-widget">
-							<nav class="dashboard-menu">
-								<ul>
-									<li>
-										<a href="doctor-dashboard.html">
-											<i class="fas fa-columns"></i>
-											<span>Dashboard</span>
-										</a>
-									</li>
-									<li>
-										<a href="doctor-appointments.html">
-											<i class="fas fa-calendar-check"></i>
-											<span>Appointments</span>
-										</a>
-									</li>
-									<li>
-										<a href="doctor-calendar.html">
-											<i class="fas fa-calendar-alt"></i>
-											<span>Calendar</span>
-										</a>
-									</li>
-									<li>
-										<a href="doctor-my-patients.html">
-											<i class="fas fa-user-injured"></i>
-											<span>My Patients</span>
-										</a>
-									</li>
-									<li>
-										<a href="doctor-time-slots.html">
-											<i class="fas fa-hourglass-start"></i>
-											<span>Schedule Timings</span>
-										</a>
-									</li>
-									<li>
-										<a href="doctor-reviews.html">
-											<i class="fas fa-star"></i>
-											<span>Reviews</span>
-										</a>
-									</li>
-									<li class="active">
-										<a href="doctor-profile-settings.html">
-											<i class="fas fa-user-cog"></i>
-											<span>Profile Settings</span>
-										</a>
-									</li>
-									<li>
-										<a href="doctor-change-password.html">
-											<i class="fas fa-lock"></i>
-											<span>Change Password</span>
-										</a>
-									</li>
-									<li>
-										<a href="index.html">
-											<i class="fas fa-sign-out-alt"></i>
-											<span>Logout</span>
-										</a>
-									</li>
-								</ul>
-							</nav>
-						</div>
-					</div>
-					<!-- /Profile Sidebar -->
+					<div th:replace="fragments/dashboard/doctorSidebar :: sidebar"></div>
 
 				</div>
 				<div class="col-md-7 col-lg-8 col-xl-9">
 				<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 				<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
-				<form action="#" method="post" th:action="@{/dashboard/profile}" th:object="${doctor}" enctype="multipart/form-data">
+				<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${doctor}" enctype="multipart/form-data">
 					<div th:if="${#fields.hasAnyErrors()}">
 						<ul>
 							<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
@@ -128,7 +81,7 @@
 									<div class="form-group">
 										<div class="change-avatar">
 											<div class="profile-img">
-												<img src="#" th:src="'/files/' + ${doctor.theAvatar}" alt="User Image">
+												<img src="#" th:src="${doctor.theAvatar}" alt="User Image">
 											</div>
 											<div class="upload-img">
 												<div class="change-photo-btn">
@@ -262,25 +215,27 @@
 										<input type="text" class="form-control" th:field="*{clinic.postalCode}">
 									</div>
 								</div>
-<!--								<div class="col-md-12">-->
-<!--									<div class="form-group">-->
-<!--										<label class="control-label">Google Maps Location Embed URL</label>-->
-<!--										<input type="text" name="" class="form-control">-->
-<!--									</div>-->
-<!--								</div>-->
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="control-label">Location</label>
+										<small class="text-muted font-italic">(Drop the pin where your clinic is located)</small>
+										<div id="clinic_location_map"></div>
+										<input type="hidden" id="clinicInputLat" th:field="*{clinic.lat}">
+										<input type="hidden" id="clinicInputLong" th:field="*{clinic.lng}">
+									</div>
+								</div>
 								<div class="col-md-12">
 									<div class="form-group">
 										<label>Clinic Images</label>
-
-									</div>
-									<div class="upload-wrap">
-										<div class="upload-images">
-											<img src="assets/img/features/feature-01.jpg" alt="Upload Image">
-											<a href="javascript:void(0);" class="btn btn-icon btn-danger btn-sm"><i class="far fa-trash-alt"></i></a>
+										<div class="dropzone position-relative">
+											<input type="file" th:field="*{clinic.postedImages}" multiple accept=".png,.jpeg,.jpg">
+											<div class="dropzone-message display-5 position-absolute">Drop files here to upload</div>
 										</div>
-										<div class="upload-images">
-											<img src="assets/img/features/feature-02.jpg" alt="Upload Image">
-											<a href="javascript:void(0);" class="btn btn-icon btn-danger btn-sm"><i class="far fa-trash-alt"></i></a>
+									</div>
+									<div class="upload-wrap" id="clinicUploadWrap">
+										<div class="upload-images uploaded-file" th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
+											<img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Clinic Image">
+											<a href="javascript:void(0);" class="btn btn-icon btn-danger btn-sm btn-rm"><i class="far fa-trash-alt"></i></a>
 										</div>
 									</div>
 								</div>
@@ -319,6 +274,7 @@
 					</form>
 				</div>
 			</div>
+			</div>
 		</div>
 	</div>
 	<div layout:fragment="layoutExtra"></div>
@@ -330,6 +286,74 @@
 				$('.specialities-multiple').select2();
 				$('.services-multiple').select2();
 			});
+		</script>
+		<script src="/assets/js/doctor-clinic.js"></script>
+		<script>
+			const clinicForm = document.getElementById('doctorProfileForm');
+			const clinicFiles = {
+				files: [],
+				wrap: document.getElementById('clinicUploadWrap'),
+				renderPreview() {
+					for (let i in this.files) {
+						let file = this.files[i];
+						let imgUrl = window.URL.createObjectURL(file);
+
+						let imgDelBtn = document.createElement('a');
+						imgDelBtn.href = 'javascript:void(0);';
+						imgDelBtn.classList.add('btn', 'btn-icon', 'btn-danger', 'btn-sm')
+						imgDelBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
+
+						let imgItem = document.createElement('div');
+						imgItem.classList.add('upload-images');
+						imgItem.innerHTML = `<img src="${imgUrl}" alt="Upload Image">`;
+						imgItem.appendChild(imgDelBtn);
+
+						let input = document.createElement('input');
+						let container = new DataTransfer();
+						container.items.add(file);
+
+						input.name = `clinic.postedImages[${i}]`;
+						input.type = 'file';
+						input.files = container.files;
+						input.classList.add('sr-only', 'sr-only-focusable');
+
+						clinicForm.appendChild(input);
+
+						imgDelBtn.onclick = () => {
+							imgItem.remove();
+							this.files = this.files.filter((_file) => _file != file)
+							clinicForm.querySelector(`input[name="postedImages[${i}]"]`).remove();
+						}
+
+						this.wrap.appendChild(imgItem);
+					}
+				},
+			};
+
+			clinicFiles.wrap.querySelectorAll('.uploaded-file').forEach((el) => {
+				let removeBtn = el.querySelector('.btn-rm')
+				if (removeBtn) {
+					removeBtn.onclick = (e) => {
+						e.preventDefault();
+						el.remove();
+
+						let input = document.createElement('input');
+						input.type = 'hidden';
+						input.name = 'deletedImages[]';
+						input.value = el.querySelector('img').dataset.image;
+						clinicForm.appendChild(input);
+					}
+				}
+			})
+
+			document.getElementById('clinic.postedImages').onchange = function() {
+				for (let file of this.files) {
+					clinicFiles.files.push(file);
+				}
+				clinicFiles.renderPreview();
+
+				this.value = ''; //reset files
+			}
 		</script>
 	</th:block>
 </body>

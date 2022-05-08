@@ -9,11 +9,11 @@
         <div class="widget-profile pro-widget-content">
             <div class="profile-info-widget">
                 <a href="#" class="booking-doc-img">
-                    <img th:src="${user.getTheAvatar()}" alt="User Image">
+                    <img th:src="${doctor.theAvatar}" alt="User Image">
                 </a>
                 <div class="profile-det-info">
-                    <h3 th:text="${user.getFullName()}" class="mb-0"></h3>
-                    <p th:text="${'@' + user.username}" class="small text-secondary"></p>
+                    <h3 th:text="${doctor.fullName}" class="mb-0"></h3>
+                    <p th:text="${'@' + doctor.username}" class="small text-secondary"></p>
                     <div class="patient-details">
                         <h5 class="mb-0">BDS, MDS - Oral & Maxillofacial Surgery</h5>
                     </div>
@@ -59,14 +59,14 @@
                             <span>Reviews</span>
                         </a>
                     </li>
-                    <li>
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/clinic-settings' ? 'active' : ''}">
                         <a th:href="@{/dashboard/clinic-settings}">
                             <i class="fas fa-clinic-medical"></i>
                             <span>Clinic Settings</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-profile-settings.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/profile-settings' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/profile-settings}">
                             <i class="fas fa-user-cog"></i>
                             <span>Profile Settings</span>
                         </a>

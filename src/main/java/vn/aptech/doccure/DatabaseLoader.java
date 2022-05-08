@@ -104,10 +104,10 @@ public class DatabaseLoader implements CommandLineRunner {
                 userService.save(user);
                 logger.info("Inserting user record for " + user.getEmail());
             }
-            logger.info("-------------------------------");
-            logger.info("Services");
-            Service service = serviceService.save(new Service("Tooth cleaning"));
-            logger.info("Inserting service record for " + service.getName());
+//            logger.info("-------------------------------");
+//            logger.info("Services");
+//            Service service = serviceService.save(new Service("Tooth cleaning"));
+//            logger.info("Inserting service record for " + service.getName());
 
 
         } catch (Exception e) {

@@ -28,10 +28,8 @@ import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.security.Principal;
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -79,14 +77,16 @@ public class UserController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("dashboard/profile")
+    @GetMapping("dashboard/profile-settings")
 //    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
-    public ModelAndView profile(@ModelAttribute("doctor") User user) {
+    public ModelAndView profile(@ModelAttribute("doctor") User user, Principal principal) {
 //        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
+        Authentication authentication = (Authentication) principal;
+        User doctor = (User) authentication.getPrincipal();
         ModelAndView modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
-        Optional<User> newUser = userService.findByUsername("admin");
+        Optional<User> newUser = userService.findByUsername(doctor.getUsername());
         if (newUser.isPresent()) {
-            //
+            newUser.get().getClinic().parseImages();
             modelAndView.addObject("doctor", newUser.get());
         } else {
             // Ban chua dang nhap hoac tai khoan khong ton tai
@@ -99,13 +99,13 @@ public class UserController {
 //        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("dashboard/profile")
-    public String saveProfileSettings(@Validated @ModelAttribute("doctor") User user, BindingResult result, RedirectAttributes redirect) {
+    @PostMapping("dashboard/profile-settings")
+    public String saveProfileSettings(@Validated @ModelAttribute("doctor") User doctor, BindingResult result, RedirectAttributes redirect) {
         try {
             if (result.hasErrors()) {
                 return "pages/doctor/doctor-profile-settings";
             }
-            MultipartFile file = user.getAvatarMultipartFile();
+            MultipartFile file = doctor.getAvatarMultipartFile();
             String fileName = file.getOriginalFilename();
             try {
                 if (file.getSize() > 0) {
@@ -114,30 +114,47 @@ public class UserController {
                         return "redirect:/dashboard/profile";
                     }
                     storageService.store(file);
-                    user.setAvatar(fileName);
+                    doctor.setAvatar(fileName);
                 }
             } catch (StorageException e) {
-                user.setAvatar("avatar-admin.png");
+                doctor.setAvatar("avatar-admin.png");
             }
-            user.getClinic().setDoctor(user);
-            user.getClinic().setDoctorId(user.getId());
 
-            user.getBio().setDoctor(user);
-            user.getBio().setDoctorId(user.getId());
-
-            Set<Service> services = user.getServices();
+            Set<Service> services = doctor.getServices();
             System.out.println("service size: ------------------ " + services.size());
             services.forEach(service -> {
                 System.out.println("service: --------------- " + service.getId() + "/" + service.getName());
             });
 
-            Set<Speciality> specialities = user.getSpecialities();
+            Set<Speciality> specialities = doctor.getSpecialities();
             System.out.println("specialities size: ------------------ " + services.size());
             specialities.forEach(speciality -> {
                 System.out.println("speciality: --------------- " + speciality.getId() + "/" + speciality.getName());
             });
 
-            User saveUser = userService.save(user);
+            if (doctor.getClinic().getImages() != null) {
+                doctor.getClinic().parseImages();
+            }
+            List<String> images = doctor.getClinic().getParsedImages();
+
+            for (String img : doctor.getClinic().getDeletedImages()) {
+                images.remove(img);
+            }
+            System.out.println("sizeeeeeeeeeeeeeeeeeeeeeeee: " + doctor.getClinic().getPostedImages());
+            for (MultipartFile image : doctor.getClinic().getPostedImages()) {
+                String filename = storageService.storeUnderRandomName(image, "clinic_" + doctor.getId());
+                images.add(filename);
+            }
+
+            doctor.getClinic().setParsedImages(images);
+            doctor.getClinic().syncParsedImages();
+
+//            doctor.getClinic().setDoctor(doctor);
+            doctor.getClinic().setDoctorId(doctor.getId());
+//
+//            doctor.getBio().setDoctor(doctor);
+            doctor.getBio().setDoctorId(doctor.getId());
+            User saveUser = userService.save(doctor);
             if (saveUser != null) {
                 // Luu thanh cong
                 redirect.addFlashAttribute("successMessage", "Successfully updated profile.");
