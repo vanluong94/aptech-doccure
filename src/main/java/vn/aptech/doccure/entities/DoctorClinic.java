@@ -3,30 +3,29 @@ package vn.aptech.doccure.entities;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
 import vn.aptech.doccure.utils.JSONUtils;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "doctor_clinics")
-@Getter
-@Setter
-public class DoctorClinic {
+public class DoctorClinic implements Serializable {
     @Id
-    @Column(name = "doctor_id", nullable = false)
+    @Column(name = "doctor_id")
     private Long doctorId;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "doctor_id")
+    @OneToOne
     private User doctor;
 
     @Column(name = "name", nullable = false)
@@ -60,8 +59,9 @@ public class DoctorClinic {
     private Integer postalCode;
 
     @CreatedDate
-    @Column(name = "created_at")
-    private Instant createdAt = Instant.now();
+    private LocalDateTime createdDate = LocalDateTime.now();
+    @LastModifiedDate
+    private LocalDateTime modifiedDate = LocalDateTime.now();
 
     @Column(name = "images")
     private String images;
@@ -76,11 +76,14 @@ public class DoctorClinic {
     private List<String> deletedImages = new ArrayList<>();
 
     public void parseImages() {
-        ObjectMapper jsonMapper = new ObjectMapper();
-        try {
-            this.parsedImages = jsonMapper.readValue(images, new TypeReference<List<String>>() {});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        if (images != null && ! images.isEmpty()) {
+            ObjectMapper jsonMapper = new ObjectMapper();
+            try {
+                this.parsedImages = jsonMapper.readValue(images, new TypeReference<List<String>>() {
+                });
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
     }
 

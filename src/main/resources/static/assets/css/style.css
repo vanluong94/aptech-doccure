@@ -5456,8 +5456,8 @@ html.menu-opened body {
 }
 .upload-images img {
 	border-radius: 4px;
-	height: 80px;
-	width: auto;
+	width: 80px;
+	height: auto;
 }
 .upload-wrap {
 	display: -webkit-box;

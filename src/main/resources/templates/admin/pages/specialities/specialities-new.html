@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}"
+>
+<head>
+
+</head>
+<body>
+<div class="page-wrapper" layout:fragment="layoutContent">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col">
+                    <h3 class="page-title">Add new Speciality</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/admin/specialities}">Specialities</a></li>
+                        <li class="breadcrumb-item active">Add new Speciality</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add new Speciality</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+                        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                        <form action="#" th:action="@{/admin/specialities/create}" th:object="${speciality}" method="post" enctype="multipart/form-data">
+                            <div th:if="${#fields.hasAnyErrors()}">
+                                <ul>
+                                    <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+                                </ul>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2">Name</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" th:field="*{name}"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2">Image</label>
+                                <div class="col-md-10">
+                                    <div class="d-flex">
+                                        <input type="file" th:field="*{imageData}" class="form-control">
+                                        <p th:if="${#fields.hasErrors('imageData')}" th:errors="*{imageData}" class="invalid-feedback">Image
+                                            Error</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    <!-- /Page Wrapper -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document" >
+            <div class="modal-content">
+                <!--	<div class="modal-header">
+                        <h5 class="modal-title">Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>-->
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">Delete</h4>
+                        <p class="mb-4">Are you sure want to delete?</p>
+                        <button type="button" class="btn btn-primary">Save </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+</div>
+
+</body>
+</html>

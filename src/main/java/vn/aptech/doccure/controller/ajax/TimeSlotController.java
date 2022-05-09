@@ -30,7 +30,7 @@ public class TimeSlotController {
         User doctor = (User) auth.getPrincipal();
 
         HashMap<String, Set<AppointmentDefault>> respData = new HashMap<>();
-        respData.put("timeSlots", doctor.getDoctorAppointmentsDefault());
+        respData.put("timeSlots", doctor.getAppointmentsDefault());
         return AjaxResponse.responseSuccess(respData, "success");
     }
 
@@ -67,13 +67,13 @@ public class TimeSlotController {
         }
 
         if (doctorTimeSlots.size() > 0) {
-            doctor.setDoctorAppointmentsDefault(doctorTimeSlots);
+            doctor.setAppointmentsDefault(doctorTimeSlots);
             apmtDefaultRepository.saveAll(doctorTimeSlots);
         } else if (timeSlots != null) {
             return AjaxResponse.responseFail(results, "Failed to save the time slots, please check again");
         }
 
-        results.put("timeSlots", doctor.getDoctorAppointmentsDefault());
+        results.put("timeSlots", doctor.getAppointmentsDefault());
 
         return AjaxResponse.responseSuccess(results,"success");
     }

@@ -3,8 +3,6 @@ package vn.aptech.doccure.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,20 +15,21 @@ import vn.aptech.doccure.repository.UserRepository;
 import vn.aptech.doccure.service.UserService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository repo;
 
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = repo.findByUsername(username);
         if (!user.isPresent()) {
             throw new UsernameNotFoundException(username);
         }
@@ -47,27 +46,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        return userRepository.save(user);
+        return repo.save(user);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return repo.findByEmail(email);
     }
 
     @Override
     public Iterable<User> findAll() {
-        return userRepository.findAll();
+        return repo.findAll();
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+        return repo.findById(id);
     }
 
     @Override
     public boolean existByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return repo.existsByEmail(email);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = repo.findByUsername(username);
         if (!user.isPresent()) {
             throw new UsernameNotFoundException(username);
         }
@@ -87,5 +86,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @Override
+    public List<User> findTop10ByOrderByIdDesc() {
+        return repo.findTop10ByOrderByIdDesc();
     }
 }

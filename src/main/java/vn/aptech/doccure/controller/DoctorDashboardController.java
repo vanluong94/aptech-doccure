@@ -15,12 +15,14 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.entities.DoctorClinic;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.DoctorClinicRepository;
+import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
-@RequestMapping("dashboard")
+@RequestMapping("/dashboard")
 @Secured("ROLE_DOCTOR")
 public class DoctorDashboardController {
 
@@ -28,18 +30,21 @@ public class DoctorDashboardController {
     DoctorClinicRepository doctorClinicRepository;
 
     @Autowired
-    StorageService storageService;
+    UserService userService;
 
-    @GetMapping("time-slot-settings")
+    @Autowired
+    StorageService storageService;
+    @GetMapping("/time-slot-settings")
     public String timeSlotsPage() {
-        return "pages/dashboard/doctorTimeSlots";
+        return "/pages/dashboard/doctorTimeSlots";
     }
 
-    @GetMapping("clinic-settings")
+    @GetMapping("/clinic-settings")
     public ModelAndView clinicPage(Authentication auth) {
-        ModelAndView modelAndView = new ModelAndView("pages/dashboard/doctorClinic");
-        User doctor = (User) auth.getPrincipal();
-        DoctorClinic clinic = doctor.getDoctorClinic();
+        ModelAndView modelAndView = new ModelAndView("/pages/dashboard/doctorClinic");
+        User user = (User) auth.getPrincipal();
+        Optional<User> doctor = userService.findById(user.getId());
+        DoctorClinic clinic = user.getClinic();
         if (clinic == null) {
             clinic = new DoctorClinic();
 //            clinic.setName("Smile Cute Dental Care Center");
@@ -51,31 +56,33 @@ public class DoctorDashboardController {
 //            clinic.setPostalCode(78749);
         }
         clinic.parseImages();
+        modelAndView.addObject("doctor", doctor.get());
         modelAndView.addObject("clinic", clinic);
         return modelAndView;
     }
 
-    @PostMapping("clinic-settings/save")
+    @PostMapping("/clinic-settings/save")
     public String clinicPageSave(@Validated @ModelAttribute DoctorClinic clinic, BindingResult result, Authentication auth) {
         if (!result.hasErrors()) {
 
             User doctor = (User) auth.getPrincipal();
-            doctor.getDoctorClinic().parseImages();
-            List<String> images = doctor.getDoctorClinic().getParsedImages();
 
-                for (String img : clinic.getDeletedImages()) {
-                    images.remove(img);
-                }
+            doctor.getClinic().parseImages();
+            List<String> images = doctor.getClinic().getParsedImages();
 
-                for (MultipartFile image : clinic.getPostedImages()) {
-                    String filename = storageService.storeUnderRandomName(image, "clinic_" + doctor.getId());
-                    images.add(filename);
-                }
+            for (String img : clinic.getDeletedImages()) {
+                images.remove(img);
+            }
+
+            for (MultipartFile image : clinic.getPostedImages()) {
+                String filename = storageService.storeUnderRandomName(image, "clinic_" + doctor.getId());
+                images.add(filename);
+            }
 
             clinic.setParsedImages(images);
             clinic.syncParsedImages();
 
-            doctor.setDoctorClinic(clinic);
+            doctor.setClinic(clinic);
             clinic.setDoctor(doctor);
             clinic.setDoctorId(doctor.getId());
             doctorClinicRepository.save(clinic);

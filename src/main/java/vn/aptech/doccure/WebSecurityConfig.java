@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler;
+import org.springframework.security.web.firewall.RequestRejectedHandler;
 import vn.aptech.doccure.service.UserService;
 
 import javax.sql.DataSource;
@@ -30,6 +32,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
+
+    @Bean
+    RequestRejectedHandler requestRejectedHandler() {
+        return new HttpStatusRequestRejectedHandler();
+    }
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
