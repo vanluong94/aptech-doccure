@@ -28,7 +28,6 @@ import vn.aptech.doccure.storage.StorageService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -72,7 +71,6 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
         Optional<User> newUser = userService.findByUsername(doctor.getUsername());
         if (newUser.isPresent()) {
-            newUser.get().getClinic().parseImages();
             modelAndView.addObject("doctor", newUser.get());
         } else {
             // Ban chua dang nhap hoac tai khoan khong ton tai
@@ -118,24 +116,6 @@ public class UserController {
                 System.out.println("speciality: --------------- " + speciality.getId() + "/" + speciality.getName());
             });
 
-            doctor.getClinic().parseImages();
-            List<String> images = doctor.getClinic().getParsedImages();
-
-            for (String img : doctor.getClinic().getDeletedImages()) {
-                images.remove(img);
-            }
-            System.out.println("sizeeeeeeeeeeeeeeeeeeeeeeee: " + doctor.getClinic().getPostedImages());
-            for (MultipartFile image : doctor.getClinic().getPostedImages()) {
-                String filename = storageService.storeUnderRandomName(image, "clinic_" + doctor.getId());
-                images.add(filename);
-            }
-
-            doctor.getClinic().setParsedImages(images);
-            doctor.getClinic().syncParsedImages();
-
-//            doctor.getClinic().setDoctor(doctor);
-            doctor.getClinic().setDoctorId(doctor.getId());
-//
 //            doctor.getBio().setDoctor(doctor);
             doctor.getBio().setDoctorId(doctor.getId());
             User saveUser = userService.save(doctor);
