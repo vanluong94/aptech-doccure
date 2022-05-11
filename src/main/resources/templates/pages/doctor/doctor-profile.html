@@ -5,15 +5,16 @@
 	  layout:decorate="~{layout}"
 >
 <head>
-
+	<link rel="stylesheet" href="/assets/plugins/fancybox/jquery.fancybox.min.css">
 </head>
 <body>
 
+	<div class="page-content" layout:fragment="layoutContent">
 		<!-- Main Wrapper -->
 		<div class="main-wrapper">
-			
+
 			<!-- Page Content -->
-			<div class="content" layout:fragment="layoutContent">
+			<div class="content">
 				<div class="container">
 
 					<!-- Doctor Widget -->
@@ -42,12 +43,12 @@
 										</div>
 										<div class="clinic-details">
 											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> Newyork, USA - <a href="javascript:void(0);" onclick="(() => {
-												let locationBtn = document.getElementById('doc_locations_nav_btn');
-												locationBtn.scrollIntoView();
-												locationBtn.click();
-											})()">Get Directions</a></p>
-											<ul class="clinic-gallery" th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
-												<li>
+											let locationBtn = document.getElementById('doc_locations_nav_btn');
+											locationBtn.scrollIntoView();
+											locationBtn.click();
+										})()">Get Directions</a></p>
+											<ul class="clinic-gallery">
+												<li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
 													<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
 														<img src="/assets/img/features/feature-01.jpg" th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
 													</a>
@@ -55,9 +56,9 @@
 											</ul>
 										</div>
 										<div class="clinic-services">
-											<span th:each="service : ${doctor?.services}">
-												<a href="/search.html" th:text="${service.name}">Dental Fillings</a>
-											</span>
+										<span th:each="service : ${doctor?.services}">
+											<a href="/search.html" th:text="${service.name}">Dental Fillings</a>
+										</span>
 										</div>
 									</div>
 								</div>
@@ -93,11 +94,11 @@
 						</div>
 					</div>
 					<!-- /Doctor Widget -->
-					
+
 					<!-- Doctor Details Tab -->
 					<div class="card">
 						<div class="card-body pt-0">
-						
+
 							<!-- Tab Menu -->
 							<nav class="user-tabs mb-4">
 								<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
@@ -113,22 +114,22 @@
 								</ul>
 							</nav>
 							<!-- /Tab Menu -->
-							
+
 							<!-- Tab Content -->
 							<div class="tab-content pt-0">
-							
+
 								<!-- Overview Content -->
 								<div role="tabpanel" id="doc_overview" class="tab-pane fade show active">
 									<div class="row">
 										<div class="col-md-12 col-lg-9">
-										
+
 											<!-- About Details -->
 											<div class="widget about-widget">
 												<h4 class="widget-title">About Me</h4>
 												<p th:text="${doctor?.bio?.biography}"></p>
 											</div>
 											<!-- /About Details -->
-										
+
 											<!-- Services List -->
 											<div class="service-list">
 												<h4>Services</h4>
@@ -137,7 +138,7 @@
 												</ul>
 											</div>
 											<!-- /Services List -->
-											
+
 											<!-- Specializations List -->
 											<div class="service-list">
 												<h4>Specializations</h4>
@@ -151,133 +152,133 @@
 									</div>
 								</div>
 								<!-- /Overview Content -->
-								
+
 								<!-- Locations Content -->
 								<div role="tabpanel" id="doc_locations" class="tab-pane fade">
-								
+
 									<!-- Location List -->
-										<div class="row align-items-stretch">
-										
-											<!-- Business Hours Widget -->
-											<div class="col-md-7 mb-4">
-												<iframe
-														width="600"
-														height="450"
-														style="border:0"
-														loading="lazy"
-														allowfullscreen
-														referrerpolicy="no-referrer-when-downgrade"
-														th:src="@{https://www.google.com/maps/embed/v1/place(key='AIzaSyCF6_tASSd0Q_9be0r5TOF9vztJIpleZes',q=${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country})}">
-												</iframe>
-											</div>
-											<!-- /Business Hours Widget -->
-											
-											<!-- Clinic Content -->
-											<div class="col-md-5 mb-4">
-												<div class="clinic-content mb-4">
-													<h4 class="clinic-name" th:text="${doctor?.clinic?.name}">Smile Cute Dental Care Center</h4>
-													<p class="doc-speciality" th:text="${doctor?.clinic?.specialities}">MDS - Periodontology and Oral Implantology, BDS</p>
-													<div class="clinic-details mb-0">
-														<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}">2286  Sundown Lane, Austin, Texas 78749, USA</span></h5>
-														<ul>
-															<li>
-																<a href="assets/img/features/feature-01.jpg" data-fancybox="gallery2">
-																	<img src="assets/img/features/feature-01.jpg" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="assets/img/features/feature-02.jpg" data-fancybox="gallery2">
-																	<img src="assets/img/features/feature-02.jpg" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="assets/img/features/feature-03.jpg" data-fancybox="gallery2">
-																	<img src="assets/img/features/feature-03.jpg" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="assets/img/features/feature-04.jpg" data-fancybox="gallery2">
-																	<img src="assets/img/features/feature-04.jpg" alt="Feature Image">
-																</a>
-															</li>
-														</ul>
-													</div>
-													
+									<div class="row align-items-stretch">
+
+										<!-- Business Hours Widget -->
+										<div class="col-md-7 mb-4">
+											<iframe
+													width="600"
+													height="450"
+													style="border:0"
+													loading="lazy"
+													allowfullscreen
+													referrerpolicy="no-referrer-when-downgrade"
+													th:src="@{https://www.google.com/maps/embed/v1/place(key='AIzaSyCF6_tASSd0Q_9be0r5TOF9vztJIpleZes',q=${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country})}">
+											</iframe>
+										</div>
+										<!-- /Business Hours Widget -->
+
+										<!-- Clinic Content -->
+										<div class="col-md-5 mb-4">
+											<div class="clinic-content mb-4">
+												<h4 class="clinic-name" th:text="${doctor?.clinic?.name}">Smile Cute Dental Care Center</h4>
+												<p class="doc-speciality" th:text="${doctor?.clinic?.specialities}">MDS - Periodontology and Oral Implantology, BDS</p>
+												<div class="clinic-details mb-0">
+													<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}">2286  Sundown Lane, Austin, Texas 78749, USA</span></h5>
+													<ul>
+														<li>
+															<a href="assets/img/features/feature-01.jpg" data-fancybox="gallery2">
+																<img src="assets/img/features/feature-01.jpg" alt="Feature Image">
+															</a>
+														</li>
+														<li>
+															<a href="assets/img/features/feature-02.jpg" data-fancybox="gallery2">
+																<img src="assets/img/features/feature-02.jpg" alt="Feature Image">
+															</a>
+														</li>
+														<li>
+															<a href="assets/img/features/feature-03.jpg" data-fancybox="gallery2">
+																<img src="assets/img/features/feature-03.jpg" alt="Feature Image">
+															</a>
+														</li>
+														<li>
+															<a href="assets/img/features/feature-04.jpg" data-fancybox="gallery2">
+																<img src="assets/img/features/feature-04.jpg" alt="Feature Image">
+															</a>
+														</li>
+													</ul>
 												</div>
 
-												<div class="widget business-widget">
-													<div class="widget-content">
-														<div class="listing-hours">
-															<div class="listing-day current">
-																<div class="day">Today <span>5 Nov 2019</span></div>
-																<div class="time-items">
-																	<span class="open-status"><span class="badge bg-success-light">Open Now</span></span>
-																	<span class="time">07:00 AM - 09:00 PM</span>
-																</div>
+											</div>
+
+											<div class="widget business-widget">
+												<div class="widget-content">
+													<div class="listing-hours">
+														<div class="listing-day current">
+															<div class="day">Today <span>5 Nov 2019</span></div>
+															<div class="time-items">
+																<span class="open-status"><span class="badge bg-success-light">Open Now</span></span>
+																<span class="time">07:00 AM - 09:00 PM</span>
 															</div>
-															<div class="listing-day">
-																<div class="day">Monday</div>
-																<div class="time-items">
-																	<span class="time">07:00 AM - 09:00 PM</span>
-																</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Monday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
 															</div>
-															<div class="listing-day">
-																<div class="day">Tuesday</div>
-																<div class="time-items">
-																	<span class="time">07:00 AM - 09:00 PM</span>
-																</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Tuesday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
 															</div>
-															<div class="listing-day">
-																<div class="day">Wednesday</div>
-																<div class="time-items">
-																	<span class="time">07:00 AM - 09:00 PM</span>
-																</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Wednesday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
 															</div>
-															<div class="listing-day">
-																<div class="day">Thursday</div>
-																<div class="time-items">
-																	<span class="time">07:00 AM - 09:00 PM</span>
-																</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Thursday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
 															</div>
-															<div class="listing-day">
-																<div class="day">Friday</div>
-																<div class="time-items">
-																	<span class="time">07:00 AM - 09:00 PM</span>
-																</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Friday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
 															</div>
-															<div class="listing-day">
-																<div class="day">Saturday</div>
-																<div class="time-items">
-																	<span class="time">07:00 AM - 09:00 PM</span>
-																</div>
+														</div>
+														<div class="listing-day">
+															<div class="day">Saturday</div>
+															<div class="time-items">
+																<span class="time">07:00 AM - 09:00 PM</span>
 															</div>
-															<div class="listing-day closed">
-																<div class="day">Sunday</div>
-																<div class="time-items">
-																	<span class="time"><span class="badge bg-danger-light">Closed</span></span>
-																</div>
+														</div>
+														<div class="listing-day closed">
+															<div class="day">Sunday</div>
+															<div class="time-items">
+																<span class="time"><span class="badge bg-danger-light">Closed</span></span>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-											<!-- /Clinic Content -->
-											
-											
-
 										</div>
+										<!-- /Clinic Content -->
+
+
+
+									</div>
 									<!-- /Location List -->
 
 								</div>
 								<!-- /Locations Content -->
-								
+
 								<!-- Reviews Content -->
 								<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
-								
+
 									<!-- Review Listing -->
 									<div class="widget review-listing">
 										<ul class="comments-list">
-										
+
 											<!-- Comment List -->
 											<li>
 												<div class="comment">
@@ -303,10 +304,10 @@
 														</p>
 													</div>
 												</div>
-												
+
 											</li>
 											<!-- /Comment List -->
-											
+
 											<!-- Comment List -->
 											<li>
 												<div class="comment">
@@ -333,9 +334,9 @@
 												</div>
 											</li>
 											<!-- /Comment List -->
-											
+
 										</ul>
-										
+
 										<!-- Show All -->
 										<div class="all-feedback text-center">
 											<a href="#" class="btn btn-primary btn-sm">
@@ -343,14 +344,14 @@
 											</a>
 										</div>
 										<!-- /Show All -->
-										
+
 									</div>
 									<!-- /Review Listing -->
-								
+
 									<!-- Write Review -->
 									<div class="write-review">
 										<h4>Write a review for <strong>Dr. Darren Elder</strong></h4>
-										
+
 										<!-- Write Review Form -->
 										<form class="form-review">
 											<div class="form-group">
@@ -385,8 +386,8 @@
 											<div class="form-group">
 												<label>Your review</label>
 												<textarea id="review_desc" maxlength="100" class="form-control"></textarea>
-											  
-											  <div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
+
+												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
 											</div>
 											<p class="recommend-btn my-2">
 												<span>Recommend?</span>
@@ -404,39 +405,40 @@
 											</div>
 										</form>
 										<!-- /Write Review Form -->
-										
+
 									</div>
 									<!-- /Write Review -->
-						
+
 								</div>
 								<!-- /Reviews Content -->
-								
+
 							</div>
 						</div>
 					</div>
 					<!-- /Doctor Details Tab -->
 
 				</div>
-			</div>		
+			</div>
 			<!-- /Page Content -->
-		   
+
 		</div>
 		<!-- /Main Wrapper -->
-		
+
 		<!-- jQuery -->
 		<script src="/assets/js/jquery.min.js"></script>
-		
+
 		<!-- Bootstrap Core JS -->
 		<script src="/assets/js/popper.min.js"></script>
 		<script src="/assets/js/bootstrap.min.js"></script>
-		
+
 		<!-- Fancybox JS -->
 		<script src="/assets/plugins/fancybox/jquery.fancybox.min.js"></script>
-		
+
 		<!-- Custom JS -->
 		<script src="/assets/js/script.js"></script>
-		
-	</body>
+	</div>
+
+</body>
 
 <!-- Mirrored from doccure-html.dreamguystech.com/template/doctor-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 22 Mar 2021 19:28:34 GMT -->
 </html>

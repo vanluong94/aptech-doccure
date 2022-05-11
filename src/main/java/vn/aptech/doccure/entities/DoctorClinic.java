@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +12,6 @@ import vn.aptech.doccure.utils.JSONUtils;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,12 +76,14 @@ public class DoctorClinic implements Serializable {
     private List<String> deletedImages = new ArrayList<>();
 
     public void parseImages() {
-        ObjectMapper jsonMapper = new ObjectMapper();
-        try {
-            this.parsedImages = jsonMapper.readValue(images, new TypeReference<List<String>>() {
-            });
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        if (images != null && ! images.isEmpty()) {
+            ObjectMapper jsonMapper = new ObjectMapper();
+            try {
+                this.parsedImages = jsonMapper.readValue(images, new TypeReference<List<String>>() {
+                });
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
     }
 
