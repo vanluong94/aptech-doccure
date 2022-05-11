@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.UserService;
 
@@ -22,7 +23,7 @@ public class DoctorController {
     public ModelAndView profile(@PathVariable("id") Long id) {
         ModelAndView modelAndView;
         Optional<User> user = userService.findById(id);
-        if (user.isPresent()) {
+        if (user.isPresent() && user.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
             modelAndView = new ModelAndView("/pages/doctor/doctor-profile");
             user.get().getClinic().parseImages();
             modelAndView.addObject("doctor", user.get());
