@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.entities.DoctorClinic;
-import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.DoctorClinicRepository;
-import vn.aptech.doccure.service.SpecialityService;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
 
@@ -25,7 +23,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/dashboard")
-//@Secured("ROLE_DOCTOR")
+@Secured("ROLE_DOCTOR")
 public class DoctorDashboardController {
 
     @Autowired
@@ -57,9 +55,7 @@ public class DoctorDashboardController {
 //            clinic.setCountry("USA");
 //            clinic.setPostalCode(78749);
         }
-        if (clinic.getImages() != null) {
-            clinic.parseImages();
-        }
+        clinic.parseImages();
         modelAndView.addObject("doctor", doctor.get());
         modelAndView.addObject("clinic", clinic);
         return modelAndView;
@@ -70,19 +66,18 @@ public class DoctorDashboardController {
         if (!result.hasErrors()) {
 
             User doctor = (User) auth.getPrincipal();
-            if (doctor.getClinic().getImages() != null) {
-                doctor.getClinic().parseImages();
-            }
+
+            doctor.getClinic().parseImages();
             List<String> images = doctor.getClinic().getParsedImages();
 
-                for (String img : clinic.getDeletedImages()) {
-                    images.remove(img);
-                }
+            for (String img : clinic.getDeletedImages()) {
+                images.remove(img);
+            }
 
-                for (MultipartFile image : clinic.getPostedImages()) {
-                    String filename = storageService.storeUnderRandomName(image, "clinic_" + doctor.getId());
-                    images.add(filename);
-                }
+            for (MultipartFile image : clinic.getPostedImages()) {
+                String filename = storageService.storeUnderRandomName(image, "clinic_" + doctor.getId());
+                images.add(filename);
+            }
 
             clinic.setParsedImages(images);
             clinic.syncParsedImages();

@@ -1,6 +1,7 @@
 package vn.aptech.doccure.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,10 +15,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -63,31 +61,39 @@ public class User implements UserDetails {
     @Column(name = "avatar")
     private String avatar;
 
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    private Set<Review> doctorReviews = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private Set<Review> patientReviews = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    private Set<Appointment> appointments = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("time_start ASC")
+    private Set<AppointmentDefault> appointmentsDefault = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private Set<Appointment> patientAppointments = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "patient")
+    private Set<PatientBio> patientBios = new LinkedHashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new LinkedHashSet<>();
+
     @Transient
     private MultipartFile avatarMultipartFile;
 
     @Column(name = "gender")
     private Short gender;
 
-    //    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-//    private Set<Review> doctorReviews = new LinkedHashSet<>();
-//
-//    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
-//    private Set<Review> patientReviews = new LinkedHashSet<>();
-//
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Set<Appointment> appointments;
-
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy("timeStart ASC")
-    private Set<AppointmentDefault> appointmentDefaults;
-//
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "doctor_speciality", joinColumns = {@JoinColumn(name = "doctor_id")}, inverseJoinColumns = {@JoinColumn(name = "speciality_id")})
     private Set<Speciality> specialities;
-    //
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "doctor_services", joinColumns = {@JoinColumn(name = "doctor_id")}, inverseJoinColumns = {@JoinColumn(name = "service_id")})
     private Set<Service> services;
@@ -97,16 +103,6 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private DoctorBio bio;
-    //
-//    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
-//    private Set<Appointment> patientAppointments = new LinkedHashSet<>();
-//
-//    @OneToMany(mappedBy = "patient")
-//    private Set<PatientBio> patientBios = new LinkedHashSet<>();
-//
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
 
     @CreatedDate
     private LocalDateTime createdDate = LocalDateTime.now();
@@ -142,20 +138,20 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled == 1;
+        return this.getEnabled() == 1;
     }
 
     public boolean hasRole(String role) {
-//        for (Role uRole : roles) {
-//            if (uRole.getName().equals(role)) {
-//                return true;
-//            }
-//        }
+        for (Role uRole : this.getRoles()) {
+            if (uRole.getName().equals(role)) {
+                return true;
+            }
+        }
         return false;
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        return this.getFirstName() + " " + this.getLastName();
     }
 
     public String getTheAvatar() {
@@ -169,7 +165,7 @@ public class User implements UserDetails {
                 } else {
                     filename = "avatar-doctor-female.png";
                 }
-            } else if (hasRole(Constants.Roles.ROLE_PATIENT)) {
+            } else if (this.hasRole(Constants.Roles.ROLE_PATIENT)) {
                 if (gender != null && gender.equals(Constants.Genders.MALE)) {
                     filename = "avatar-patient-male.png";
                 } else {

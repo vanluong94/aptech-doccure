@@ -2,7 +2,6 @@ package vn.aptech.doccure.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,7 +28,8 @@ import vn.aptech.doccure.storage.StorageService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -62,23 +62,8 @@ public class UserController {
         return services;
     }
 
-
-    @GetMapping("dashboard")
-    @Secured({"ROLE_ADMIN", "ROLE_DOCTOR", "ROLE_PATIENT"})
-    public String dashboard(HttpServletRequest request) {
-        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
-            return "pages/dashboard/doctorDashboard";
-        } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
-            return "pages/dashboard/patientDashboard";
-        } else if (request.isUserInRole(Constants.Roles.ROLE_ADMIN)) {
-            return "admin/pages/dashboard";
-        }
-
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
-
     @GetMapping("dashboard/profile-settings")
-//    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     public ModelAndView profile(@ModelAttribute("doctor") User user, Principal principal) {
 //        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
         Authentication authentication = (Authentication) principal;
@@ -86,9 +71,6 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
         Optional<User> newUser = userService.findByUsername(doctor.getUsername());
         if (newUser.isPresent()) {
-            if (newUser.get().getClinic().getImages() != null) {
-                newUser.get().getClinic().parseImages();
-            }
             modelAndView.addObject("doctor", newUser.get());
         } else {
             // Ban chua dang nhap hoac tai khoan khong ton tai
@@ -134,26 +116,6 @@ public class UserController {
                 System.out.println("speciality: --------------- " + speciality.getId() + "/" + speciality.getName());
             });
 
-            if (doctor.getClinic().getImages() != null) {
-                doctor.getClinic().parseImages();
-            }
-            List<String> images = doctor.getClinic().getParsedImages();
-
-            for (String img : doctor.getClinic().getDeletedImages()) {
-                images.remove(img);
-            }
-            System.out.println("sizeeeeeeeeeeeeeeeeeeeeeeee: " + doctor.getClinic().getPostedImages());
-            for (MultipartFile image : doctor.getClinic().getPostedImages()) {
-                String filename = storageService.storeUnderRandomName(image, "clinic_" + doctor.getId());
-                images.add(filename);
-            }
-
-            doctor.getClinic().setParsedImages(images);
-            doctor.getClinic().syncParsedImages();
-
-//            doctor.getClinic().setDoctor(doctor);
-            doctor.getClinic().setDoctorId(doctor.getId());
-//
 //            doctor.getBio().setDoctor(doctor);
             doctor.getBio().setDoctorId(doctor.getId());
             User saveUser = userService.save(doctor);
@@ -168,6 +130,32 @@ public class UserController {
             e.printStackTrace();
         }
         return "redirect:/dashboard/profile";
+    }
+
+    @GetMapping("dashboard")
+    @Secured({"ROLE_ADMIN", "ROLE_DOCTOR", "ROLE_PATIENT"})
+    public String dashboard(HttpServletRequest request) {
+        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
+            return "pages/dashboard/doctorDashboard";
+        } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
+            return "pages/dashboard/patientDashboard";
+        } else if (request.isUserInRole(Constants.Roles.ROLE_ADMIN)) {
+            return "admin/pages/dashboard";
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("dashboard/profile")
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    public String profile(HttpServletRequest request) {
+        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
+            return "pages/doctorDashboard";
+        } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
+            return "pages/patientDashboard";
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     private String getPrincipal() {

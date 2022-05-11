@@ -5,32 +5,7 @@
 	  layout:decorate="~{layout}"
 >
 <head>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
-	<style>
-		#clinic_location_map {
-			width: 980px;
-			height: 500px;
-		}
-		.dropzone {
-			padding: 5em 2em;
-		}
 
-		.dropzone > input[type="file"] {
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			cursor: pointer;
-			/* opacity: 0; */
-		}
-
-		.dropzone .dropzone-message {
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-		}
-	</style>
 </head>
 <body>
 	<div class="page-content" layout:fragment="layoutContent">
@@ -161,89 +136,6 @@
 					</div>
 					<!-- /About Me -->
 
-					<!-- Clinic Info -->
-					<div class="card">
-						<div class="card-body">
-							<h4 class="card-title">Clinic Info</h4>
-							<div class="row form-row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>Clinic Name <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" th:field="*{clinic.name}" required>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>Clinic Specializations <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" th:field="*{clinic.specialities}" required>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>Address Line 1 <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" th:field="*{clinic.addressLine1}" required>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="control-label">Address Line 2</label>
-										<input type="text" class="form-control" th:field="*{clinic.addressLine2}">
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="control-label">City <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" th:field="*{clinic.city}" required>
-									</div>
-								</div>
-
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="control-label">State / Province <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" th:field="*{clinic.state}" required>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="control-label">Country <span class="text-danger">*</span></label>
-										<input type="text" class="form-control" th:field="*{clinic.country}" required>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label class="control-label">Postal Code</label>
-										<input type="text" class="form-control" th:field="*{clinic.postalCode}">
-									</div>
-								</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										<label class="control-label">Location</label>
-										<small class="text-muted font-italic">(Drop the pin where your clinic is located)</small>
-										<div id="clinic_location_map"></div>
-										<input type="hidden" id="clinicInputLat" th:field="*{clinic.lat}">
-										<input type="hidden" id="clinicInputLong" th:field="*{clinic.lng}">
-									</div>
-								</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										<label>Clinic Images</label>
-										<div class="dropzone position-relative">
-											<input type="file" th:field="*{clinic.postedImages}" multiple accept=".png,.jpeg,.jpg">
-											<div class="dropzone-message display-5 position-absolute">Drop files here to upload</div>
-										</div>
-									</div>
-									<div class="upload-wrap" id="clinicUploadWrap">
-										<div class="upload-images uploaded-file" th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
-											<img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Clinic Image">
-											<a href="javascript:void(0);" class="btn btn-icon btn-danger btn-sm btn-rm"><i class="far fa-trash-alt"></i></a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- /Clinic Info -->
-
 					<!-- Services and Specialization -->
 					<div class="card services-card">
 						<div class="card-body">
@@ -286,74 +178,6 @@
 				$('.specialities-multiple').select2();
 				$('.services-multiple').select2();
 			});
-		</script>
-		<script src="/assets/js/doctor-clinic.js"></script>
-		<script>
-			const clinicForm = document.getElementById('doctorProfileForm');
-			const clinicFiles = {
-				files: [],
-				wrap: document.getElementById('clinicUploadWrap'),
-				renderPreview() {
-					for (let i in this.files) {
-						let file = this.files[i];
-						let imgUrl = window.URL.createObjectURL(file);
-
-						let imgDelBtn = document.createElement('a');
-						imgDelBtn.href = 'javascript:void(0);';
-						imgDelBtn.classList.add('btn', 'btn-icon', 'btn-danger', 'btn-sm')
-						imgDelBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
-
-						let imgItem = document.createElement('div');
-						imgItem.classList.add('upload-images');
-						imgItem.innerHTML = `<img src="${imgUrl}" alt="Upload Image">`;
-						imgItem.appendChild(imgDelBtn);
-
-						let input = document.createElement('input');
-						let container = new DataTransfer();
-						container.items.add(file);
-
-						input.name = `clinic.postedImages[${i}]`;
-						input.type = 'file';
-						input.files = container.files;
-						input.classList.add('sr-only', 'sr-only-focusable');
-
-						clinicForm.appendChild(input);
-
-						imgDelBtn.onclick = () => {
-							imgItem.remove();
-							this.files = this.files.filter((_file) => _file != file)
-							clinicForm.querySelector(`input[name="postedImages[${i}]"]`).remove();
-						}
-
-						this.wrap.appendChild(imgItem);
-					}
-				},
-			};
-
-			clinicFiles.wrap.querySelectorAll('.uploaded-file').forEach((el) => {
-				let removeBtn = el.querySelector('.btn-rm')
-				if (removeBtn) {
-					removeBtn.onclick = (e) => {
-						e.preventDefault();
-						el.remove();
-
-						let input = document.createElement('input');
-						input.type = 'hidden';
-						input.name = 'deletedImages[]';
-						input.value = el.querySelector('img').dataset.image;
-						clinicForm.appendChild(input);
-					}
-				}
-			})
-
-			document.getElementById('clinic.postedImages').onchange = function() {
-				for (let file of this.files) {
-					clinicFiles.files.push(file);
-				}
-				clinicFiles.renderPreview();
-
-				this.value = ''; //reset files
-			}
 		</script>
 	</th:block>
 </body>
