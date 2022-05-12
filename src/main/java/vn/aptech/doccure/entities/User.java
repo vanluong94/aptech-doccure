@@ -1,5 +1,6 @@
 package vn.aptech.doccure.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,6 +22,7 @@ import java.util.*;
 @Setter
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,8 +72,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy("time_start ASC")
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = AppointmentDefault.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OrderBy("weekday ASC, time_start ASC")
     private Set<AppointmentDefault> appointmentsDefault = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)

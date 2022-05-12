@@ -1,10 +1,7 @@
 package vn.aptech.doccure.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -19,7 +16,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppointmentDefault {
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", insertable = false, updatable = false)
     @JsonIgnore
     private User doctor;
@@ -59,6 +56,22 @@ public class AppointmentDefault {
         str.append("[status = " + this.getStatus() + "]");
         str.append("[created_at = " + this.getCreatedAt() + "]");
         return str.toString();
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        if (another instanceof AppointmentDefault) {
+            AppointmentDefault anotherApmtDefault = (AppointmentDefault) another;
+            if (
+                    anotherApmtDefault.getDoctorId().equals(this.getDoctorId())
+                    && anotherApmtDefault.getWeekday().equals(this.getWeekday())
+                    && anotherApmtDefault.getTimeStart().equals(this.getTimeStart())
+                    && anotherApmtDefault.getTimeEnd().equals(this.getTimeEnd())
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @JsonIgnore
