@@ -3,6 +3,7 @@ package vn.aptech.doccure.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.User;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
     List<User> findTop10ByOrderByIdDesc();
+
+    List<User> findAllByGenderInAndSpecialitiesIn(List<Short> gender, List<Speciality> specialities);
 }

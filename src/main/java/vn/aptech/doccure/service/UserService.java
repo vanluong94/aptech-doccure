@@ -1,6 +1,7 @@
 package vn.aptech.doccure.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.User;
 
 import java.util.List;
@@ -24,4 +25,7 @@ public interface UserService extends UserDetailsService {
     User getCurrentUser();
 
     List<User> findTop10ByOrderByIdDesc();
+
+    List<User> findAllByGenderInAndSpecialitiesIn(List<Short> gender, List<Speciality> specialities);
+
 }

@@ -1,12 +1,20 @@
 package vn.aptech.doccure.request;
 
+import vn.aptech.doccure.entities.Speciality;
+
+import javax.validation.constraints.Null;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class SearchDoctorRequest {
+
+    @Null
     private Date timeSlot;
-    private Boolean gender;
-    private List<Long> specialist;
+    @Null
+    private List<Short> gender;
+    @Null
+    private List<Speciality> specialist = new ArrayList<>();
     private String sort;
 
     public Date getTimeSlot() {
@@ -17,19 +25,19 @@ public class SearchDoctorRequest {
         this.timeSlot = timeSlot;
     }
 
-    public Boolean getGender() {
+    public List<Short> getGender() {
         return gender;
     }
 
-    public void setGender(Boolean gender) {
+    public void setGender(List<Short> gender) {
         this.gender = gender;
     }
 
-    public List<Long> getSpecialist() {
+    public List<Speciality> getSpecialist() {
         return specialist;
     }
 
-    public void setSpecialist(List<Long> specialist) {
+    public void setSpecialist(List<Speciality> specialist) {
         this.specialist = specialist;
     }
 
