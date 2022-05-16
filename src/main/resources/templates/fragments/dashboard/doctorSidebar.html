@@ -9,10 +9,10 @@
         <div class="widget-profile pro-widget-content">
             <div class="profile-info-widget">
                 <a href="#" class="booking-doc-img">
-                    <img th:src="${user.getTheAvatar()}" alt="User Image">
+                    <img th:src="${user.theAvatar}" alt="User Image">
                 </a>
                 <div class="profile-det-info">
-                    <h3 th:text="${user.getFullName()}" class="mb-0"></h3>
+                    <h3 th:text="${user.fullName}" class="mb-0"></h3>
                     <p th:text="${'@' + user.username}" class="small text-secondary"></p>
                     <div class="patient-details">
                         <h5 class="mb-0">BDS, MDS - Oral & Maxillofacial Surgery</h5>
