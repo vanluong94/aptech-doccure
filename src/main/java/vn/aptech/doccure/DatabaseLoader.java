@@ -9,15 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Role;
-import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.RoleService;
 import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.UserService;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
