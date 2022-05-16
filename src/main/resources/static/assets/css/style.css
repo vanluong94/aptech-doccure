@@ -4106,6 +4106,7 @@ html.menu-opened body {
     padding: 20px;
 }
 .time-slot ul {
+    display: flex;
     list-style: none;
     margin-right: -5px;
     margin-left: -5px;
