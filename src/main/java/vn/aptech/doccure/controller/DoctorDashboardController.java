@@ -19,7 +19,6 @@ import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -43,7 +42,6 @@ public class DoctorDashboardController {
     public ModelAndView clinicPage(Authentication auth) {
         ModelAndView modelAndView = new ModelAndView("/pages/dashboard/doctorClinic");
         User user = (User) auth.getPrincipal();
-        Optional<User> doctor = userService.findById(user.getId());
         DoctorClinic clinic = user.getClinic();
         if (clinic == null) {
             clinic = new DoctorClinic();
@@ -56,7 +54,6 @@ public class DoctorDashboardController {
 //            clinic.setPostalCode(78749);
         }
         clinic.parseImages();
-        modelAndView.addObject("doctor", doctor.get());
         modelAndView.addObject("clinic", clinic);
         return modelAndView;
     }
