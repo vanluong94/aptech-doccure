@@ -30,11 +30,9 @@ public class AppointmentController {
     @GetMapping("/getByDoctor")
     @ResponseBody
     @Transactional
-    public ResponseEntity<Object> getByDoctor(@Param("doctorId") Long doctorId, @Param("offset") Integer offset, @Param("length") Integer length, Authentication authentication) {
+    public ResponseEntity<Object> getByDoctor(@RequestParam Long doctorId, @RequestParam Integer offset, @RequestParam Integer length, Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
-
-        System.out.println("Check user role: " + user.hasRole("ROLE_PATIENT"));
 
         Map<String, Object> respData = new HashMap<>();
 
