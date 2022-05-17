@@ -109,6 +109,7 @@ public class DoctorController {
 
         appointment.setPatient(patient);
         appointment.setStatus(Appointment.STATUS.PENDING);
+        appointment.setBookedDate(LocalDateTime.now());
 
         appointmentRepository.saveAndFlush(appointment);
 

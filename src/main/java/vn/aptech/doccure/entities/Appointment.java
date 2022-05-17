@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -36,11 +38,11 @@ import java.util.Set;
 public class Appointment implements Serializable {
 
     public static interface STATUS {
-        Short QUEUE = -1;
-        Short PENDING = 0;
-        Short CONFIRMED = 1;
-        Short COMPLETED = 2;
-        Short CANCELED = 3;
+        short QUEUE = -1;
+        short PENDING = 0;
+        short CONFIRMED = 1;
+        short COMPLETED = 2;
+        short CANCELED = 3;
     }
 
     @Id
@@ -71,11 +73,24 @@ public class Appointment implements Serializable {
     @Column(name = "status", nullable = false)
     private Short status = STATUS.QUEUE;
 
-    public Appointment (Long id, Long doctorId, Long patientId, LocalDateTime timeStart, LocalDateTime timeEnd, Short status) {
+    @Column(name = "booked_date", columnDefinition = "TIMESTAMP NULL")
+    private LocalDateTime bookedDate;
+
+    @Column(name = "created_date")
+    @CreatedDate
+    private LocalDateTime createdDate = LocalDateTime.now();
+
+    @Column(name = "modified_date")
+    @LastModifiedDate
+    private LocalDateTime modifiedDate = LocalDateTime.now();
+
+    public Appointment (Long id, Long doctorId, Long patientId, LocalDateTime timeStart, LocalDateTime timeEnd, Short status, LocalDateTime bookedDate, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
         this.status = status != null ? status : STATUS.QUEUE;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
 
         this.doctor = new User();
         this.doctor.setId(doctorId);

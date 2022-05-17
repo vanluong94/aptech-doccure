@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>My Appointments - Doccure</title>
+</head>
+<body>
+
+<div class="page-content" layout:fragment="layoutContent">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-12">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Appointments</li>
+                        </ol>
+                    </nav>
+                    <h2 class="breadcrumb-title">Appointments</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Breadcrumb -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <!-- Profile Sidebar -->
+                <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+                    <div th:replace="fragments/dashboard/patientSidebar :: sidebar"></div>
+                </div>
+                <!-- / Profile Sidebar -->
+
+                <div class="col-md-7 col-lg-8 col-xl-9">
+                    <table id="appointmentsTable" class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th>Doctor</th>
+                            <th>Appt Date</th>
+                            <th>Starting Time</th>
+                            <th>Ending Time</th>
+                            <th>Booking Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+</div>
+
+<div layout:fragment="layoutExtra"></div>
+<div layout:fragment="customScripts">
+    <!-- <script src="assets/plugins/datatables/datatables.min.js"></script> -->
+    <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script>
+			const $appointmentsTable = jQuery('#appointmentsTable').DataTable({
+				searching: false,
+				bInfo: false,
+				bLengthChange: false,
+				dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
+				ordering: false,
+				pageLength: 5,
+				processing: true,
+				serverSide: true,
+				columnDefs: [
+					{ "name": "doctor",   "targets": 0 },
+					{ "name": "apmtDate",  "targets": 1 },
+					{ "name": "timeStart",  "targets": 2 },
+					{ "name": "timeEnd", "targets": 3 },
+					{ "name": "bookingDate",  "targets": 4 },
+					{ "name": "status",  "targets": 5 },
+					{ "name": "actions",    "targets": 6 }
+				],
+				ajax: {
+					url: '/ajax/appointments/mine',
+					data: function(d) {
+						var info = $('#appointmentsTable').DataTable().page.info();
+						return {
+							page: info.page,
+							length: d.length,
+						};
+					},
+					dataSrc: function(resp){
+						return resp.data.map((row) => {
+                            // return Object.keys(row).map((key) => {
+                            //     if (key == 'timeStart' || key == 'timeEnd') {
+                            //         return `<span class="text-info">${row[key]}</span>`;
+                            //     } else {
+                            //         return row[key];
+                            //     }
+                            // })
+                            return Object.values(row)
+                        });
+					}
+				},
+				drawCallback(settings, json) {
+
+					let $pagination = $('#appointmentsTable_paginate')
+					let $pageItemsWrapper = $pagination.find('> span')
+
+					$pagination.addClass('pagination');
+
+					$pageItemsWrapper.find('a').insertAfter($pageItemsWrapper)
+					$pageItemsWrapper.remove();
+
+					$pagination.find('a').each(function(i,e){
+						let $e = $(e);
+						$e.addClass('page-link btn rounded-0 text-sm');
+						$e.wrap(`<span class="page-item ${$e.hasClass('current') ? 'active' : ''}"></span>`)
+					});
+
+				}
+			});
+		</script>
+</div>
+
+</body>
+</html>

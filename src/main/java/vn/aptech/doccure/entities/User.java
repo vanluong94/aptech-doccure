@@ -156,6 +156,9 @@ public class User implements UserDetails {
         return this.getFirstName() + " " + this.getLastName();
     }
 
+    public String getDoctorTitle() {
+        return "Dr. " + getFullName();
+    }
     public String getTheAvatar() {
         if (avatar != null && !avatar.isEmpty()) {
             return avatar;
