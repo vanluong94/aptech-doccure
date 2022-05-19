@@ -10,7 +10,7 @@ public interface Constants {
     }
 
     interface Genders {
-        int FEMALE = 0;
-        int MALE = 1;
+        short FEMALE = 0;
+        short MALE = 1;
     }
 }

@@ -149,8 +149,8 @@
                                                     <li th:each="weekday,weekdayStat : ${weekdays}">
                                                         <th:block th:each="slot,slotStat : ${weekday.slots}">
                                                             <input th:if="${slot.past || slot.booked}" type="radio" class="slot-option" disabled>
-                                                            <input th:unless="${slot.past || slot.booked}" type="radio" th:value="${slot.id}" th:id="${'appointment_' + slot.id}" name="appointmentId" class="slot-option" required>
-                                                            <label class="timing" th:classappend="${!slot.past}? 'btn'" th:for="${'appointment_' + slot.id}">
+                                                            <input th:unless="${slot.past || slot.booked}" type="radio" th:value="${slot.id}" th:id="${'time_slot_' + slot.id}" name="timeSlotId" class="slot-option" required>
+                                                            <label class="timing" th:classappend="${!slot.past}? 'btn'" th:for="${'time_slot_' + slot.id}">
                                                                 <span th:text="${slot.timeText}"></span>
                                                             </label>
                                                         </th:block>
@@ -224,9 +224,9 @@
                                         if (slot.past || slot.booked) {
                                             bookingSlotsOutput += `<input type="radio" class="slot-option" disabled>`;
                                         } else {
-                                            bookingSlotsOutput += `<input type="radio" value="${slot.id}" id="appointment_${slot.id}" name="appointmentId" class="slot-option" required>`;
+                                            bookingSlotsOutput += `<input type="radio" value="${slot.id}" id="time_slot_{slot.id}" name="timeSlotId" class="slot-option" required>`;
                                         }
-                                        bookingSlotsOutput += `<label class="timing ${slot.past ? 'btn' : ''}" for="appointment_${slot.id}"><span>${slot.timeText}</span></label>`;
+                                        bookingSlotsOutput += `<label class="timing ${slot.past ? 'btn' : ''}" for="time_slot_{slot.id}"><span>${slot.timeText}</span></label>`;
                                     }
                                     bookingSlotsOutput += '</li></div>';
 

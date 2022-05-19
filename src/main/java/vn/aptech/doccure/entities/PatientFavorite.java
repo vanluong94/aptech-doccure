@@ -1,17 +1,26 @@
 package vn.aptech.doccure.entities;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
-import java.time.Instant;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "patient_favorites")
 public class PatientFavorite {
     @EmbeddedId
     private PatientFavoriteId id;
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime default current_timestamp")
+    private LocalDateTime createdAt;
 }

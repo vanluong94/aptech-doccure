@@ -17,8 +17,6 @@ public class AppointmentUtils {
     public static String getStatusBadgeOutput(Appointment appointment) {
 
         switch (appointment.getStatus()) {
-            case Appointment.STATUS.QUEUE:
-                return "<span class=\"badge badge-pill bg-secondary text-light\">Confirm</span>";
             case Appointment.STATUS.PENDING:
                 return "<span class=\"badge badge-pill bg-warning-light\">Pending</span>";
             case Appointment.STATUS.CANCELED:

@@ -1,18 +1,27 @@
 package vn.aptech.doccure.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "appointment_logs")
 public class AppointmentLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "appointment_Id", nullable = false)
+    @JoinColumn(name = "appointment_id", nullable = false, foreignKey = @ForeignKey(name = "appointment_log_apmt_fk"))
     private Appointment appointment;
 
     @Lob
@@ -20,49 +29,10 @@ public class AppointmentLog {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "made_by", nullable = false)
+    @JoinColumn(name = "made_by", nullable = false, foreignKey = @ForeignKey(name = "appointment_log_user_fk"))
     private User madeBy;
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    @Column(name = "created_date", nullable = false, columnDefinition = "datetime default current_timestamp")
+    private LocalDateTime createdDate;
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public User getMadeBy() {
-        return madeBy;
-    }
-
-    public void setMadeBy(User madeBy) {
-        this.madeBy = madeBy;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 }

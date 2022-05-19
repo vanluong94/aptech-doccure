@@ -12,8 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Appointment;
+import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.AppointmentRepository;
+import vn.aptech.doccure.repository.TimeSlotRepository;
 import vn.aptech.doccure.service.UserService;
 
 import java.time.LocalDateTime;
@@ -30,6 +32,9 @@ public class DoctorController {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private TimeSlotRepository timeSlotRepository;
 
     @GetMapping("/profile/{id}")
     public ModelAndView profile(@PathVariable("id") Long id) {
@@ -67,7 +72,7 @@ public class DoctorController {
 
             weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
             weekdayData.put("textDate", theDate.format(dateFormatter));
-            weekdayData.put("slots", appointmentRepository.findAllByDoctorOnDate(user.get().getId(), theDate));
+            weekdayData.put("slots", timeSlotRepository.findAllByDoctorOnDate(user.get().getId(), theDate));
 
             weekdays.add(weekdayData);
         }
@@ -81,7 +86,7 @@ public class DoctorController {
 
     @Secured("ROLE_PATIENT")
     @PostMapping("profile/{id}/booking")
-    public String booking(Authentication authentication, @PathVariable("id") Long doctorId, @RequestParam Long appointmentId, RedirectAttributes redirect, Model model) {
+    public String booking(Authentication authentication, @PathVariable("id") Long doctorId, @RequestParam Long timeSlotId, RedirectAttributes redirect, Model model) {
 
         Optional<User> doctorResult = userService.findById(doctorId);
 
@@ -89,29 +94,30 @@ public class DoctorController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        Optional<Appointment> appointmentResult = appointmentRepository.findById(appointmentId);
-        if (!appointmentResult.isPresent()) {
+        Optional<TimeSlot> timeSlotResult = timeSlotRepository.findById(timeSlotId);
+        if (!timeSlotResult.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
+        User doctor = doctorResult.get();
         User patient = (User) authentication.getPrincipal();
-        Appointment appointment = appointmentResult.get();
+        TimeSlot timeSlot = timeSlotResult.get();
 
-        if (appointment.isBooked()) {
-            redirect.addFlashAttribute("errorMessage", "This appointment is already booked, please book another.");
-            model.addAttribute("id", appointment.getDoctor().getId());
+        if (timeSlot.isBooked()) {
+            redirect.addFlashAttribute("errorMessage", "This time slot is already booked, please book another.");
+            model.addAttribute("id", timeSlot.getDoctor().getId());
             return "redirect:/doctor/profile/{id}/booking";
-        } else if (appointment.isPast()) {
-            redirect.addFlashAttribute("errorMessage", "This appointment is not available to be booked anymore, please book another.");
-            model.addAttribute("id", appointment.getDoctor().getId());
+        } else if (timeSlot.isPast()) {
+            redirect.addFlashAttribute("errorMessage", "This time slot is not available to be booked anymore, please book another.");
+            model.addAttribute("id", timeSlot.getDoctor().getId());
             return "redirect:/doctor/profile/{id}/booking";
         }
 
-        appointment.setPatient(patient);
-        appointment.setStatus(Appointment.STATUS.PENDING);
-        appointment.setBookedDate(LocalDateTime.now());
+        Appointment appointment = new Appointment(doctor, patient, timeSlot, Appointment.STATUS.PENDING);
+        timeSlot.setAppointment(appointment);
+        appointment.setTimeSlot(timeSlot);
 
-        appointmentRepository.saveAndFlush(appointment);
+        timeSlotRepository.saveAndFlush(timeSlot);
 
         model.addAttribute("appointment", appointment);
         return "pages/doctor/doctor-booking-success";

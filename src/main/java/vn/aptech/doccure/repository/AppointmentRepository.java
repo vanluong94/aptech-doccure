@@ -15,14 +15,5 @@ import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-
-    @Query(
-            value = "SELECT * FROM appointments WHERE doctor_id = :doctorId AND CAST(time_start AS DATE) = CAST(:theDate AS DATE)",
-            nativeQuery = true
-    )
-    List<Appointment> findAllByDoctorOnDate(@Param("doctorId") Long doctorId, @Param("theDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime date);
-
-    List<Appointment> findAllByPatient(User patient);
-
     Page<Appointment> findAllByPatient(User patient, Pageable pageable);
 }

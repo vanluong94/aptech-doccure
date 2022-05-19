@@ -1,30 +1,33 @@
 package vn.aptech.doccure.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "appointments_default")
-@IdClass(AppointmentDefaultId.class)
+@Table(name = "time_slots_default")
+@IdClass(TimeSlotDefaultId.class)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppointmentDefault {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id", insertable = false, updatable = false)
-    @JsonIgnore
-    private User doctor;
+public class TimeSlotDefault {
 
     @Id
     @Column(name = "doctor_id", nullable = false)
-    @JsonIgnore
     private Long doctorId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "time_slot_default_user_fk"))
+    @JsonIgnore
+    private User doctor;
 
     @Id
     @Column(name = "weekday", nullable = false)
@@ -43,13 +46,13 @@ public class AppointmentDefault {
 
     @JsonIgnore
     @CreatedDate
-    @Column(name = "created_at")
-    private Instant createdAt = Instant.now();
+    @Column(name = "created_at", columnDefinition = "datetime default current_timestamp")
+    private LocalDateTime createdAt;
 
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("AppointmentDefault: ");
-        str.append("[doctor_id = " + this.getDoctorId() + "]");
+        str.append("[doctor_id = " + this.getDoctor().getId() + "]");
         str.append("[weekday = " + this.getWeekday() + "]");
         str.append("[time_start = " + (this.getTimeStart() != null ? this.getTimeStart().toString() : "null") + "]");
         str.append("[time_end = " + (this.getTimeEnd() != null ? this.getTimeEnd().toString() : "null") + "]");
@@ -60,10 +63,10 @@ public class AppointmentDefault {
 
     @Override
     public boolean equals(Object another) {
-        if (another instanceof AppointmentDefault) {
-            AppointmentDefault anotherApmtDefault = (AppointmentDefault) another;
+        if (another instanceof TimeSlotDefault) {
+            TimeSlotDefault anotherApmtDefault = (TimeSlotDefault) another;
             if (
-                    anotherApmtDefault.getDoctorId().equals(this.getDoctorId())
+                    anotherApmtDefault.getDoctor().getId().equals(this.getDoctor().getId())
                     && anotherApmtDefault.getWeekday().equals(this.getWeekday())
                     && anotherApmtDefault.getTimeStart().equals(this.getTimeStart())
                     && anotherApmtDefault.getTimeEnd().equals(this.getTimeEnd())

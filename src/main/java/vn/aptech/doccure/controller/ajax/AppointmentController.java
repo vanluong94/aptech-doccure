@@ -13,7 +13,8 @@ import vn.aptech.doccure.common.AjaxResponse;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.AppointmentRepository;
-import vn.aptech.doccure.service.AppointmentService;
+import vn.aptech.doccure.repository.TimeSlotRepository;
+import vn.aptech.doccure.service.TimeSlotService;
 import vn.aptech.doccure.utils.AppointmentUtils;
 import vn.aptech.doccure.utils.DateUtils;
 
@@ -29,14 +30,15 @@ public class AppointmentController {
     AppointmentRepository appointmentRepository;
 
     @Autowired
-    AppointmentService appointmentService;
+    TimeSlotService timeSlotService;
+
+    @Autowired
+    TimeSlotRepository timeSlotRepository;
 
     @GetMapping("/getByDoctor")
     @ResponseBody
     @Transactional
     public ResponseEntity<Object> getByDoctor(@RequestParam Long doctorId, @RequestParam Integer offset, @RequestParam Integer length, Authentication authentication) {
-
-        User user = (User) authentication.getPrincipal();
 
         Map<String, Object> respData = new HashMap<>();
 
@@ -56,7 +58,7 @@ public class AppointmentController {
 
             weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
             weekdayData.put("textDate", theDate.format(dateFormatter));
-            weekdayData.put("slots", appointmentService.findAllByDoctorOnDate(doctorId, theDate));
+            weekdayData.put("slots", timeSlotRepository.findAllByDoctorOnDate(doctorId, theDate));
 
             weekdays.add(weekdayData);
         }
@@ -83,10 +85,10 @@ public class AppointmentController {
             Map<String, Object> doctor = new HashMap<>();
 
             row.put("doctor", AppointmentUtils.getDoctorItemOutput(apmt.getDoctor()));
-            row.put("apmtDate", DateUtils.toStandardDate(apmt.getTimeStart()));
-            row.put("timeStart", "<span class=\"text-info\">" + DateUtils.toStandardTime(apmt.getTimeStart()) + "</span>");
-            row.put("timeEnd", "<span class=\"text-info\">" + DateUtils.toStandardTime(apmt.getTimeEnd()) + "</span>");
-            row.put("bookingDate", DateUtils.toStandardDate(apmt.getBookedDate()));
+            row.put("apmtDate", DateUtils.toStandardDate(apmt.getTimeSlot().getTimeStart()));
+            row.put("timeStart", "<span class=\"text-info\">" + DateUtils.toStandardTime(apmt.getTimeSlot().getTimeStart()) + "</span>");
+            row.put("timeEnd", "<span class=\"text-info\">" + DateUtils.toStandardTime(apmt.getTimeSlot().getTimeEnd()) + "</span>");
+            row.put("bookingDate", DateUtils.toStandardDate(apmt.getCreatedDate()));
             row.put("status", AppointmentUtils.getStatusBadgeOutput(apmt));
             row.put("action", "");
 
@@ -98,7 +100,7 @@ public class AppointmentController {
         response.put("recordsTotal", results.getTotalElements());
         response.put("recordsFiltered", results.getTotalElements());
 
-        return new ResponseEntity<Object>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

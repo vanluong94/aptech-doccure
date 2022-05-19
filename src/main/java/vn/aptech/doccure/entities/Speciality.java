@@ -27,7 +27,7 @@ public class Speciality implements Serializable {
     @Column(name = "slug", nullable = false, unique = true, length = 100)
     private String slug;
 
-    @Column(name = "image")
+    @Column(name = "image", columnDefinition = "json")
     private String image;
 
 //    @ManyToMany(targetEntity = vn.aptech.doccure.entities.User.class, mappedBy = "specialities")

@@ -2,43 +2,27 @@ package vn.aptech.doccure.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "appointments")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SqlResultSetMapping(
-        name = "AppointmentDTOMapping",
-        classes = {
-                @ConstructorResult(
-                        targetClass = Appointment.class,
-                        columns = {
-                                @ColumnResult(name = "id", type = Long.class),
-                                @ColumnResult(name = "doctor_id", type = Long.class),
-                                @ColumnResult(name = "patient_id", type = Long.class),
-                                @ColumnResult(name = "time_start", type = LocalDateTime.class),
-                                @ColumnResult(name = "time_end", type = LocalDateTime.class),
-                                @ColumnResult(name = "status", type = Short.class),
-                        }
-                )
-        }
-)
+@Getter
+@Setter
 public class Appointment implements Serializable {
 
     public static interface STATUS {
-        short QUEUE = -1;
         short PENDING = 0;
         short CONFIRMED = 1;
         short COMPLETED = 2;
@@ -51,70 +35,60 @@ public class Appointment implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(
+            name = "doctor_id",
+            nullable = false,
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(
+                    name = "appointment_doctor_fk"
+            )
+    )
     @JsonIgnore
     private User doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id", columnDefinition = "BIGINT NULL")
+    @JoinColumn(
+            name = "patient_id",
+            nullable = false,
+            foreignKey = @ForeignKey(
+                    name = "appointment_patient_fk"
+            )
+    )
     @JsonIgnore
     private User patient;
+
+    @OneToOne(mappedBy = "appointment", fetch = FetchType.EAGER)
+    private TimeSlot timeSlot;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "time_slot_id",
+            nullable = false,
+            foreignKey = @ForeignKey(
+                    name = "appointment_time_slot_fk"
+            )
+    )
+    private TimeSlot originalTimeSlot;
 
     @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<AppointmentLog> logs = new LinkedHashSet<>();
 
-    @Column(name = "time_start", nullable = false)
-    private LocalDateTime timeStart;
-
-    @Column(name = "time_end", nullable = false)
-    private LocalDateTime timeEnd;
-
     @Column(name = "status", nullable = false)
-    private Short status = STATUS.QUEUE;
+    private Short status = STATUS.PENDING;
 
-    @Column(name = "booked_date", columnDefinition = "TIMESTAMP NULL")
-    private LocalDateTime bookedDate;
-
-    @Column(name = "created_date")
+    @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
     @CreatedDate
     private LocalDateTime createdDate = LocalDateTime.now();
 
-    @Column(name = "modified_date")
+    @Column(name = "modified_date", columnDefinition = "datetime default current_timestamp")
     @LastModifiedDate
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
-    public Appointment (Long id, Long doctorId, Long patientId, LocalDateTime timeStart, LocalDateTime timeEnd, Short status, LocalDateTime bookedDate, LocalDateTime createdDate, LocalDateTime modifiedDate) {
-        this.id = id;
-        this.timeStart = timeStart;
-        this.timeEnd = timeEnd;
-        this.status = status != null ? status : STATUS.QUEUE;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-
-        this.doctor = new User();
-        this.doctor.setId(doctorId);
-
-        if (patientId != null && patientId > 0) {
-            this.patient = new User();
-            this.patient.setId(patientId);
-        }
+    public Appointment(User doctor, User patient, TimeSlot originalTimeSlot, Short status) {
+        this.doctor = doctor;
+        this.patient = patient;
+        this.originalTimeSlot = originalTimeSlot;
+        this.status = status;
     }
-
-    public String getTimeText() {
-        return timeStart.format(DateTimeFormatter.ofPattern("h:m a"));
-    }
-
-    public boolean isPast() {
-        return timeStart.isBefore(LocalDateTime.now());
-    }
-
-    public boolean exists() {
-        return id != null && id > 0;
-    }
-
-    public boolean isBooked() {
-        return patient != null;
-    }
-
 }
