@@ -14,20 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.entities.DoctorClinic;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repository.DoctorClinicRepository;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/dashboard")
 @Secured("ROLE_DOCTOR")
 public class DoctorDashboardController {
-
-    @Autowired
-    DoctorClinicRepository doctorClinicRepository;
 
     @Autowired
     UserService userService;
@@ -41,11 +37,12 @@ public class DoctorDashboardController {
 
     @GetMapping("/clinic-settings")
     public ModelAndView clinicPage(Authentication auth) {
+
         ModelAndView modelAndView = new ModelAndView("/pages/dashboard/doctorClinic");
         User user = (User) auth.getPrincipal();
-        Optional<User> doctor = userService.findById(user.getId());
-        DoctorClinic clinic = user.getClinic();
-        if (clinic == null) {
+        DoctorClinic clinic;
+
+        if (user.getClinic() == null) {
             clinic = new DoctorClinic();
 //            clinic.setName("Smile Cute Dental Care Center");
 //            clinic.setSpecialities("MDS - Periodontology and Oral Implantology, BDS");
@@ -54,9 +51,11 @@ public class DoctorDashboardController {
 //            clinic.setState("Texas");
 //            clinic.setCountry("USA");
 //            clinic.setPostalCode(78749);
+        } else {
+            clinic = user.getClinic();
         }
+
         clinic.parseImages();
-        modelAndView.addObject("doctor", doctor.get());
         modelAndView.addObject("clinic", clinic);
         return modelAndView;
     }
@@ -67,11 +66,17 @@ public class DoctorDashboardController {
 
             User doctor = (User) auth.getPrincipal();
 
-            doctor.getClinic().parseImages();
-            List<String> images = doctor.getClinic().getParsedImages();
+            List<String> images;
 
-            for (String img : clinic.getDeletedImages()) {
-                images.remove(img);
+            if (doctor.getClinic() != null) {
+                doctor.getClinic().parseImages();
+                images = doctor.getClinic().getParsedImages();
+
+                for (String img : clinic.getDeletedImages()) {
+                    images.remove(img);
+                }
+            } else {
+                images = new LinkedList<>();
             }
 
             for (MultipartFile image : clinic.getPostedImages()) {
@@ -82,10 +87,10 @@ public class DoctorDashboardController {
             clinic.setParsedImages(images);
             clinic.syncParsedImages();
 
-            doctor.setClinic(clinic);
-            clinic.setDoctor(doctor);
             clinic.setDoctorId(doctor.getId());
-            doctorClinicRepository.save(clinic);
+            clinic.setDoctor(doctor);
+            doctor.setClinic(clinic);
+            userService.save(doctor);
         }
 
         return "redirect:/dashboard/clinic-settings";

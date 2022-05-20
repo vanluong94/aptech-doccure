@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 
 @Data
-public class AppointmentDefaultId  implements Serializable {
+public class TimeSlotDefaultId implements Serializable {
     private Long doctorId;
     private Integer weekday;
     private LocalTime timeStart;

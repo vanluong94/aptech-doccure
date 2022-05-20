@@ -1,14 +1,18 @@
 package vn.aptech.doccure.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import vn.aptech.doccure.common.Constants;
+import vn.aptech.doccure.utils.DoctorUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -21,6 +25,8 @@ import java.util.*;
 @Setter
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,9 +76,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy("time_start ASC")
-    private Set<AppointmentDefault> appointmentsDefault = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = TimeSlot.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<TimeSlot> timeSlots = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = TimeSlotDefault.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OrderBy("weekday ASC, time_start ASC")
+    private Set<TimeSlotDefault> timeSlotsDefault = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private Set<Appointment> patientAppointments = new LinkedHashSet<>();
@@ -80,8 +89,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "patient")
     private Set<PatientBio> patientBios = new LinkedHashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "role_user_fk")),
+            inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "user_role_fk"))
+    )
     private Set<Role> roles = new LinkedHashSet<>();
 
     @Transient
@@ -91,11 +104,19 @@ public class User implements UserDetails {
     private Short gender;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "doctor_speciality", joinColumns = {@JoinColumn(name = "doctor_id")}, inverseJoinColumns = {@JoinColumn(name = "speciality_id")})
+    @JoinTable(
+            name = "doctor_speciality",
+            joinColumns = @JoinColumn(name = "doctor_id", foreignKey = @ForeignKey(name = "doctor_specialty_fk")),
+            inverseJoinColumns = @JoinColumn(name = "speciality_id", foreignKey = @ForeignKey(name = "specialty_doctor_fk"))
+    )
     private Set<Speciality> specialities;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "doctor_services", joinColumns = {@JoinColumn(name = "doctor_id")}, inverseJoinColumns = {@JoinColumn(name = "service_id")})
+    @JoinTable(
+            name = "doctor_services",
+            joinColumns = @JoinColumn(name = "doctor_id", foreignKey = @ForeignKey(name = "doctor_service_fk")),
+            inverseJoinColumns = @JoinColumn(name = "service_id", foreignKey = @ForeignKey(name = "service_doctor_fk"))
+    )
     private Set<Service> services;
 
     @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -105,12 +126,12 @@ public class User implements UserDetails {
     private DoctorBio bio;
 
     @CreatedDate
+    @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
     private LocalDateTime createdDate = LocalDateTime.now();
-    @LastModifiedDate
-    private LocalDateTime modifiedDate = LocalDateTime.now();
 
-    public User() {
-    }
+    @LastModifiedDate
+    @Column(name = "modified_date", columnDefinition = "datetime default current_timestamp")
+    private LocalDateTime modifiedDate = LocalDateTime.now();
 
     public User(Integer enabled, Set<Role> roles) {
         this.enabled = enabled;
@@ -150,8 +171,24 @@ public class User implements UserDetails {
         return false;
     }
 
+    public boolean isDoctor() {
+        return this.hasRole(Constants.Roles.ROLE_DOCTOR);
+    }
+
+    public boolean isPatient() {
+        return this.hasRole(Constants.Roles.ROLE_PATIENT);
+    }
+
+    public boolean isAdmin() {
+        return this.hasRole(Constants.Roles.ROLE_ADMIN);
+    }
+
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
+    }
+
+    public String getDoctorTitle() {
+        return "Dr. " + getFullName();
     }
 
     public String getTheAvatar() {
@@ -177,5 +214,10 @@ public class User implements UserDetails {
 
             return "/assets/img/" + filename;
         }
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return ((User) another).getId().equals(id);
     }
 }

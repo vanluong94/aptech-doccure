@@ -1,15 +1,16 @@
 package vn.aptech.doccure.entities;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.Set;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -23,6 +24,9 @@ public class Service implements Serializable  {
     @NotEmpty(message = "Name must not be null or empty!")
     @Column(name = "name", nullable = false, length = 100)
     private String name;
+
+    @Column(name = "slug", nullable = false, unique = true, length = 100)
+    private String slug;
 
 //    @ManyToMany(targetEntity = vn.aptech.doccure.entities.User.class, mappedBy = "services")
 //    private Set<User> users;
