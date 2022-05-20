@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>My Appointments - Doccure</title>
+</head>
+<body>
+
+<div class="page-content" layout:fragment="layoutContent">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-12">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Appointments</li>
+                        </ol>
+                    </nav>
+                    <h2 class="breadcrumb-title">Appointments</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Breadcrumb -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <!-- Profile Sidebar -->
+                <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+                    <div th:replace="fragments/dashboard/patientSidebar :: sidebar"></div>
+                </div>
+                <!-- / Profile Sidebar -->
+
+                <div class="col-md-7 col-lg-8 col-xl-9">
+                    <table id="appointmentsTable" class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th>Doctor</th>
+                            <th>Appt Date</th>
+                            <th>Starting Time</th>
+                            <th>Ending Time</th>
+                            <th>Booking Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+</div>
+
+<div layout:fragment="layoutExtra">
+
+    <!-- Appointment Details Modal -->
+    <div class="modal fade custom-modal" id="appointmentDetail">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Appointment Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="info-details">
+                        <li>
+                            <div class="details-header">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="title h3">#<span data-field="id"></span></span>
+                                        <span class="text" data-field="timeSlot.date"></span>
+                                        <span class="text">
+                                            <span class="text-info" data-field="timeSlot.timeStart"></span><span> - </span><span class="text-info" data-field="timeSlot.timeEnd"></span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-right" data-field="statusBadge"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="title">Booking Date:</span>
+                            <span class="text" data-field="createdDate"></span>
+                        </li>
+                        <li>
+                            <span class="title">Status:</span>
+                            <span class="text" data-field="statusText"></span>
+                        </li>
+                        <li>
+                            <span class="title">Logs:</span>
+                            <table class="table table-bordered mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>Datetime</th>
+                                        <th>Content</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-field="logs"></tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Appointment Details Modal --> 
+
+</div>
+
+<div layout:fragment="customScripts">
+
+    <!-- <script src="assets/plugins/datatables/datatables.min.js"></script> -->
+    <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/js/table-appointments.js"></script>
+    <script>
+
+        $('#appointmentsTable').DataTable({
+            searching: false,
+            bInfo: false,
+            bLengthChange: false,
+            dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
+            ordering: false,
+            // pageLength: 5,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/ajax/appointments/mine',
+                data: function(d) {
+                    var info = $('#appointmentsTable').DataTable().page.info();
+                    return {
+                        page: info.page,
+                        length: d.length,
+                    };
+                },
+                dataSrc: (resp) => appointmentUtils.parsePatientTableData(resp)
+            },
+            drawCallback(settings, json) {
+
+                /**
+                 * Custom datatable pagination style
+                 * */
+                let $pagination = $('#appointmentsTable_paginate')
+                let $pageItemsWrapper = $pagination.find('> span')
+
+                $pagination.addClass('pagination');
+
+                $pageItemsWrapper.find('a').insertAfter($pageItemsWrapper)
+                $pageItemsWrapper.remove();
+
+                $pagination.find('a').each(function(i,e){
+                    let $e = $(e);
+                    $e.addClass('page-link btn rounded-0 text-sm');
+                    $e.wrap(`<span class="page-item ${$e.hasClass('current') ? 'active' : ''}"></span>`)
+                });
+
+                /**
+                 * Handle button action
+                 * */
+                let $table = $('#appointmentsTable');
+                $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
+                    e.preventDefault();
+                    appointmentUtils.view($(this).data('appointment-id'));
+                })
+
+                $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
+                    e.preventDefault();
+                    appointmentUtils.cancel($(this).data('appointment-id'));
+                })
+            }
+        });
+        
+    </script>
+</div>
+
+</body>
+</html>

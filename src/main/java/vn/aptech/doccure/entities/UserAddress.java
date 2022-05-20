@@ -14,6 +14,7 @@ public class UserAddress {
 
     @MapsId
     @OneToOne
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_address_fk"))
     private User user;
 
     @Column(name = "address_line_1")
@@ -31,6 +32,6 @@ public class UserAddress {
     @Column(name = "country", length = 50)
     private String country;
 
-    @Column(name = "postal_code")
+    @Column(name = "postal_code", length = 10)
     private Integer postalCode;
 }

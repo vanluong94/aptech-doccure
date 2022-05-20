@@ -146,6 +146,18 @@ public class UserController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/dashboard/appointments")
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    public String dashboardAppointments(HttpServletRequest request) {
+        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
+            return "pages/dashboard/doctorAppointments";
+        } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
+            return "pages/dashboard/patientAppointments";
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping("dashboard/profile")
     @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     public String profile(HttpServletRequest request) {

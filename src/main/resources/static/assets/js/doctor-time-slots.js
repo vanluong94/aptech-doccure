@@ -4,86 +4,96 @@ jQuery(function($){
         method: "get",
         success(resp) {
             if (resp.isSuccess) {
-
-                // group by weekday
-                let timeSlots = resp.data.timeSlots.reduce((timeSlots, _timeSlot) => {
-                    if (!timeSlots[_timeSlot.weekday]) {
-                        timeSlots[_timeSlot.weekday] = [];
-                    }
-                    timeSlots[_timeSlot.weekday].push(_timeSlot);
-                    return timeSlots;
-                }, {});
-
-                $('form.time-slots-form').each((i,form) => {
-
-                    let $form = $(form);
-                    let weekday = $form.data('weekday');
-
-                    if (typeof weekday != 'undefined' && timeSlots[weekday]) {
-                        renderTimeSlots($form, timeSlots[weekday]);
-                    }
-
-                    $form.on('submit', (formEvt) => {
-                        formEvt.preventDefault();
-                        // let formData = new FormData($form.get(0));
-
-                        let postData = $form.find('.hours-cont').get().map((el) => {
-                            let $el = $(el);
-                            return {
-                                status   : $el.find('input[name="status"]').is(':checked') ? 1: 0,
-                                timeStart: $el.find('input[name="timeStart"]').val(),
-                                timeEnd  : $el.find('input[name="timeEnd"]').val()
-                            }
-                        })
-
-                        $.ajax({
-                            url: `/ajax/timeSlots/save?weekday=${weekday}`,
-                            method: 'post',
-                            data: JSON.stringify(postData),
-                            contentType: 'application/json',
-                            headers: {
-                                ...getAjaxCsrfTokenHeader()
-                            },
-                            beforeSend() {
-                                addLoadingOverlay($form);
-                            },
-                            success(resp) {
-                                if (resp.isSuccess) {
-                                    if (resp.data.timeSlots) {
-                                        renderTimeSlots($form, resp.data.timeSlots);
-                                    }
-                                } else {
-                                    alert(resp.message);
-                                }
-                            },
-                            complete(xhr) {
-                                removeLoadingOverlay($form);
-
-                                if (xhr.responseJSON && !xhr.responseJSON.isSuccess) {
-                                    alert(xhr.responseJSON.message);
-                                }
-                            }
-                        });
-                    })
-
-                    $form.find('.add-hours').on('click', () => {
-                        renderTimeSlots($form, [
-                            {
-                                status: 1,
-                                timeStart: '',
-                                timeEnd: '',
-                            }
-                        ], true);
-                    })
-                })
-
+                if (resp.data.timeSlots) {
+                    renderAllTimeSlots(resp.data.timeSlots);
+                }
             } else {
                 alert('Failed to load time slots');
             }
         }
     });
 
-    const renderTimeSlots = ($form, timeSlots, isAppending) => {
+    const renderAllTimeSlots = (respTimeSlots) => {
+
+        // group by weekday
+        let timeSlots = respTimeSlots.reduce((timeSlots, _timeSlot) => {
+            if (!timeSlots[_timeSlot.weekday]) {
+                timeSlots[_timeSlot.weekday] = [];
+            }
+            timeSlots[_timeSlot.weekday].push(_timeSlot);
+            return timeSlots;
+        }, {});
+        
+        $('form.time-slots-form').each((i,form) => {
+
+            let $form = $(form);
+            let weekday = $form.data('weekday');
+
+            if (typeof weekday != 'undefined' && timeSlots[weekday]) {
+                renderFormTimeSlots($form, timeSlots[weekday]);
+            }
+
+            $form.find('.add-hours').on('click', () => {
+                renderFormTimeSlots($form, [
+                    {
+                        status: 1,
+                        timeStart: '',
+                        timeEnd: '',
+                    }
+                ], true);
+            })
+        })
+
+    }
+
+    $('form.time-slots-form button.submit-btn').on('click', function(e){
+
+        e.preventDefault();
+        
+        let postData = $('form.time-slots-form .hours-cont').map((i, el) => {
+            let $el = $(el);
+            return {
+                weekday  : $el.parents('form').data('weekday'),
+                status   : $el.find('input[name="status"]').is(':checked') ? 1: 0,
+                timeStart: $el.find('input[name="timeStart"]').val(),
+                timeEnd  : $el.find('input[name="timeEnd"]').val()
+            }
+        }).toArray();
+
+        let $wrapper = $('.card.schedule-widget');
+
+        $.ajax({
+            url: `/ajax/timeSlots/saveAll`,
+            method: 'post',
+            data: JSON.stringify(postData),
+            contentType: 'application/json',
+            headers: {
+                ...getAjaxCsrfTokenHeader()
+            },
+            beforeSend() {
+                addLoadingOverlay($wrapper);
+            },
+            success(resp) {
+                if (resp.isSuccess) {
+                    if (resp.data.timeSlots) {
+                        renderAllTimeSlots(resp.data.timeSlots);
+                    }
+                } else {
+                    alert(resp.message);
+                }
+            },
+            complete(xhr) {
+                removeLoadingOverlay($wrapper);
+
+                if (xhr.responseJSON && !xhr.responseJSON.isSuccess) {
+                    alert(xhr.responseJSON.message);
+                }
+            }
+        });
+
+    });
+
+    const renderFormTimeSlots = ($form, timeSlots, isAppending) => {
         let $hoursInfo = $form.find('.hours-info');
         if ($hoursInfo.length) {
             let output = '';

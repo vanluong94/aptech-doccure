@@ -3,7 +3,10 @@ package vn.aptech.doccure.entities;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,10 +16,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "doctor_clinics")
 public class DoctorClinic implements Serializable {
@@ -26,6 +32,7 @@ public class DoctorClinic implements Serializable {
 
     @MapsId
     @OneToOne
+    @JoinColumn(name = "doctor_id", nullable = false, foreignKey = @ForeignKey(name = "doctor_clinic_user_fk"))
     private User doctor;
 
     @Column(name = "name", nullable = false)
@@ -55,25 +62,28 @@ public class DoctorClinic implements Serializable {
     @Column(name = "country", nullable = false, length = 50)
     private String country;
 
-    @Column(name = "postal_code", nullable = false)
+    @Column(name = "postal_code", nullable = false, length = 10)
     private Integer postalCode;
 
+    @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
     @CreatedDate
     private LocalDateTime createdDate = LocalDateTime.now();
+
+    @Column(name = "modified_date", columnDefinition = "datetime default current_timestamp")
     @LastModifiedDate
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
-    @Column(name = "images")
+    @Column(name = "images", columnDefinition = "json")
     private String images;
 
     @Transient
-    private List<String> parsedImages = new ArrayList<>();
+    private List<String> parsedImages = new LinkedList<>();
 
     @Transient
-    private List<MultipartFile> postedImages = new ArrayList<>();
+    private List<MultipartFile> postedImages = new LinkedList<>();
 
     @Transient
-    private List<String> deletedImages = new ArrayList<>();
+    private List<String> deletedImages = new LinkedList<>();
 
     public void parseImages() {
         if (images != null && ! images.isEmpty()) {
@@ -85,6 +95,22 @@ public class DoctorClinic implements Serializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("[DoctorClinic:");
+        builder.append(" doctorId=" + doctorId);
+        builder.append("; name=" + name);
+        builder.append("; specialties=" + specialities);
+        builder.append("; lat=" + lat);
+        builder.append("; lng=" + lng);
+        builder.append("; addressLine1=" + addressLine1);
+        builder.append("; addressLine2=" + addressLine2);
+        builder.append("; postCode=" + postalCode);
+        builder.append("; images=" + images);
+        builder.append("]");
+        return builder.toString();
     }
 
     public void syncParsedImages() {

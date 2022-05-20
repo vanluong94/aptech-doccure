@@ -1,68 +1,53 @@
 package vn.aptech.doccure.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "appointment_logs")
 public class AppointmentLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "appointment_Id", nullable = false)
+    @JoinColumn(name = "appointment_id", nullable = false, foreignKey = @ForeignKey(name = "appointment_log_apmt_fk"))
+    @JsonIgnore
     private Appointment appointment;
 
     @Lob
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "made_by", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "made_by", foreignKey = @ForeignKey(name = "appointment_log_user_fk"))
+    @JsonIgnore
     private User madeBy;
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    @Column(name = "created_date", nullable = false, columnDefinition = "datetime default current_timestamp")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd MMM yyyy kk:mm")
+    private LocalDateTime createdDate = LocalDateTime.now();
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public User getMadeBy() {
-        return madeBy;
-    }
-
-    public void setMadeBy(User madeBy) {
-        this.madeBy = madeBy;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
+    public AppointmentLog(Appointment appointment, String content, User madeBy) {
         this.appointment = appointment;
+        this.content = content;
+        this.madeBy = madeBy;
+        this.createdDate = LocalDateTime.now();
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 }

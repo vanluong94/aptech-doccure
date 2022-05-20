@@ -27,7 +27,7 @@ const addLoadingOverlay = ($el) => {
         $el = $($el);
     }
     
-    $el.addClass('position-relative')
+    $el.addClass('position-relative').css('min-height', '100px');
     $el.append($loadingOverlay);
 
 }
@@ -40,4 +40,3 @@ const removeLoadingOverlay = ($el) => {
     $el.removeClass('position-relative');
     $el.find('.loading-overlay').remove();
 }
-

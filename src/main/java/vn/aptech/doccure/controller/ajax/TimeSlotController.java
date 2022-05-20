@@ -6,10 +6,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vn.aptech.doccure.common.AjaxResponse;
-import vn.aptech.doccure.entities.AppointmentDefault;
+import vn.aptech.doccure.entities.TimeSlotDefault;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repository.AppointmentDefaultRepository;
-import vn.aptech.doccure.service.UserService;
+import vn.aptech.doccure.repository.TimeSlotDefaultRepository;
+import vn.aptech.doccure.repository.UserRepository;
 
 import java.util.*;
 
@@ -19,32 +19,36 @@ import java.util.*;
 public class TimeSlotController {
 
     @Autowired
-    UserService userService;
+    UserRepository userRepository;
 
     @Autowired
-    AppointmentDefaultRepository apmtDefaultRepository;
+    TimeSlotDefaultRepository timeSlotDefaultRepository;
 
     @GetMapping("getAll")
     @ResponseBody
-    public ResponseEntity<Object> getWeekdayTimeSlots(Authentication auth) {
+    public ResponseEntity<Object> getAll(Authentication auth) {
         User doctor = (User) auth.getPrincipal();
-
-        HashMap<String, Set<AppointmentDefault>> respData = new HashMap<>();
-        respData.put("timeSlots", doctor.getAppointmentsDefault());
+        Map<String, Object> respData = new HashMap<>();
+        respData.put("timeSlots", timeSlotDefaultRepository.findAllByDoctor(doctor));
         return AjaxResponse.responseSuccess(respData, "success");
     }
 
-    @PostMapping("save")
+    @PostMapping("saveAll")
     @ResponseBody
-    public ResponseEntity<Object> updateWeekdayTimeSlots(Authentication auth, @RequestParam int weekday, @RequestBody(required = false) List<AppointmentDefault> timeSlots) {
+    public ResponseEntity<Object> updateAll(Authentication auth, @RequestBody(required = false) List<TimeSlotDefault> postedTimeSlots) {
 
         Map<String, Object> results = new LinkedHashMap<>();
 
         User doctor = (User) auth.getPrincipal();
-        Set<AppointmentDefault> doctorTimeSlots = new TreeSet<>(new Comparator<AppointmentDefault>() {
+
+        Set<TimeSlotDefault> updateTimeSlots = new TreeSet<>(new Comparator<TimeSlotDefault>() {
             @Override
-            public int compare(AppointmentDefault o1, AppointmentDefault o2) {
-                if (o1.getTimeStart().isBefore(o2.getTimeStart())) {
+            public int compare(TimeSlotDefault o1, TimeSlotDefault o2) {
+                if (o1.getWeekday() < o2.getWeekday()) {
+                    return -1;
+                } else if (o1.getWeekday() > o2.getWeekday()) {
+                    return 1;
+                } else if (o1.getTimeStart().isBefore(o2.getTimeStart())) {
                     return -1;
                 } else if (o1.getTimeStart().equals(o2.getTimeEnd())) {
                     return 0;
@@ -53,27 +57,19 @@ public class TimeSlotController {
                 }
             }
         });
-        apmtDefaultRepository.deleteDoctorWeekdayTimeSlots(doctor.getId(), weekday);
 
-        if (timeSlots != null) {
-            for (AppointmentDefault apmt : timeSlots) {
-                if (apmt.isTimeRangeValid()) {
-                    apmt.setDoctor(doctor);
-                    apmt.setDoctorId(doctor.getId());
-                    apmt.setWeekday(weekday);
-                    doctorTimeSlots.add(apmt);
-                }
+        for (TimeSlotDefault apmtDefault : postedTimeSlots) {
+            if (apmtDefault.isTimeRangeValid()) {
+                apmtDefault.setDoctor(doctor);
+                apmtDefault.setDoctorId(doctor.getId());
+                updateTimeSlots.add(apmtDefault);
             }
         }
 
-        if (doctorTimeSlots.size() > 0) {
-            doctor.setAppointmentsDefault(doctorTimeSlots);
-            apmtDefaultRepository.saveAll(doctorTimeSlots);
-        } else if (timeSlots != null) {
-            return AjaxResponse.responseFail(results, "Failed to save the time slots, please check again");
-        }
+        doctor.setTimeSlotsDefault(updateTimeSlots);
+        userRepository.saveAndFlush(doctor);
 
-        results.put("timeSlots", doctor.getAppointmentsDefault());
+        results.put("timeSlots", doctor.getTimeSlotsDefault());
 
         return AjaxResponse.responseSuccess(results,"success");
     }
