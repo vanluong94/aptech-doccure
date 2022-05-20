@@ -27,7 +27,7 @@ const addLoadingOverlay = ($el) => {
         $el = $($el);
     }
     
-    $el.addClass('position-relative')
+    $el.addClass('position-relative').css('min-height', '100px');
     $el.append($loadingOverlay);
 
 }
@@ -41,3 +41,40 @@ const removeLoadingOverlay = ($el) => {
     $el.find('.loading-overlay').remove();
 }
 
+const themeUtils = {
+    renderApmtStatusBadge(status) {
+        switch (status) {
+            case 0:
+                return `<div class="btn bg-warning-light btn-sm">Pending</div>`;
+            case 1:
+                return `<div class="btn bg-info-light btn-sm">Confirm</div>`;
+            case 2:
+                return `<div class="btn bg-success-light btn-sm">Completed</div>`;
+            case 3:
+                return `<div class="btn bg-danger-light btn-sm">Cancelled</div>`;
+        }
+    },
+    renderApmtStatusPill(status) {
+        switch (status) {
+            case 0:
+                return `<span class="badge badge-pill bg-warning-light">Pending</span>`;
+            case 1:
+                return `<span class="badge badge-pill bg-info-light">Confirm</span>`;
+            case 2:
+                return `<span class="badge badge-pill bg-success-light">Completed</span>`;
+            case 3:
+                return `<span class="badge badge-pill bg-danger-light">Cancelled</span>`;
+        }
+    },
+    renderApmtLogContent(content) {
+        return content.replace(/\[([^\]]+)\]/g, '<mark>$1</mark>');
+    },
+    renderDoctorTd(doctor) {
+        return `<h2 class="table-avatar">` +
+            `<a href="${doctor.url}" class="avatar avatar-sm mr-2">` +
+                `<img class="avatar-img rounded-circle" src="${doctor.avatar}" alt="${doctor.title}">` +
+            `</a>` +
+            `<a href="${doctor.url}">${doctor.title}<span>${doctor.specialty}</span></a>` +
+        `</h2>`;
+    }
+}

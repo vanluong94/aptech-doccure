@@ -66,70 +66,254 @@
     <!-- /Page Content -->
 </div>
 
-<div layout:fragment="layoutExtra"></div>
+<div layout:fragment="layoutExtra">
+
+    <!-- Appointment Details Modal -->
+    <div class="modal fade custom-modal" id="appointmentDetail">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Appointment Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="info-details">
+                        <li>
+                            <div class="details-header">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="title h3">#<span data-field="id"></span></span>
+                                        <span class="text" data-field="timeSlot.date"></span>
+                                        <span class="text">
+                                            <span class="text-info" data-field="timeSlot.timeStart"></span><span> - </span><span class="text-info" data-field="timeSlot.timeEnd"></span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-right" data-field="statusBadge"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="title">Status:</span>
+                            <span class="text" data-field="statusText"></span>
+                        </li>
+                        <li>
+                            <span class="title">Logs:</span>
+                            <table class="table table-bordered mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>Datetime</th>
+                                        <th>Content</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-field="logs">
+                                    <tr>
+                                        <td>
+                                            25 Jun 2019 23:00
+                                        </td>
+                                        <td>Patient changed appointment scheduled time from <mark>10:00am</mark> to <mark>12:00am</mark></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            26 Jun 2019 08:00
+                                        </td>
+                                        <td>Doctor <mark>comfirmed</mark> the appointment</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            26 Jun 2019 09:00
+                                        </td>
+                                        <td>Patient <mark>canceled</mark> the appointment</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Appointment Details Modal --> 
+
+</div>
+
 <div layout:fragment="customScripts">
+
     <!-- <script src="assets/plugins/datatables/datatables.min.js"></script> -->
     <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
     <script>
-			const $appointmentsTable = jQuery('#appointmentsTable').DataTable({
-				searching: false,
-				bInfo: false,
-				bLengthChange: false,
-				dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
-				ordering: false,
-				pageLength: 5,
-				processing: true,
-				serverSide: true,
-				columnDefs: [
-					{ "name": "doctor",   "targets": 0 },
-					{ "name": "apmtDate",  "targets": 1 },
-					{ "name": "timeStart",  "targets": 2 },
-					{ "name": "timeEnd", "targets": 3 },
-					{ "name": "bookingDate",  "targets": 4 },
-					{ "name": "status",  "targets": 5 },
-					{ "name": "actions",    "targets": 6 }
-				],
-				ajax: {
-					url: '/ajax/appointments/mine',
-					data: function(d) {
-						var info = $('#appointmentsTable').DataTable().page.info();
-						return {
-							page: info.page,
-							length: d.length,
-						};
-					},
-					dataSrc: function(resp){
-						return resp.data.map((row) => {
-                            // return Object.keys(row).map((key) => {
-                            //     if (key == 'timeStart' || key == 'timeEnd') {
-                            //         return `<span class="text-info">${row[key]}</span>`;
-                            //     } else {
-                            //         return row[key];
-                            //     }
-                            // })
-                            return Object.values(row)
-                        });
-					}
-				},
-				drawCallback(settings, json) {
 
-					let $pagination = $('#appointmentsTable_paginate')
-					let $pageItemsWrapper = $pagination.find('> span')
+        const $appointmentDetailModal = $('#appointmentDetail');
+        const $appointmentDetailBody = $appointmentDetailModal.find('.modal-body');
 
-					$pagination.addClass('pagination');
+        const $appointmentsTable = $('#appointmentsTable').DataTable({
+            searching: false,
+            bInfo: false,
+            bLengthChange: false,
+            dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
+            ordering: false,
+            // pageLength: 5,
+            processing: true,
+            serverSide: true,
+            columnDefs: [
+                { "name": "doctor",         "targets": 1 },
+                { "name": "apmtDate",       "targets": 1 },
+                { "name": "timeStart",      "targets": 2 },
+                { "name": "timeEnd",        "targets": 3 },
+                { "name": "bookingDate",    "targets": 4 },
+                { "name": "status",         "targets": 5 },
+                { "name": "actions",        "targets": 6 },
+            ],
+            ajax: {
+                url: '/ajax/appointments/mine',
+                data: function(d) {
+                    var info = $('#appointmentsTable').DataTable().page.info();
+                    return {
+                        page: info.page,
+                        length: d.length,
+                    };
+                },
+                dataSrc: function(resp){
+                    return resp.data.map((row) => {
+                        return Object.keys(row).map((key) => {
 
-					$pageItemsWrapper.find('a').insertAfter($pageItemsWrapper)
-					$pageItemsWrapper.remove();
+                            let output = row[key];
 
-					$pagination.find('a').each(function(i,e){
-						let $e = $(e);
-						$e.addClass('page-link btn rounded-0 text-sm');
-						$e.wrap(`<span class="page-item ${$e.hasClass('current') ? 'active' : ''}"></span>`)
-					});
+                            if (key == 'doctor') {
+                                output = themeUtils.renderDoctorTd(row.doctor);
+                            } else if (key == 'timeStart' || key == 'timeEnd') {
+                                output = `<span class="text-info">${row[key]}</span>`;
+                            } else if (key == 'status') {
+                                output = themeUtils.renderApmtStatusPill(row.status);
+                            } else if (key == 'action') {
 
-				}
-			});
-		</script>
+                                output = `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="far fa-eye"></i> View</div>`;
+
+                                switch(row.status) {
+                                    case 0:
+                                        output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
+                                        break;
+                                }
+
+                            }
+
+                            return output;
+                        }).slice(1)
+                    });
+                }
+            },
+            drawCallback(settings, json) {
+
+                /**
+                 * Custom datatable pagination style
+                 * */
+                let $pagination = $('#appointmentsTable_paginate')
+                let $pageItemsWrapper = $pagination.find('> span')
+
+                $pagination.addClass('pagination');
+
+                $pageItemsWrapper.find('a').insertAfter($pageItemsWrapper)
+                $pageItemsWrapper.remove();
+
+                $pagination.find('a').each(function(i,e){
+                    let $e = $(e);
+                    $e.addClass('page-link btn rounded-0 text-sm');
+                    $e.wrap(`<span class="page-item ${$e.hasClass('current') ? 'active' : ''}"></span>`)
+                });
+
+                /**
+                 * Handle button action
+                 * */
+                let $table = $('#appointmentsTable');
+                $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
+                    e.preventDefault();
+                    viewAppointmentDetail($(this).data('appointment-id'));
+                })
+
+                $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
+                    e.preventDefault();
+                    cancelAppointment($(this).data('appointment-id'));
+                })
+            }
+        });
+
+        const viewAppointmentDetail = (apmtId) => {
+
+            $appointmentDetailModal.modal('show');
+
+            let $info = $appointmentDetailBody.find('.info-details');
+            let $fields = $appointmentDetailBody.find('[data-field]');
+
+            $.ajax({
+                url: `/ajax/appointments/${apmtId}/get`,
+                beforeSend() {
+                    addLoadingOverlay($info);
+                    $fields.empty();
+                },
+                success(resp) {
+                    if (resp.isSuccess) {
+                        $fields.each((i,e) => {
+                            $e = $(e);
+                            $e.empty(); // just to make sure it's empty
+
+                            let name = $e.data('field');
+                            let value;
+
+                            if (name == 'statusBadge') {
+                                value = themeUtils.renderApmtStatusBadge(resp.data.appointment.status);
+                            } else if (name == 'logs') {
+                                for (log of resp.data.appointment.logs) {
+                                    $e.append(
+                                        ` <tr>
+                                            <td>${log.createdDate}</td>
+                                            <td>${themeUtils.renderApmtLogContent(log.content)}</td>
+                                        </tr>`
+                                    );
+                                }
+                            } else {
+                                value = resp.data.appointment;
+                                name.split('.').forEach(key => {
+                                    value = value[key];
+                                });
+                            }
+
+                            $e.html(value);
+                        })
+                    }
+                },
+                complete(status, xhr) {
+                    removeLoadingOverlay($info);
+                }
+            });
+        }
+
+        const cancelAppointment = (apmtId) => {
+            if (confirm(`Are you sure that you want to cancel this appointment?`)) {
+                $.ajax({
+                    url: `/ajax/appointments/${apmtId}/cancel`,
+                    method: 'post',
+                    headers: {
+                        ...getAjaxCsrfTokenHeader()
+                    },
+                    beforeSend() {
+                        addLoadingOverlay($appointmentsTable);
+                    },
+                    success(resp) {
+                        if (resp.isSuccess) {
+                            $appointmentsTable.ajax.reload();
+                        }
+                    },
+                    complete(status, xhr) {
+                        removeLoadingOverlay($appointmentsTable);
+                    }
+                });
+            }   
+        }
+
+    </script>
 </div>
 
 </body>

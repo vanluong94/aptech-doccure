@@ -43,7 +43,7 @@
                                     <i class="fas fa-check"></i>
                                     <h3>Appointment booked Successfully!</h3>
                                     <p>Appointment booked with <strong>Dr. <span th:text="${appointment.doctor.fullName}"></span></strong><br> on <strong th:text="${#temporals.format(appointment.timeSlot.timeStart, 'dd MMM yyyy')}"></strong> <strong th:text="${#temporals.format(appointment.timeSlot.timeStart, 'h:m a')}"></strong> to <strong th:text="${#temporals.format(appointment.timeSlot.timeEnd, 'h:m a')}"></strong></p>
-                                    <a th:href="@{/dashboard}" class="btn btn-primary view-inv-btn">See your bookings</a>
+                                    <a th:href="@{/dashboard/patient-appointments}" class="btn btn-primary view-inv-btn">See your bookings</a>
                                 </div>
                             </div>
                         </div>

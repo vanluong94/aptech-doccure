@@ -176,6 +176,7 @@ public class User implements UserDetails {
     public String getDoctorTitle() {
         return "Dr. " + getFullName();
     }
+
     public String getTheAvatar() {
         if (avatar != null && !avatar.isEmpty()) {
             return avatar;
@@ -199,5 +200,10 @@ public class User implements UserDetails {
 
             return "/assets/img/" + filename;
         }
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        return ((User) another).getId().equals(id);
     }
 }

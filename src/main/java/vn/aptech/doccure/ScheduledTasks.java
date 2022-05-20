@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import vn.aptech.doccure.entities.Appointment;
+import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.TimeSlot;
+import vn.aptech.doccure.repository.AppointmentRepository;
 import vn.aptech.doccure.repository.TimeSlotRepository;
 import vn.aptech.doccure.service.TimeSlotService;
 
@@ -23,8 +26,11 @@ public class ScheduledTasks {
     @Autowired
     private TimeSlotService timeSlotService;
 
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
     @Scheduled(fixedRate = 60*60*24*1000)
-    public void appointmentsGenerator() {
+    public void timeSlotsGenerator() {
 
         LocalDateTime now = LocalDateTime.now().plusDays(1);
 
@@ -50,4 +56,31 @@ public class ScheduledTasks {
 
     }
 
+    @Scheduled(fixedRate = 60*60*1000)
+    public void appointmentsAutoComplete() {
+
+        List<Appointment> appointments = appointmentRepository.findAllPastIncomplete();
+
+        for (Appointment apmt : appointments) {
+
+            AppointmentLog log = new AppointmentLog();
+            log.setAppointment(apmt);
+
+            switch (apmt.getStatus()) {
+                case Appointment.STATUS.PENDING:
+                    apmt.setStatus(Appointment.STATUS.CANCELED);
+                    apmt.getTimeSlot().setAppointment(null);
+                    log.setContent("Canceled by system due to overdue");
+                    apmt.getLogs().add(log);
+                    break;
+                case Appointment.STATUS.CONFIRMED:
+                    apmt.setStatus(Appointment.STATUS.COMPLETED);
+                    log.setContent("Completed by system");
+                    apmt.getLogs().add(log);
+                    break;
+            }
+        }
+
+        appointmentRepository.saveAllAndFlush(appointments);
+    }
 }

@@ -1,5 +1,9 @@
 package vn.aptech.doccure.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,17 +26,28 @@ public class AppointmentLog {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "appointment_id", nullable = false, foreignKey = @ForeignKey(name = "appointment_log_apmt_fk"))
+    @JsonIgnore
     private Appointment appointment;
 
     @Lob
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "made_by", nullable = false, foreignKey = @ForeignKey(name = "appointment_log_user_fk"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "made_by", foreignKey = @ForeignKey(name = "appointment_log_user_fk"))
+    @JsonIgnore
     private User madeBy;
 
     @Column(name = "created_date", nullable = false, columnDefinition = "datetime default current_timestamp")
-    private LocalDateTime createdDate;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd MMM yyyy kk:mm")
+    private LocalDateTime createdDate = LocalDateTime.now();
+
+    public AppointmentLog(Appointment appointment, String content, User madeBy) {
+        this.appointment = appointment;
+        this.content = content;
+        this.madeBy = madeBy;
+        this.createdDate = LocalDateTime.now();
+    }
 
 }

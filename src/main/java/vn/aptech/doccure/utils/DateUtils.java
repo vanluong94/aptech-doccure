@@ -10,7 +10,7 @@ public class DateUtils {
     }
 
     public static String toStandardTime(LocalDateTime input) {
-        return input.format(DateTimeFormatter.ofPattern("h:m a"));
+        return input.format(DateTimeFormatter.ofPattern("hh:mm a"));
     }
 
 }

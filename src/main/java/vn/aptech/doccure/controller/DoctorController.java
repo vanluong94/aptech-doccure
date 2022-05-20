@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Appointment;
+import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.AppointmentRepository;
@@ -116,6 +117,9 @@ public class DoctorController {
         Appointment appointment = new Appointment(doctor, patient, timeSlot, Appointment.STATUS.PENDING);
         timeSlot.setAppointment(appointment);
         appointment.setTimeSlot(timeSlot);
+
+        AppointmentLog log = new AppointmentLog(appointment, "The appointment has been made", patient);
+        appointment.getLogs().add(log);
 
         timeSlotRepository.saveAndFlush(timeSlot);
 

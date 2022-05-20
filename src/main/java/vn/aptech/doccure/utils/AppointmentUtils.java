@@ -31,8 +31,45 @@ public class AppointmentUtils {
 
     }
 
-    public static String getAppointmentActionsOutput(Appointment appointment) {
+    public static String getPatientAppointmentActionsOutput(Appointment appointment) {
+
         StringBuilder output = new StringBuilder();
+
+        output.append("<div class=\"btn btn-sm bg-info-light mr-1\"><i class=\"far fa-eye\"></i> View</div>");
+
+        switch (appointment.getStatus()) {
+            case Appointment.STATUS.PENDING:
+                output.append("<div class=\"btn btn-sm bg-danger-light mr-1\" data-action=\"view-appointment\" data-appointment=\"" + appointment.getId() + "\"><i class=\"fas fa-times\"></i> Cancel</div>");
+                break;
+            case Appointment.STATUS.CANCELED:
+                break;
+            case Appointment.STATUS.COMPLETED:
+                break;
+            case Appointment.STATUS.CONFIRMED:
+                break;
+        }
+
+        return output.toString();
+    }
+
+    public static String getDoctorAppointmentActionsOutput(Appointment appointment) {
+        StringBuilder output = new StringBuilder();
+
+        output.append("<div class=\"btn btn-sm bg-info-light mr-1\"><i class=\"far fa-eye\"></i> View</div>");
+
+        switch (appointment.getStatus()) {
+            case Appointment.STATUS.PENDING:
+                output.append("<div class=\"btn btn-sm bg-success-light mr-1\"><i class=\"fas fa-check\"></i> Confirm</div>");
+                output.append("<div class=\"btn btn-sm bg-danger-light mr-1\"><i class=\"fas fa-times\"></i> Cancel</div>");
+                break;
+            case Appointment.STATUS.CANCELED:
+                break;
+            case Appointment.STATUS.COMPLETED:
+                break;
+            case Appointment.STATUS.CONFIRMED:
+                break;
+        }
+
         return output.toString();
     }
 

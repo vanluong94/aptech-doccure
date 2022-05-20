@@ -1,12 +1,16 @@
 package vn.aptech.doccure.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import vn.aptech.doccure.utils.DateUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -47,12 +51,17 @@ public class TimeSlot {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "appointment_id", foreignKey = @ForeignKey(name = "time_slot_apmt_fk"))
+    @JsonIgnore
     private Appointment appointment;
 
     @Column(name = "time_start", nullable = false, columnDefinition = "datetime not null")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "h:m a")
     private LocalDateTime timeStart;
 
     @Column(name = "time_end", nullable = false, columnDefinition = "datetime not null")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "h:m a")
     private LocalDateTime timeEnd;
 
     @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
@@ -93,6 +102,7 @@ public class TimeSlot {
         return timeStart.format(DateTimeFormatter.ofPattern("h:m a"));
     }
 
+    @Override
     public String toString() {
         return String.format(
                 "[id=%d, appointment_id=%d, doctorId=%d, timeStart=%s, timeEnd=%s, createdDate=%s, modifiedDate=%s]",
@@ -104,5 +114,9 @@ public class TimeSlot {
                 this.createdDate.toString(),
                 this.modifiedDate.toString()
         );
+    }
+
+    public String getDate() {
+        return DateUtils.toStandardDate(this.timeStart);
     }
 }
