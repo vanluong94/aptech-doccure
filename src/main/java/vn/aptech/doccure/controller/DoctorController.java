@@ -43,7 +43,9 @@ public class DoctorController {
         Optional<User> user = userService.findById(id);
         if (user.isPresent() && user.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
             modelAndView = new ModelAndView("/pages/doctor/doctor-profile");
-            user.get().getClinic().parseImages();
+            if (user.get().getClinic() != null) {
+                user.get().getClinic().parseImages();
+            }
             modelAndView.addObject("doctor", user.get());
 
             if (authentication != null) {

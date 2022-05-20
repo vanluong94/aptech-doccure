@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.UserRepository;
 import vn.aptech.doccure.service.UserService;
@@ -17,6 +18,7 @@ import vn.aptech.doccure.service.UserService;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -91,5 +93,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findTop10ByOrderByIdDesc() {
         return repo.findTop10ByOrderByIdDesc();
+    }
+
+    @Override
+    public List<User> findTop10ByRolesInOrderByIdDesc(Set<Role> roles) {
+        return repo.findTop10ByRolesInOrderByIdDesc(roles);
     }
 }
