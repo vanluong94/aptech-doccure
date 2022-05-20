@@ -12,11 +12,15 @@ import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+
     Page<Appointment> findAllByPatientOrderByCreatedDateDesc(User patient, Pageable pageable);
+
+    Page<Appointment> findAllByDoctorOrderByCreatedDateDesc(User doctor, Pageable pageable);
 
     @Query(
             value = "SELECT * FROM appointments JOIN time_slots ON time_slots.id = appointments.time_slot_id WHERE time_slots.time_end < current_timestamp AND appointments.status NOT IN (2,3)",
             nativeQuery = true
     )
     List<Appointment> findAllPastIncomplete();
+
 }

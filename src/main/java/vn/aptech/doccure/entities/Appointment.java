@@ -87,10 +87,14 @@ public class Appointment implements Serializable {
     private LocalDateTime confirmedDate;
 
     @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd MMM yyyy h:m a")
     @CreatedDate
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "modified_date", columnDefinition = "datetime default current_timestamp")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd MMM yyyy h:m a")
     @LastModifiedDate
     private LocalDateTime modifiedDate = LocalDateTime.now();
 

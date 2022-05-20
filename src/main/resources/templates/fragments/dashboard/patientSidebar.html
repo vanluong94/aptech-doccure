@@ -23,14 +23,14 @@
         <div class="dashboard-widget">
             <nav class="dashboard-menu">
                 <ul>
-                    <li class="active">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard' ? 'active' : ''}">
                         <a href="patient-dashboard.html">
                             <i class="fas fa-columns"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li>
-                        <a th:href="@{/dashboard/patient-appointments}">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/appointments' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/appointments}">
                             <i class="fas fa-calendar-check"></i>
                             <span>Appointments</span>
                         </a>

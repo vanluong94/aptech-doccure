@@ -38,7 +38,7 @@
 
                 <!-- Profile Sidebar -->
                 <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
-                    <div th:replace="fragments/dashboard/patientSidebar :: sidebar"></div>
+                    <div th:replace="fragments/dashboard/doctorSidebar :: sidebar"></div>
                 </div>
                 <!-- / Profile Sidebar -->
 
@@ -46,11 +46,10 @@
                     <table id="appointmentsTable" class="table table-hover table-center mb-0">
                         <thead>
                         <tr>
-                            <th>Doctor</th>
+                            <th>Patient</th>
                             <th>Appt Date</th>
                             <th>Starting Time</th>
                             <th>Ending Time</th>
-                            <th>Booking Date</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -108,10 +107,10 @@
                             <span class="title">Logs:</span>
                             <table class="table table-bordered mt-2">
                                 <thead>
-                                    <tr>
-                                        <th>Datetime</th>
-                                        <th>Content</th>
-                                    </tr>
+                                <tr>
+                                    <th>Datetime</th>
+                                    <th>Content</th>
+                                </tr>
                                 </thead>
                                 <tbody data-field="logs"></tbody>
                             </table>
@@ -121,7 +120,7 @@
             </div>
         </div>
     </div>
-    <!-- /Appointment Details Modal --> 
+    <!-- /Appointment Details Modal -->
 
 </div>
 
@@ -155,13 +154,13 @@
                 dataSrc: function(resp){
                     return resp.data.map((row) => {
                         return Object.keys(row)
-                        .filter((key) => ['id', 'patient'].indexOf(key) == -1) // exclude these field in results
+                        .filter((key) => ['id', 'doctor', 'bookingDate'].indexOf(key) == -1) // exclude these field in results
                         .map((key) => {
 
                             let output = row[key];
 
-                            if (key == 'doctor') {
-                                output = themeUtils.renderUserTd(row.doctor);
+                            if (key == 'patient') {
+                                output = themeUtils.renderUserTd(row.patient);
                             } else if (key == 'timeStart' || key == 'timeEnd') {
                                 output = `<span class="text-info">${row[key]}</span>`;
                             } else if (key == 'status') {
@@ -172,6 +171,7 @@
 
                                 switch(row.status) {
                                     case 0:
+                                        output += `<div class="btn btn-sm bg-success-light mr-1" data-apmt-action="confirm" data-appointment-id="${row.id}"><i class="fas fa-check"></i> Accept</div>`;
                                         output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
                                         break;
                                 }
@@ -214,6 +214,11 @@
                 $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
                     e.preventDefault();
                     cancelAppointment($(this).data('appointment-id'));
+                })
+
+                $table.find('.btn[data-apmt-action="confirm"]').on('click', function(e){
+                    e.preventDefault();
+                    confirmAppointment($(this).data('appointment-id'));
                 })
             }
         });
@@ -288,9 +293,31 @@
                         removeLoadingOverlay($appointmentsTable);
                     }
                 });
-            }   
+            }
         }
 
+        const confirmAppointment = (apmtId) => {
+            if (confirm(`Are you sure that you want to confirm this appointment?`)) {
+                $.ajax({
+                    url: `/ajax/appointments/${apmtId}/confirm`,
+                    method: 'post',
+                    headers: {
+                        ...getAjaxCsrfTokenHeader()
+                    },
+                    beforeSend() {
+                        addLoadingOverlay($appointmentsTable);
+                    },
+                    success(resp) {
+                        if (resp.isSuccess) {
+                            $appointmentsTable.ajax.reload();
+                        }
+                    },
+                    complete(status, xhr) {
+                        removeLoadingOverlay($appointmentsTable);
+                    }
+                });
+            }
+        }
     </script>
 </div>
 

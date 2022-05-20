@@ -169,6 +169,18 @@ public class User implements UserDetails {
         return false;
     }
 
+    public boolean isDoctor() {
+        return this.hasRole(Constants.Roles.ROLE_DOCTOR);
+    }
+
+    public boolean isPatient() {
+        return this.hasRole(Constants.Roles.ROLE_PATIENT);
+    }
+
+    public boolean isAdmin() {
+        return this.hasRole(Constants.Roles.ROLE_ADMIN);
+    }
+
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
     }

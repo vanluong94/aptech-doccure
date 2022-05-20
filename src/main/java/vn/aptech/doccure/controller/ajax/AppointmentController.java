@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vn.aptech.doccure.common.AjaxResponse;
@@ -37,6 +38,7 @@ public class AppointmentController {
 
     @GetMapping("/getByDoctor")
     @ResponseBody
+    @Secured("ROLE_PATIENT")
     public ResponseEntity<Object> getByDoctor(@RequestParam Long doctorId, @RequestParam Integer offset, @RequestParam Integer length, Authentication authentication) {
 
         Map<String, Object> respData = new HashMap<>();
@@ -68,24 +70,40 @@ public class AppointmentController {
     }
 
     @GetMapping("/mine")
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     @ResponseBody
     public ResponseEntity<Object> getByPatient(@RequestParam Integer page, @RequestParam Integer length, Authentication authentication) {
+
         User user = (User) authentication.getPrincipal();
 
         Map<String, Object> response = new HashMap<>();
 
         Pageable pageable = PageRequest.of(page, length);
-        Page<Appointment> results = appointmentRepository.findAllByPatientOrderByCreatedDateDesc(user, pageable);
+        Page<Appointment> results;
+
+        if (user.isDoctor()) {
+            results = appointmentRepository.findAllByDoctorOrderByCreatedDateDesc(user, pageable);
+        } else if (user.isPatient()) {
+            results = appointmentRepository.findAllByPatientOrderByCreatedDateDesc(user, pageable);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
         List<Object> rows = new LinkedList<>();
         for (Appointment apmt : results.getContent()) {
             Map<String, Object> row = new LinkedHashMap<>();
             Map<String, Object> doctor = new HashMap<>();
+            Map<String, Object> patient = new HashMap<>();
 
             doctor.put("avatar", apmt.getDoctor().getTheAvatar());
             doctor.put("url", DoctorUtils.getDoctorProfileUrl(apmt.getDoctor()));
             doctor.put("title", apmt.getDoctor().getDoctorTitle());
-            doctor.put("specialty", "Dental");
+            doctor.put("subtitle", "Dental");
+
+            patient.put("avatar", apmt.getPatient().getTheAvatar());
+            patient.put("url", "#");
+            patient.put("title", apmt.getPatient().getFullName());
+            patient.put("subtitle", "#" + apmt.getPatient().getId());
 
 //            row.put("doctor", AppointmentUtils.getDoctorItemOutput(apmt.getDoctor()));
 //            row.put("apmtDate", DateUtils.toStandardDate(apmt.getTimeSlot().getTimeStart()));
@@ -97,6 +115,7 @@ public class AppointmentController {
 
             row.put("id", apmt.getId());
             row.put("doctor", doctor);
+            row.put("patient", patient);
             row.put("apmtDate", DateUtils.toStandardDate(apmt.getTimeSlot().getTimeStart()));
             row.put("timeStart", DateUtils.toStandardTime(apmt.getTimeSlot().getTimeStart()));
             row.put("timeEnd", DateUtils.toStandardTime(apmt.getTimeSlot().getTimeEnd()));
@@ -117,6 +136,7 @@ public class AppointmentController {
 
     @GetMapping("/{id}/get")
     @ResponseBody
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     public ResponseEntity<Object> getById(@PathVariable Long id, Authentication authentication) {
 
         Map<String, Object> response = new HashMap<>();
@@ -145,6 +165,7 @@ public class AppointmentController {
 
     @PostMapping("/{id}/cancel")
     @ResponseBody
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     public ResponseEntity<Object> cancel(@PathVariable Long id, Authentication authentication) {
 
         Map<String, Object> response = new HashMap<>();
@@ -182,6 +203,45 @@ public class AppointmentController {
 
         appointmentRepository.saveAndFlush(appointment);
         timeSlotRepository.saveAndFlush(appointment.getTimeSlot());
+
+        return AjaxResponse.responseSuccess(response, "success");
+
+    }
+
+    @PostMapping("/{id}/confirm")
+    @ResponseBody
+    @Secured("ROLE_DOCTOR")
+    public ResponseEntity<Object> confirm(@PathVariable Long id, Authentication authentication) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (authentication == null) {
+            return AjaxResponse.responseFail(response, "login required");
+        }
+
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+
+        if (!appointmentOptional.isPresent()) {
+            return AjaxResponse.responseFail(response, "appointment not found");
+        }
+
+        User doctor = (User) authentication.getPrincipal();
+        Appointment appointment = appointmentOptional.get();
+
+        if (!appointment.getDoctor().equals(doctor)) {
+            return AjaxResponse.responseFail(response, "you are not allowed to perform action on this appointment");
+        }
+
+        AppointmentLog log = new AppointmentLog(
+                appointment,
+                String.format("[%s] has confirmed the appointment", doctor.getDoctorTitle()),
+                doctor
+        );
+
+        appointment.setStatus(Appointment.STATUS.CONFIRMED);
+        appointment.getLogs().add(log);
+
+        appointmentRepository.saveAndFlush(appointment);
 
         return AjaxResponse.responseSuccess(response, "success");
 

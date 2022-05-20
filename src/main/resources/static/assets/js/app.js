@@ -69,12 +69,12 @@ const themeUtils = {
     renderApmtLogContent(content) {
         return content.replace(/\[([^\]]+)\]/g, '<mark>$1</mark>');
     },
-    renderDoctorTd(doctor) {
+    renderUserTd(user) {
         return `<h2 class="table-avatar">` +
-            `<a href="${doctor.url}" class="avatar avatar-sm mr-2">` +
-                `<img class="avatar-img rounded-circle" src="${doctor.avatar}" alt="${doctor.title}">` +
+            `<a href="${user.url}" class="avatar avatar-sm mr-2">` +
+                `<img class="avatar-img rounded-circle" src="${user.avatar}" alt="${user.title}">` +
             `</a>` +
-            `<a href="${doctor.url}">${doctor.title}<span>${doctor.specialty}</span></a>` +
+            `<a href="${user.url}">${user.title}<span>${user.subtitle}</span></a>` +
         `</h2>`;
     }
 }

@@ -29,8 +29,8 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-appointments.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/appointments' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/appointments}">
                             <i class="fas fa-calendar-check"></i>
                             <span>Appointments</span>
                         </a>
