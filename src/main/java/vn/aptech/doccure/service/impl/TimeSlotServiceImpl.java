@@ -3,9 +3,11 @@ package vn.aptech.doccure.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.TimeSlot;
+import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.TimeSlotRepository;
 import vn.aptech.doccure.service.TimeSlotService;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -86,5 +88,10 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     @Override
     public List<TimeSlot> findAllByDoctorOnDate(Long id, LocalDateTime date) {
         return timeSlotRepository.findAllByDoctorOnDate(id, date);
+    }
+
+    @Override
+    public TimeSlot findUpcomingAvailable(User doctor) {
+        return timeSlotRepository.findFirstByDoctorAndTimeStartAfterAndAppointmentIsNullOrderByTimeStartAsc(doctor, LocalDateTime.now());
     }
 }

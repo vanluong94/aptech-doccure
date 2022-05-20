@@ -35,8 +35,8 @@
                             <span>Appointments</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="patient-favourites.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/favorites' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/favorites}">
                             <i class="fas fa-bookmark"></i>
                             <span>Favourites</span>
                         </a>
