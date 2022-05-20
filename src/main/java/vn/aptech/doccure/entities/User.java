@@ -8,9 +8,11 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import vn.aptech.doccure.common.Constants;
+import vn.aptech.doccure.utils.DoctorUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

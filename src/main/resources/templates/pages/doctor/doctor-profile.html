@@ -73,8 +73,9 @@
 									<div class="doctor-action d-block">
 										<div class="row form-row">
 											<div class="col-6">
-												<a href="javascript:void(0)" class="btn btn-white fav-btn w-100">
-													<i class="far fa-bookmark d-block"></i>
+												<a href="javascript:void(0)" class="btn fav-btn w-100" th:classappend="${isDoctorFavorite ? 'btn-info' : 'btn-white'}" th:attr="data-doctor=${doctor.id}">
+													<i class="d-block far fa-bookmark"></i>
+													<i class="d-block fas fa-check"></i>
 													<small>Bookmark</small>
 												</a>
 											</div>
@@ -436,9 +437,41 @@
 
 		<!-- Custom JS -->
 		<script src="/assets/js/script.js"></script>
+
+		<script>
+			jQuery(function($){
+				$('.fav-btn').on('click', function(e){
+					let $btn = $(this);
+					e.preventDefault();
+					$.ajax({
+						url: `/ajax/favorite/${$btn.data('doctor')}`,
+						method: 'post',
+						headers: {
+							...getAjaxCsrfTokenHeader(),
+						},
+						beforeSend() {
+							$btn.addClass('disabled');
+						},
+						success(resp) {
+							if (resp.data.isFavorite) {
+								$btn.addClass('btn-info').removeClass('btn-white');
+							} else {
+								$btn.removeClass('btn-info').addClass('btn-white');
+							}
+						},
+						complete(xhr) {
+							$btn.removeClass('disabled');
+
+							if (xhr.responseJSON && xhr.responseJSON.message) {
+								alert(xhr.responseJSON.message);
+							} 
+						}
+					});
+				})
+			})
+		</script>
 	</div>
 
 </body>
 
-<!-- Mirrored from doccure-html.dreamguystech.com/template/doctor-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 22 Mar 2021 19:28:34 GMT -->
 </html>

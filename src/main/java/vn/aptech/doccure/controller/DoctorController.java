@@ -11,11 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
-import vn.aptech.doccure.entities.Appointment;
-import vn.aptech.doccure.entities.AppointmentLog;
-import vn.aptech.doccure.entities.TimeSlot;
-import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.entities.*;
 import vn.aptech.doccure.service.AppointmentService;
+import vn.aptech.doccure.service.PatientFavoriteService;
 import vn.aptech.doccure.service.TimeSlotService;
 import vn.aptech.doccure.service.UserService;
 
@@ -36,14 +34,25 @@ public class DoctorController {
     @Autowired
     private TimeSlotService timeSlotService;
 
+    @Autowired
+    private PatientFavoriteService favoriteService;
+
     @GetMapping("/profile/{id}")
-    public ModelAndView profile(@PathVariable("id") Long id) {
+    public ModelAndView profile(@PathVariable("id") Long id, Authentication authentication) {
         ModelAndView modelAndView;
         Optional<User> user = userService.findById(id);
         if (user.isPresent() && user.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
             modelAndView = new ModelAndView("/pages/doctor/doctor-profile");
             user.get().getClinic().parseImages();
             modelAndView.addObject("doctor", user.get());
+
+            if (authentication != null) {
+                User currentUser = (User) authentication.getPrincipal();
+                modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
+            } else {
+                modelAndView.addObject("isDoctorFavorite", false);
+            }
+
         } else {
             modelAndView = new ModelAndView("/pages/404");
         }

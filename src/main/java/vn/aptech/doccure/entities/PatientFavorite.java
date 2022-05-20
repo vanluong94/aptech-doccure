@@ -22,5 +22,9 @@ public class PatientFavorite {
     private PatientFavoriteId id;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "datetime default current_timestamp")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    
+    public PatientFavorite(PatientFavoriteId id) {
+        this.id = id;
+    }
 }

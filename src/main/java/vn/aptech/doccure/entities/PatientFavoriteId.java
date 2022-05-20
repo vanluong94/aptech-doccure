@@ -1,11 +1,14 @@
 package vn.aptech.doccure.entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class PatientFavoriteId implements Serializable {
     @MapsId
