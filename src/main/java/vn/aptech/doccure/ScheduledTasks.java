@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.TimeSlot;
-import vn.aptech.doccure.repository.AppointmentRepository;
-import vn.aptech.doccure.repository.TimeSlotRepository;
+import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.TimeSlotService;
 
 import java.time.LocalDateTime;
@@ -21,13 +20,10 @@ public class ScheduledTasks {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
 
     @Autowired
-    private TimeSlotRepository timeSlotRepository;
-
-    @Autowired
     private TimeSlotService timeSlotService;
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
+    private AppointmentService appointmentService;
 
     @Scheduled(fixedRate = 60*60*24*1000)
     public void timeSlotsGenerator() {
@@ -45,7 +41,7 @@ public class ScheduledTasks {
 
             for (TimeSlot timeSlot : timeSlots) {
                 if (!timeSlot.exists()) {
-                    timeSlotRepository.save(timeSlot);
+                    timeSlotService.saveAndFlush(timeSlot);
                     count++;
                 }
             }
@@ -59,7 +55,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 60*60*1000)
     public void appointmentsAutoComplete() {
 
-        List<Appointment> appointments = appointmentRepository.findAllPastIncomplete();
+        List<Appointment> appointments = appointmentService.findAllPastIncomplete();
 
         for (Appointment apmt : appointments) {
 
@@ -81,6 +77,6 @@ public class ScheduledTasks {
             }
         }
 
-        appointmentRepository.saveAllAndFlush(appointments);
+        appointmentService.saveAllAndFlush(appointments);
     }
 }

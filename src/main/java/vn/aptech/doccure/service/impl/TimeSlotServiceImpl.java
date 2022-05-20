@@ -1,7 +1,9 @@
 package vn.aptech.doccure.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.TimeSlot;
+import vn.aptech.doccure.repository.TimeSlotRepository;
 import vn.aptech.doccure.service.TimeSlotService;
 
 import javax.persistence.EntityManager;
@@ -10,12 +12,31 @@ import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TimeSlotServiceImpl implements TimeSlotService {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
+
+    @Autowired
+    private TimeSlotRepository timeSlotRepository;
+
+    @Override
+    public Optional<TimeSlot> findById(Long id) {
+        return timeSlotRepository.findById(id);
+    }
+
+    @Override
+    public TimeSlot saveAndFlush(TimeSlot timeSlot) {
+        return timeSlotRepository.saveAndFlush(timeSlot);
+    }
+
+    @Override
+    public TimeSlot save(TimeSlot timeSlot) {
+        return timeSlotRepository.save(timeSlot);
+    }
 
     @Override
     public List<TimeSlot> findAllByDate(LocalDateTime date) {
@@ -60,5 +81,10 @@ public class TimeSlotServiceImpl implements TimeSlotService {
                 .setParameter("theDate", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         return query.getResultList();
+    }
+
+    @Override
+    public List<TimeSlot> findAllByDoctorOnDate(Long id, LocalDateTime date) {
+        return timeSlotRepository.findAllByDoctorOnDate(id, date);
     }
 }

@@ -15,14 +15,13 @@ import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repository.AppointmentRepository;
-import vn.aptech.doccure.repository.TimeSlotRepository;
+import vn.aptech.doccure.service.AppointmentService;
+import vn.aptech.doccure.service.TimeSlotService;
 import vn.aptech.doccure.service.UserService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("doctor")
@@ -32,10 +31,10 @@ public class DoctorController {
     private UserService userService;
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
+    private AppointmentService appointmentService;
 
     @Autowired
-    private TimeSlotRepository timeSlotRepository;
+    private TimeSlotService timeSlotService;
 
     @GetMapping("/profile/{id}")
     public ModelAndView profile(@PathVariable("id") Long id) {
@@ -73,7 +72,7 @@ public class DoctorController {
 
             weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
             weekdayData.put("textDate", theDate.format(dateFormatter));
-            weekdayData.put("slots", timeSlotRepository.findAllByDoctorOnDate(user.get().getId(), theDate));
+            weekdayData.put("slots", timeSlotService.findAllByDoctorOnDate(user.get().getId(), theDate));
 
             weekdays.add(weekdayData);
         }
@@ -95,7 +94,7 @@ public class DoctorController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        Optional<TimeSlot> timeSlotResult = timeSlotRepository.findById(timeSlotId);
+        Optional<TimeSlot> timeSlotResult = timeSlotService.findById(timeSlotId);
         if (!timeSlotResult.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -121,7 +120,7 @@ public class DoctorController {
         AppointmentLog log = new AppointmentLog(appointment, "The appointment has been made", patient);
         appointment.getLogs().add(log);
 
-        timeSlotRepository.saveAndFlush(timeSlot);
+        timeSlotService.saveAndFlush(timeSlot);
 
         model.addAttribute("appointment", appointment);
         return "pages/doctor/doctor-booking-success";

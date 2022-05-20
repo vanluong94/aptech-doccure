@@ -13,11 +13,9 @@ import vn.aptech.doccure.common.AjaxResponse;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repository.AppointmentRepository;
-import vn.aptech.doccure.repository.TimeSlotRepository;
+import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.TimeSlotService;
-import vn.aptech.doccure.utils.DateUtils;
-import vn.aptech.doccure.utils.DoctorUtils;
+import vn.aptech.doccure.utils.AppointmentUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,13 +26,10 @@ import java.util.*;
 public class AppointmentController {
 
     @Autowired
-    AppointmentRepository appointmentRepository;
+    private AppointmentService appointmentService;
 
     @Autowired
-    TimeSlotService timeSlotService;
-
-    @Autowired
-    TimeSlotRepository timeSlotRepository;
+    private TimeSlotService timeSlotService;
 
     @GetMapping("/getByDoctor")
     @ResponseBody
@@ -59,7 +54,7 @@ public class AppointmentController {
 
             weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
             weekdayData.put("textDate", theDate.format(dateFormatter));
-            weekdayData.put("slots", timeSlotRepository.findAllByDoctorOnDate(doctorId, theDate));
+            weekdayData.put("slots", timeSlotService.findAllByDoctorOnDate(doctorId, theDate));
 
             weekdays.add(weekdayData);
         }
@@ -72,7 +67,7 @@ public class AppointmentController {
     @GetMapping("/mine")
     @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     @ResponseBody
-    public ResponseEntity<Object> getByPatient(@RequestParam Integer page, @RequestParam Integer length, Authentication authentication) {
+    public ResponseEntity<Object> getMine(@RequestParam Integer page, @RequestParam Integer length, Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
@@ -82,52 +77,68 @@ public class AppointmentController {
         Page<Appointment> results;
 
         if (user.isDoctor()) {
-            results = appointmentRepository.findAllByDoctorOrderByCreatedDateDesc(user, pageable);
+            results = appointmentService.findAllByDoctor(user, pageable);
         } else if (user.isPatient()) {
-            results = appointmentRepository.findAllByPatientOrderByCreatedDateDesc(user, pageable);
+            results = appointmentService.findAllByPatient(user, pageable);
         } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        List<Object> rows = new LinkedList<>();
-        for (Appointment apmt : results.getContent()) {
-            Map<String, Object> row = new LinkedHashMap<>();
-            Map<String, Object> doctor = new HashMap<>();
-            Map<String, Object> patient = new HashMap<>();
+        response.put("data", AppointmentUtils.toDataTable(results.getContent()));
+        response.put("recordsTotal", results.getTotalElements());
+        response.put("recordsFiltered", results.getTotalElements());
 
-            doctor.put("avatar", apmt.getDoctor().getTheAvatar());
-            doctor.put("url", DoctorUtils.getDoctorProfileUrl(apmt.getDoctor()));
-            doctor.put("title", apmt.getDoctor().getDoctorTitle());
-            doctor.put("subtitle", "Dental");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-            patient.put("avatar", apmt.getPatient().getTheAvatar());
-            patient.put("url", "#");
-            patient.put("title", apmt.getPatient().getFullName());
-            patient.put("subtitle", "#" + apmt.getPatient().getId());
+    @GetMapping("/mine/upcoming")
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    @ResponseBody
+    public ResponseEntity<Object> getMineUpcoming(@RequestParam Integer page, @RequestParam Integer length, Authentication authentication) {
 
-//            row.put("doctor", AppointmentUtils.getDoctorItemOutput(apmt.getDoctor()));
-//            row.put("apmtDate", DateUtils.toStandardDate(apmt.getTimeSlot().getTimeStart()));
-//            row.put("timeStart", "<span class=\"text-info\">" + DateUtils.toStandardTime(apmt.getTimeSlot().getTimeStart()) + "</span>");
-//            row.put("timeEnd", "<span class=\"text-info\">" + DateUtils.toStandardTime(apmt.getTimeSlot().getTimeEnd()) + "</span>");
-//            row.put("bookingDate", DateUtils.toStandardDate(apmt.getCreatedDate()));
-//            row.put("status", AppointmentUtils.getStatusBadgeOutput(apmt));
-//            row.put("action", AppointmentUtils.getPatientAppointmentActionsOutput(apmt));
+        User user = (User) authentication.getPrincipal();
 
-            row.put("id", apmt.getId());
-            row.put("doctor", doctor);
-            row.put("patient", patient);
-            row.put("apmtDate", DateUtils.toStandardDate(apmt.getTimeSlot().getTimeStart()));
-            row.put("timeStart", DateUtils.toStandardTime(apmt.getTimeSlot().getTimeStart()));
-            row.put("timeEnd", DateUtils.toStandardTime(apmt.getTimeSlot().getTimeEnd()));
-            row.put("bookingDate", DateUtils.toStandardDate(apmt.getCreatedDate()));
-            row.put("status", apmt.getStatus());
-            row.put("action", "");
+        Map<String, Object> response = new HashMap<>();
 
-            rows.add(row);
+        Pageable pageable = PageRequest.of(page, length);
+        Page<Appointment> results;
+
+        if (user.isDoctor()) {
+            results = appointmentService.findUpcomingByDoctor(user, pageable);
+        } else if (user.isPatient()) {
+            results = appointmentService.findUpcomingByPatient(user, pageable);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-//        response.put("draw", results.isEmpty() ? 0 : 1);
-        response.put("data", rows);
+        response.put("data", AppointmentUtils.toDataTable(results.getContent()));
+        response.put("recordsTotal", results.getTotalElements());
+        response.put("recordsFiltered", results.getTotalElements());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/mine/today")
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    @ResponseBody
+    public ResponseEntity<Object> getMineToday(@RequestParam Integer page, @RequestParam Integer length, Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+
+        Pageable pageable = PageRequest.of(page, length);
+        Page<Appointment> results;
+
+        if (user.isDoctor()) {
+            results = appointmentService.findTodayByDoctor(user, pageable);
+        } else if (user.isPatient()) {
+            results = appointmentService.findTodayByPatient(user, pageable);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        response.put("data", AppointmentUtils.toDataTable(results.getContent()));
         response.put("recordsTotal", results.getTotalElements());
         response.put("recordsFiltered", results.getTotalElements());
 
@@ -145,7 +156,7 @@ public class AppointmentController {
             return AjaxResponse.responseFail(response, "login required");
         }
 
-        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+        Optional<Appointment> appointmentOptional = appointmentService.findById(id);
 
         if (!appointmentOptional.isPresent()) {
             return AjaxResponse.responseFail(response, "appointment not found");
@@ -174,7 +185,7 @@ public class AppointmentController {
             return AjaxResponse.responseFail(response, "login required");
         }
 
-        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+        Optional<Appointment> appointmentOptional = appointmentService.findById(id);
 
         if (!appointmentOptional.isPresent()) {
             return AjaxResponse.responseFail(response, "appointment not found");
@@ -201,8 +212,8 @@ public class AppointmentController {
         appointment.setStatus(Appointment.STATUS.CANCELED);
         appointment.getLogs().add(log);
 
-        appointmentRepository.saveAndFlush(appointment);
-        timeSlotRepository.saveAndFlush(appointment.getTimeSlot());
+        appointmentService.saveAndFlush(appointment);
+        timeSlotService.saveAndFlush(appointment.getTimeSlot());
 
         return AjaxResponse.responseSuccess(response, "success");
 
@@ -219,7 +230,7 @@ public class AppointmentController {
             return AjaxResponse.responseFail(response, "login required");
         }
 
-        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+        Optional<Appointment> appointmentOptional = appointmentService.findById(id);
 
         if (!appointmentOptional.isPresent()) {
             return AjaxResponse.responseFail(response, "appointment not found");
@@ -241,7 +252,7 @@ public class AppointmentController {
         appointment.setStatus(Appointment.STATUS.CONFIRMED);
         appointment.getLogs().add(log);
 
-        appointmentRepository.saveAndFlush(appointment);
+        appointmentService.saveAndFlush(appointment);
 
         return AjaxResponse.responseSuccess(response, "success");
 

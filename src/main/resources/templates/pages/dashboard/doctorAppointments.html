@@ -128,12 +128,10 @@
 
     <!-- <script src="assets/plugins/datatables/datatables.min.js"></script> -->
     <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/js/table-appointments.js"></script>
     <script>
 
-        const $appointmentDetailModal = $('#appointmentDetail');
-        const $appointmentDetailBody = $appointmentDetailModal.find('.modal-body');
-
-        const $appointmentsTable = $('#appointmentsTable').DataTable({
+        $('#appointmentsTable').DataTable({
             searching: false,
             bInfo: false,
             bLengthChange: false,
@@ -151,37 +149,7 @@
                         length: d.length,
                     };
                 },
-                dataSrc: function(resp){
-                    return resp.data.map((row) => {
-                        return Object.keys(row)
-                        .filter((key) => ['id', 'doctor', 'bookingDate'].indexOf(key) == -1) // exclude these field in results
-                        .map((key) => {
-
-                            let output = row[key];
-
-                            if (key == 'patient') {
-                                output = themeUtils.renderUserTd(row.patient);
-                            } else if (key == 'timeStart' || key == 'timeEnd') {
-                                output = `<span class="text-info">${row[key]}</span>`;
-                            } else if (key == 'status') {
-                                output = themeUtils.renderApmtStatusPill(row.status);
-                            } else if (key == 'action') {
-
-                                output = `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="far fa-eye"></i> View</div>`;
-
-                                switch(row.status) {
-                                    case 0:
-                                        output += `<div class="btn btn-sm bg-success-light mr-1" data-apmt-action="confirm" data-appointment-id="${row.id}"><i class="fas fa-check"></i> Accept</div>`;
-                                        output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
-                                        break;
-                                }
-
-                            }
-
-                            return output;
-                        })
-                    });
-                }
+                dataSrc: (resp) => appointmentUtils.parseDoctorTableData(resp, ['id', 'patient'])
             },
             drawCallback(settings, json) {
 
@@ -208,116 +176,21 @@
                 let $table = $('#appointmentsTable');
                 $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
                     e.preventDefault();
-                    viewAppointmentDetail($(this).data('appointment-id'));
+                    appointmentUtils.view($(this).data('appointment-id'));
                 })
 
                 $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
                     e.preventDefault();
-                    cancelAppointment($(this).data('appointment-id'));
+                    appointmentUtils.cancel($(this).data('appointment-id'));
                 })
 
                 $table.find('.btn[data-apmt-action="confirm"]').on('click', function(e){
                     e.preventDefault();
-                    confirmAppointment($(this).data('appointment-id'));
+                    appointmentUtils.confirm($(this).data('appointment-id'));
                 })
             }
         });
 
-        const viewAppointmentDetail = (apmtId) => {
-
-            $appointmentDetailModal.modal('show');
-
-            let $info = $appointmentDetailBody.find('.info-details');
-            let $fields = $appointmentDetailBody.find('[data-field]');
-
-            $.ajax({
-                url: `/ajax/appointments/${apmtId}/get`,
-                beforeSend() {
-                    addLoadingOverlay($info);
-                    $fields.empty();
-                },
-                success(resp) {
-                    if (resp.isSuccess) {
-                        $fields.each((i,e) => {
-                            $e = $(e);
-                            $e.empty(); // just to make sure it's empty
-
-                            let name = $e.data('field');
-                            let value;
-
-                            if (name == 'statusBadge') {
-                                value = themeUtils.renderApmtStatusBadge(resp.data.appointment.status);
-                            } else if (name == 'logs') {
-                                for (log of resp.data.appointment.logs) {
-                                    $e.append(
-                                        ` <tr>
-                                            <td>${log.createdDate}</td>
-                                            <td>${themeUtils.renderApmtLogContent(log.content)}</td>
-                                        </tr>`
-                                    );
-                                }
-                            } else {
-                                value = resp.data.appointment;
-                                name.split('.').forEach(key => {
-                                    value = value[key];
-                                });
-                            }
-
-                            $e.html(value);
-                        })
-                    }
-                },
-                complete(status, xhr) {
-                    removeLoadingOverlay($info);
-                }
-            });
-        }
-
-        const cancelAppointment = (apmtId) => {
-            if (confirm(`Are you sure that you want to cancel this appointment?`)) {
-                $.ajax({
-                    url: `/ajax/appointments/${apmtId}/cancel`,
-                    method: 'post',
-                    headers: {
-                        ...getAjaxCsrfTokenHeader()
-                    },
-                    beforeSend() {
-                        addLoadingOverlay($appointmentsTable);
-                    },
-                    success(resp) {
-                        if (resp.isSuccess) {
-                            $appointmentsTable.ajax.reload();
-                        }
-                    },
-                    complete(status, xhr) {
-                        removeLoadingOverlay($appointmentsTable);
-                    }
-                });
-            }
-        }
-
-        const confirmAppointment = (apmtId) => {
-            if (confirm(`Are you sure that you want to confirm this appointment?`)) {
-                $.ajax({
-                    url: `/ajax/appointments/${apmtId}/confirm`,
-                    method: 'post',
-                    headers: {
-                        ...getAjaxCsrfTokenHeader()
-                    },
-                    beforeSend() {
-                        addLoadingOverlay($appointmentsTable);
-                    },
-                    success(resp) {
-                        if (resp.isSuccess) {
-                            $appointmentsTable.ajax.reload();
-                        }
-                    },
-                    complete(status, xhr) {
-                        removeLoadingOverlay($appointmentsTable);
-                    }
-                });
-            }
-        }
     </script>
 </div>
 

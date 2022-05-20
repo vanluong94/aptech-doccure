@@ -1,76 +1,44 @@
 package vn.aptech.doccure.utils;
 
 import vn.aptech.doccure.entities.Appointment;
-import vn.aptech.doccure.entities.User;
+
+import java.util.*;
 
 public class AppointmentUtils {
 
-    public static String getDoctorItemOutput(User doctor) {
-        return "<h2 class=\"table-avatar\">" +
-                "<a href=\"" + DoctorUtils.getDoctorProfileUrl(doctor) + "\" class=\"avatar avatar-sm mr-2\">" +
-                "<img class=\"avatar-img rounded-circle\" src=\"" + doctor.getTheAvatar() + "\" alt=\"User Image\">" +
-                "</a>" +
-                "<a href=\"" + DoctorUtils.getDoctorProfileUrl(doctor) + "\">" + doctor.getDoctorTitle() + " <span>Dental</span></a>" +
-                "</h2>";
-    }
+    public static List<Object> toDataTable(List<Appointment>appointments) {
 
-    public static String getStatusBadgeOutput(Appointment appointment) {
+        List<Object> rows = new LinkedList<>();
 
-        switch (appointment.getStatus()) {
-            case Appointment.STATUS.PENDING:
-                return "<span class=\"badge badge-pill bg-warning-light\">Pending</span>";
-            case Appointment.STATUS.CANCELED:
-                return "<span class=\"badge badge-pill bg-danger-light\">Cancelled</span>";
-            case Appointment.STATUS.COMPLETED:
-                return "<span class=\"badge badge-pill bg-info-light\">Confirm</span>";
-            case Appointment.STATUS.CONFIRMED:
-                return "<span class=\"badge badge-pill bg-success-light\">Confirm</span>";
-            default:
-                return "";
+        for (Appointment apmt : appointments) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            Map<String, Object> doctor = new HashMap<>();
+            Map<String, Object> patient = new HashMap<>();
+
+            doctor.put("avatar", apmt.getDoctor().getTheAvatar());
+            doctor.put("url", DoctorUtils.getDoctorProfileUrl(apmt.getDoctor()));
+            doctor.put("title", apmt.getDoctor().getDoctorTitle());
+            doctor.put("subtitle", "Dental");
+
+            patient.put("avatar", apmt.getPatient().getTheAvatar());
+            patient.put("url", "#");
+            patient.put("title", apmt.getPatient().getFullName());
+            patient.put("subtitle", "#" + apmt.getPatient().getId());
+
+            row.put("id", apmt.getId());
+            row.put("doctor", doctor);
+            row.put("patient", patient);
+            row.put("apmtDate", DateUtils.toStandardDate(apmt.getTimeSlot().getTimeStart()));
+            row.put("timeStart", DateUtils.toStandardTime(apmt.getTimeSlot().getTimeStart()));
+            row.put("timeEnd", DateUtils.toStandardTime(apmt.getTimeSlot().getTimeEnd()));
+            row.put("bookingDate", DateUtils.toStandardDate(apmt.getCreatedDate()));
+            row.put("status", apmt.getStatus());
+            row.put("action", "");
+
+            rows.add(row);
         }
 
+        return rows;
+
     }
-
-    public static String getPatientAppointmentActionsOutput(Appointment appointment) {
-
-        StringBuilder output = new StringBuilder();
-
-        output.append("<div class=\"btn btn-sm bg-info-light mr-1\"><i class=\"far fa-eye\"></i> View</div>");
-
-        switch (appointment.getStatus()) {
-            case Appointment.STATUS.PENDING:
-                output.append("<div class=\"btn btn-sm bg-danger-light mr-1\" data-action=\"view-appointment\" data-appointment=\"" + appointment.getId() + "\"><i class=\"fas fa-times\"></i> Cancel</div>");
-                break;
-            case Appointment.STATUS.CANCELED:
-                break;
-            case Appointment.STATUS.COMPLETED:
-                break;
-            case Appointment.STATUS.CONFIRMED:
-                break;
-        }
-
-        return output.toString();
-    }
-
-    public static String getDoctorAppointmentActionsOutput(Appointment appointment) {
-        StringBuilder output = new StringBuilder();
-
-        output.append("<div class=\"btn btn-sm bg-info-light mr-1\"><i class=\"far fa-eye\"></i> View</div>");
-
-        switch (appointment.getStatus()) {
-            case Appointment.STATUS.PENDING:
-                output.append("<div class=\"btn btn-sm bg-success-light mr-1\"><i class=\"fas fa-check\"></i> Confirm</div>");
-                output.append("<div class=\"btn btn-sm bg-danger-light mr-1\"><i class=\"fas fa-times\"></i> Cancel</div>");
-                break;
-            case Appointment.STATUS.CANCELED:
-                break;
-            case Appointment.STATUS.COMPLETED:
-                break;
-            case Appointment.STATUS.CONFIRMED:
-                break;
-        }
-
-        return output.toString();
-    }
-
 }
