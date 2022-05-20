@@ -24,7 +24,7 @@
             <nav class="dashboard-menu">
                 <ul>
                     <li th:classappend="${#request.getRequestURI() == '/dashboard' ? 'active' : ''}">
-                        <a href="patient-dashboard.html">
+                        <a th:href="@{/dashboard}">
                             <i class="fas fa-columns"></i>
                             <span>Dashboard</span>
                         </a>

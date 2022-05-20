@@ -135,9 +135,7 @@
             searching: false,
             bInfo: false,
             bLengthChange: false,
-            dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
             ordering: false,
-            // pageLength: 5,
             processing: true,
             serverSide: true,
             ajax: {
@@ -149,7 +147,7 @@
                         length: d.length,
                     };
                 },
-                dataSrc: (resp) => appointmentUtils.parseDoctorTableData(resp, ['id', 'patient'])
+                dataSrc: (resp) => appointmentUtils.parseDoctorTableData(resp)
             },
             drawCallback(settings, json) {
 
