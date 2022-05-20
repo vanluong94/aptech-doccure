@@ -77,8 +77,6 @@
                                     <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}">
                                         <img class="img-fluid" src="#" th:src="${doctor.theAvatar}" alt="User Image">
                                     </a>
-                                    <a href="javascript:void(0)" class="fav-btn"> <i class="far fa-bookmark"></i>
-                                    </a>
                                 </div>
                                 <div class="pro-content">
                                     <h3 class="title">
@@ -93,7 +91,7 @@
                                     <div class="row row-sm">
                                         <div class="col-6"> <a class="btn view-btn" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">View Profile</a>
                                         </div>
-                                        <div class="col-6"> <a href="booking.html" class="btn book-btn">Book Now</a>
+                                        <div class="col-6"> <a th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" class="btn book-btn">Book Now</a>
                                         </div>
                                     </div>
                                 </div>
