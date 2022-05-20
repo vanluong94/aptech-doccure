@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface TimeSlotDefaultRepository extends JpaRepository<TimeSlotDefault, Long> {
+    
     List<TimeSlotDefault> findAllByDoctor(User doctor);
+
 }

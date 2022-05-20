@@ -443,30 +443,13 @@
 				$('.fav-btn').on('click', function(e){
 					let $btn = $(this);
 					e.preventDefault();
-					$.ajax({
-						url: `/ajax/favorite/${$btn.data('doctor')}`,
-						method: 'post',
-						headers: {
-							...getAjaxCsrfTokenHeader(),
-						},
-						beforeSend() {
-							$btn.addClass('disabled');
-						},
-						success(resp) {
-							if (resp.data.isFavorite) {
-								$btn.addClass('btn-info').removeClass('btn-white');
-							} else {
-								$btn.removeClass('btn-info').addClass('btn-white');
-							}
-						},
-						complete(xhr) {
-							$btn.removeClass('disabled');
-
-							if (xhr.responseJSON && xhr.responseJSON.message) {
-								alert(xhr.responseJSON.message);
-							} 
+					favoriteDoctorToggle($btn, (resp) => {
+						if (resp.data.isFavorite) {
+							$btn.addClass('btn-info').removeClass('btn-white');
+						} else {
+							$btn.removeClass('btn-info').addClass('btn-white');
 						}
-					});
+					})
 				})
 			})
 		</script>

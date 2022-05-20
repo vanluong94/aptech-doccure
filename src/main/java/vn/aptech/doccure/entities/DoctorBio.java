@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "doctor_bio")
 public class DoctorBio implements Serializable {
+
     @Id
     @Column(name = "doctor_id", nullable = false)
     private Long doctorId;
@@ -30,4 +31,17 @@ public class DoctorBio implements Serializable {
 
     @Column(name = "rating", nullable = false, columnDefinition = "double(1,1) default 0")
     private Double rating;
+
+    @Lob
+    @Column(name = "educations", columnDefinition = "json")
+    private String educations;
+
+    @Lob
+    @Column(name = "experiences", columnDefinition = "json")
+    private String experiences;
+
+    @Lob
+    @Column(name = "awards", columnDefinition = "json")
+    private String awards;
+
 }

@@ -40,3 +40,31 @@ const removeLoadingOverlay = ($el) => {
     $el.removeClass('position-relative');
     $el.find('.loading-overlay').remove();
 }
+
+/**
+ * Handle favorite toggle feature
+ * @param {*} $btn 
+ * @param {*} callback 
+ */
+const favoriteDoctorToggle = ($btn, callback) => {
+    $.ajax({
+        url: `/ajax/favorite/${$btn.data('doctor')}`,
+        method: 'post',
+        headers: {
+            ...getAjaxCsrfTokenHeader(),
+        },
+        beforeSend() {
+            $btn.addClass('disabled');
+        },
+        success(resp) {
+            callback(resp);
+        },
+        complete(xhr) {
+            $btn.removeClass('disabled');
+
+            if (xhr.responseJSON && !xhr.responseJSON.isSuccess && xhr.responseJSON.message) {
+                alert(xhr.responseJSON.message);
+            } 
+        }
+    });
+}
