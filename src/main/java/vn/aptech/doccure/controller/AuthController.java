@@ -42,16 +42,21 @@ class AuthController {
     }
 
     @GetMapping("register")
-    public ModelAndView register(@RequestParam(value = "doctor", required = false) String doctor) {
+    public ModelAndView register() {
         ModelAndView modelAndView = new ModelAndView("auth/register");
-        User user;
         Set<Role> roles = new HashSet<>();
-        if (doctor != null && doctor.equals("doctor")) {
-            roles.add(roleService.findByName(Constants.Roles.ROLE_DOCTOR));
-        } else {
-            roles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
-        }
-        user = new User(1, roles);
+        roles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
+        User user = new User(1, roles);
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @GetMapping("doctor-register")
+    public ModelAndView doctorRegister() {
+        ModelAndView modelAndView = new ModelAndView("auth/register");
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.findByName(Constants.Roles.ROLE_DOCTOR));
+        User user = new User(1, roles);
         modelAndView.addObject("user", user);
         return modelAndView;
     }
