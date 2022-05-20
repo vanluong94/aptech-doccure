@@ -48,6 +48,7 @@ class AuthController {
         roles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
         User user = new User(1, roles);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("isDoctor", false);
         return modelAndView;
     }
 
@@ -58,6 +59,7 @@ class AuthController {
         roles.add(roleService.findByName(Constants.Roles.ROLE_DOCTOR));
         User user = new User(1, roles);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("isDoctor", true);
         return modelAndView;
     }
 

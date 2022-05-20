@@ -21,10 +21,10 @@
                                 <img src="/assets/img/login-banner.png" class="img-fluid" alt="Doccure Login">
                             </div>
                             <div class="col-md-12 col-lg-6 login-right">
-                                <div class="login-header" th:unless="${param.doctor != null}">
+                                <div class="login-header" th:unless="${isDoctor}">
                                     <h3>Patient Register <a th:href="@{/doctor-register}">Are you a Doctor?</a></h3>
                                 </div>
-                                <div class="login-header" th:unless="${param.doctor == null}">
+                                <div class="login-header" th:if="${isDoctor}">
                                     <h3>Doctor Register <a th:href="@{/register}">Not a Doctor?</a></h3>
                                 </div>
                                 <form action="#" th:action="@{/register}" th:object="${user}" method="post">
