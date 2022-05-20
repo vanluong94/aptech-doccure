@@ -1,6 +1,8 @@
 package vn.aptech.doccure.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.PatientFavorite;
 import vn.aptech.doccure.entities.PatientFavoriteId;
@@ -35,5 +37,10 @@ public class PatientFavoriteServiceImpl implements PatientFavoriteService {
     public boolean isDoctorFavorited(User doctor, User patient) {
         PatientFavoriteId favoriteId = new PatientFavoriteId(doctor, patient);
         return this.findById(favoriteId).isPresent();
+    }
+
+    @Override
+    public Page<PatientFavorite> findByPatient(User patient, Pageable pageable) {
+        return favoriteRepository.findByIdPatientOrderByCreatedAtDesc(patient, pageable);
     }
 }

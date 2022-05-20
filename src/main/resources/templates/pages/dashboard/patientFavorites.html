@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>My Favorites - Doccure</title>
+</head>
+<body>
+
+<div class="page-content" layout:fragment="layoutContent">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-12">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Favourites</li>
+                        </ol>
+                    </nav>
+                    <h2 class="breadcrumb-title">Favourites</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Breadcrumb -->
+    
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <!-- Profile Sidebar -->
+                <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+                    <div th:replace="fragments/dashboard/patientSidebar :: sidebar"></div>
+                </div>
+                <!-- / Profile Sidebar -->
+
+                <div class="col-md-7 col-lg-8 col-xl-9">
+
+                    <th:block th:unless="${favoriteDoctors.empty}">
+                        <!-- GRID -->
+                        <div class="row row-grid">
+    
+                            <div class="col-md-6 col-lg-4 col-xl-3" th:each="doctorDto : ${favoriteDoctors}">
+                                <div class="profile-widget">
+                                    <div class="doc-img">
+                                        <a th:href="@{/doctor/profile/{id}(id=${doctorDto.doctor.id})}">
+                                            <img class="img-fluid" alt="User Image" th:src="${doctorDto.doctor.theAvatar}">
+                                        </a>
+                                        <a href="javascript:void(0)" class="fav-btn bg-danger-light"  th:attr="data-doctor=${doctorDto.doctor.id}">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </div>
+                                    <div class="pro-content">
+                                        <h3 class="title">
+                                            <a th:href="@{/doctor/profile/{id}(id=${doctorDto.doctor.id})}" th:text="${doctorDto.title}"></a> 
+                                            <i class="fas fa-check-circle verified"></i>
+                                        </h3>
+                                        <p class="speciality" th:text="${doctorDto.eduSpecialtiesText}"></p>
+                                        <div class="rating">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <span class="d-inline-block average-rating">(17)</span>
+                                        </div>
+                                        <ul class="available-info">
+                                            <li>
+                                                <i class="fas fa-map-marker-alt"></i> <span th:text="${doctorDto.city}"></span>
+                                            </li>
+                                            <li>
+                                                <i class="far fa-clock"></i> <span th:if="${doctorDto.upcomingAvailableDate != null}">Available on <span th:text="${doctorDto.upcomingAvailableDate}"></span><span th:unless="${doctorDto.upcomingAvailableDate != null}">Not available</span></span> 
+                                            </li>
+                                        </ul>
+                                        <div class="row row-sm">
+                                            <div class="col-6">
+                                                <a th:href="@{/doctor/profile/{id}(id=${doctorDto.doctor.id})}" class="btn view-btn">View Profile</a>
+                                            </div>
+                                            <div class="col-6">
+                                                <a th:href="@{/doctor/profile/{id}/booking(id=${doctorDto.doctor.id})}" class="btn book-btn">Book Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div>
+    
+                        <!-- PAGINATION -->
+                        <div class="d-flex justify-content-end mt-1 mb-4">
+                            <ul class="pagination" th:object="${favoriteResult}">
+                                <!-- PREVIOUS -->
+                                <li class="page-item" th:classappend="${favoriteResult.hasPrevious() ? '' : 'disabled'}">
+                                    <a class="page-link" th:if="${favoriteResult.hasPrevious()}" th:href="@{/dashboard/favorites} + ${favoriteResult.previousPageable().getPageNumber()}" tabindex="-1">Previous</a>
+                                    <a class="page-link" th:unless="${favoriteResult.hasPrevious()}" href="#" tabindex="-1">Previous</a>
+                                </li>
+    
+                                <!-- PAGES -->
+                                <li class="page-item" th:each="i : ${#numbers.sequence(1,favoriteResult.totalPages,1)}" th:classappend="${favoriteResult.number == i ? 'active' : ''}">
+                                    <a th:href="@{/dashboard/favorites} + ${i}" th:text="${i}" class="page-link"><span class="sr-only" th:if="${favoriteResult.number == i}">(current)</span></a>
+                                </li>
+    
+                                <!-- NEXT -->
+                                <li class="page-item" th:classappend="${favoriteResult.hasNext() ? '' : 'disabled'}">
+                                    <a class="page-link" th:if="${favoriteResult.hasNext()}" th:href="@{/dashboard/favorites} + ${favoriteResult.nextPageable().getPageNumber()}" tabindex="-1">Next</a>
+                                    <a class="page-link" th:unless="${favoriteResult.hasNext()}" href="#" tabindex="-1">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th:block>
+
+                    <p th:if="${favoriteDoctors.empty}" class="text-center h5 py-5">No favorite found</p>
+
+                </div>
+            </div>
+        </div>
+
+    </div>		
+    <!-- /Page Content -->    
+</div>
+
+<div layout:fragment="layoutExtra">
+
+</div>
+
+<div layout:fragment="customScripts">
+    <script>
+        jQuery(function($){
+            $('.fav-btn').on('click', function(e){
+                let $btn = $(this);
+                e.preventDefault();
+                favoriteDoctorToggle($btn, (resp) => {
+                    window.location.reload();
+                })
+            })
+        })
+    </script>
+</div>
+
+</body>
+</html>
