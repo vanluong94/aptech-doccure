@@ -21,13 +21,13 @@
 
                     <!-- Search -->
                     <div class="search-box">
-                        <form th:action="@{/ajax/time_slots/save}" method="post">
+                        <form th:action="@{/search}" method="get">
                             <div class="form-group search-location">
-                                <input type="text" class="form-control" placeholder="Search Location">
+                                <input name="location" type="text" class="form-control" placeholder="Search Location">
                                 <span class="form-text">Based on your Location</span>
                             </div>
                             <div class="form-group search-info">
-                                <input type="text" class="form-control" placeholder="Search Doctors, Clinics">
+                                <input name="query" type="text" class="form-control" placeholder="Search Doctors, Clinics">
                                 <span class="form-text">Ex : Dental or Sugar Check up etc</span>
                             </div>
                             <button type="submit" class="btn btn-primary search-btn mt-0"><i class="fas fa-search"></i> <span>Search</span></button>

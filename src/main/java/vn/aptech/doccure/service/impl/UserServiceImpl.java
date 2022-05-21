@@ -15,6 +15,7 @@ import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.UserRepository;
 import vn.aptech.doccure.service.UserService;
+import vn.aptech.doccure.utils.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,8 +43,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
-       String[] userRoles = user.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
-       Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
+        String[] userRoles = user.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
+        Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
         return authorities;
     }
 
@@ -92,6 +93,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findTop10ByOrderByIdDesc() {
+        return repo.findTop10ByOrderByIdDesc();
+    }
+
+    @Override
     public List<User> findTop10ByRolesInOrderByIdDesc(Set<Role> roles) {
         return repo.findTop10ByRolesInOrderByIdDesc(roles);
     }
@@ -104,5 +110,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllByGenderInAndSpecialitiesIn(List<Short> gender, List<Speciality> specialities) {
         return repo.findAllByGenderInAndSpecialitiesIn(gender, specialities);
+    }
+
+    public List<User> findAllWithAdvanceSearch(String location, String query, Collection<Short> gender, Collection<Long> specialities, Collection<String> roles) {
+        if (StringUtils.isNullOrBlank(location)) {
+            location = null;
+        }
+        if (StringUtils.isNullOrBlank(query)) {
+            query = null;
+        }
+        return repo.findAllWithAdvanceSearch(location, query, gender, specialities, roles);
     }
 }
