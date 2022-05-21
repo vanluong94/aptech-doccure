@@ -1,10 +1,19 @@
 package vn.aptech.doccure.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "patient_bio")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PatientBio implements Serializable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,24 +21,19 @@ public class PatientBio implements Serializable  {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(
+            name = "patient_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "patient_bio_user_fk")
+    )
     private User patient;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "bloodType", length = 10)
+    private String bloodType;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "weight")
+    private Short weight;
 
-    public User getPatient() {
-        return patient;
-    }
-
-    public void setPatient(User patient) {
-        this.patient = patient;
-    }
-
-    //TODO Reverse Engineering! Migrate other columns to the entity
+    @Column(name = "height")
+    private Short height;
 }

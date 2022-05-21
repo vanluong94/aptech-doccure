@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.doccure.entities.Speciality;
+import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repository.UserRepository;
 import vn.aptech.doccure.service.UserService;
@@ -18,6 +19,7 @@ import vn.aptech.doccure.service.UserService;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,9 +42,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
-//        String[] userRoles = user.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
-//        Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
-        return null;
+       String[] userRoles = user.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
+       Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
+        return authorities;
     }
 
     @Override
@@ -90,8 +92,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findTop10ByOrderByIdDesc() {
-        return repo.findTop10ByOrderByIdDesc();
+    public List<User> findTop10ByRolesInOrderByIdDesc(Set<Role> roles) {
+        return repo.findTop10ByRolesInOrderByIdDesc(roles);
+    }
+
+    @Override
+    public Long countByRolesIn(Set<Role> roles) {
+        return repo.countByRolesIn(roles);
     }
 
     @Override

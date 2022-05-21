@@ -32,7 +32,7 @@
 											<i class="fa fa-user-md" aria-hidden="true"></i>
 										</span>
                             <div class="dash-count">
-                                <h3>168</h3>
+                                <h3 th:text="${countDoctors}">0</h3>
                             </div>
                         </div>
                         <div class="dash-widget-info">
@@ -52,7 +52,7 @@
 											<i class="fa fa-user-plus" aria-hidden="true"></i>
 										</span>
                             <div class="dash-count">
-                                <h3>487</h3>
+                                <h3 th:text="${countPatients}">0</h3>
                             </div>
                         </div>
                         <div class="dash-widget-info">
@@ -73,7 +73,7 @@
 											<i class="fa fa-calendar-check-o" aria-hidden="true"></i>
 										</span>
                             <div class="dash-count">
-                                <h3>485</h3>
+                                <h3>0</h3>
                             </div>
                         </div>
                         <div class="dash-widget-info">
@@ -85,22 +85,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-
-                <!-- Invoice Chart -->
-                <div class="card card-chart">
-                    <div class="card-header">
-                        <h4 class="card-title">New Registrations</h4>
-                    </div>
-                    <div class="card-body">
-                        <div id="morrisLine"></div>
-                    </div>
-                </div>
-                <!-- /Invoice Chart -->
-
             </div>
         </div>
         <div class="row">
@@ -121,79 +105,22 @@
                                     <th>Reviews</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody th:if="${#lists.isEmpty(listDoctors)}">
                                 <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-01.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Ruby Perrin</a>
-                                        </h2>
-                                    </td>
-                                    <td>Dental</td>
-                                    <td>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                    </td>
+                                    <td colspan="4">No data.</td>
                                 </tr>
-                                <tr>
+                                </tbody>
+                                <tbody th:unless="${#lists.isEmpty(listDoctors)}">
+                                <tr th:each="doctor : ${listDoctors}">
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-02.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Darren Elder</a>
+                                            <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" class="avatar avatar-sm mr-2">
+                                                <img class="avatar-img rounded-circle" th:src="${doctor.theAvatar}" alt="User Image">
+                                            </a>
+                                            <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
                                         </h2>
                                     </td>
-                                    <td>Dental</td>
-                                    <td>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-03.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Deborah Angel</a>
-                                        </h2>
-                                    </td>
-                                    <td>Cardiology</td>
-                                    <td>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-04.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Sofia Brient</a>
-                                        </h2>
-                                    </td>
-                                    <td>Urology</td>
-                                    <td>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-secondary"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-05.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Marvin Campbell</a>
-                                        </h2>
-                                    </td>
-                                    <td>Orthopaedics</td>
+                                    <td th:text="${doctor?.clinic?.specialities}"></td>
                                     <td>
                                         <i class="fa fa-star text-warning"></i>
                                         <i class="fa fa-star text-warning"></i>
@@ -227,56 +154,23 @@
                                     <th>Last Appointment</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody th:if="${#lists.isEmpty(listPatients)}">
                                 <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient1.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Charlene Reed </a>
-                                        </h2>
-                                    </td>
-                                    <td>8286329170</td>
-                                    <td>20 Oct 2019</td>
+                                    <td colspan="4">No data.</td>
                                 </tr>
-                                <tr>
+                                </tbody>
+                                <tbody th:unless="${#lists.isEmpty(listPatients)}">
+                                <tr th:each="patient : ${listPatients}">
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient2.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Travis Trimble </a>
+                                            <a th:href="@{/doctor/profile/{id}(id=${patient.id})}" class="avatar avatar-sm mr-2">
+                                                <img class="avatar-img rounded-circle" th:src="${patient.theAvatar}" alt="User Image">
+                                            </a>
+                                            <a th:href="@{/doctor/profile/{id}(id=${patient.id})}" th:text="${patient.fullName}"></a>
                                         </h2>
                                     </td>
-                                    <td>2077299974</td>
-                                    <td>22 Oct 2019</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient3.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Carl Kelly</a>
-                                        </h2>
-                                    </td>
-                                    <td>2607247769</td>
-                                    <td>21 Oct 2019</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient4.jpg" alt="User Image"></a>
-                                            <a href="profile.html"> Michelle Fairfax</a>
-                                        </h2>
-                                    </td>
-                                    <td>5043686874</td>
-                                    <td>21 Sep 2019</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient5.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Gina Moore</a>
-                                        </h2>
-                                    </td>
-                                    <td>9548207887</td>
-                                    <td>18 Sep 2019</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
                                 </tr>
                                 </tbody>
                             </table>

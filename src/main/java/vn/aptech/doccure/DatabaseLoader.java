@@ -1,5 +1,6 @@
 package vn.aptech.doccure;
 
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Role;
-import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.RoleService;
 import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.UserService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,11 +34,30 @@ public class DatabaseLoader implements CommandLineRunner {
     @Autowired
     private ServiceService serviceService;
 
+    @PersistenceContext
+    EntityManager entityManager;
+
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Override
     public void run(String... strings) throws Exception {
         try {
+
+            /**
+             * Create `persistent_logins` table
+             */
+            Session session = entityManager.unwrap(org.hibernate.Session.class);
+            session.createNativeQuery(
+                    "create table if not exists persistent_logins\n" +
+                            "(\n" +
+                            "    username  varchar(64) not null,\n" +
+                            "    series    varchar(64) not null\n" +
+                            "        primary key,\n" +
+                            "    token     varchar(64) not null,\n" +
+                            "    last_used timestamp   not null\n" +
+                            ");\n"
+            ).executeUpdate();
+
             Iterable<Role> roleList = roleService.findAll();
             if (!roleList.iterator().hasNext()) {
                 roleService.save(new Role(Constants.Roles.ROLE_ADMIN));

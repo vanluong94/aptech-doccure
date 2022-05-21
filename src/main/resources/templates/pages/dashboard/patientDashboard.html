@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard</title>
+</head>
+<body>
+    <div class="page-content" layout:fragment="layoutContent">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-12">
+                        <nav aria-label="breadcrumb" class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            </ol>
+                        </nav>
+                        <h2 class="breadcrumb-title">Dashboard</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <!-- Page Content -->
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+
+                    <!-- Profile Sidebar -->
+                    <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+                        <div th:replace="fragments/dashboard/patientSidebar :: sidebar"></div>
+                    </div>
+                    <!-- / Profile Sidebar -->
+
+                    <div class="col-md-7 col-lg-8 col-xl-9">
+
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="mb-3">
+                                            <img src="assets/img/patient-gender.png" alt="" width="55">
+                                        </div>
+                                        <h5>Gender</h5>
+                                        <h6>Female</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="mb-3">
+                                            <img src="assets/img/patient-blood-type.png" alt="" width="55">
+                                        </div>
+                                        <h5>Blood Type</h5>
+                                        <h6>AB+</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="mb-3">
+                                            <img src="assets/img/patient-height.png" alt="" width="55">
+                                        </div>
+                                        <h5>Height</h5>
+                                        <h6>160 <small>cm</small></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 patient-dashboard-top">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="mb-3">
+                                            <img src="assets/img/patient-weight.png" alt="" width="55">
+                                        </div>
+                                        <h5>Weight</h5>
+                                        <h6>50 <small>kg</small></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="mb-4">Appoinments</h4>
+                                <div class="appointment-tab">
+
+                                    <!-- Appointment Tab -->
+                                    <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
+                                        <li class="nav-item mr-1">
+                                            <a class="nav-link active" href="#upcoming-appointments" data-toggle="tab">Upcoming</a>
+                                        </li>
+                                        <li class="nav-item mr-1">
+                                            <a class="nav-link" href="#recent-appointments" data-toggle="tab">Recent</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /Appointment Tab -->
+
+                                    <div class="tab-content">
+
+                                        <!-- Upcoming Appointment Tab -->
+                                        <div class="tab-pane show active" id="upcoming-appointments">
+                                            <div class="card card-table mb-0">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover table-center mb-0 w-100 appointments-table" data-url="/ajax/appointments/mine/upcoming">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Doctor</th>
+                                                                <th>Appt Date</th>
+                                                                <th>Starting Time</th>
+                                                                <th>Ending Time</th>
+                                                                <th>Booking Date</th>
+                                                                <th>Status</th>
+                                                                <th></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /Upcoming Appointment Tab -->
+
+                                        <!-- Recent Appointment Tab -->
+                                        <div class="tab-pane" id="recent-appointments">
+                                            <div class="card card-table mb-0">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover table-center mb-0 w-100 appointments-table" data-url="/ajax/appointments/mine">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Doctor</th>
+                                                                <th>Appt Date</th>
+                                                                <th>Starting Time</th>
+                                                                <th>Ending Time</th>
+                                                                <th>Booking Date</th>
+                                                                <th>Status</th>
+                                                                <th></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /Recent Appointment Tab -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /Page Content -->
+    </div>
+
+    <div layout:fragment="layoutExtra">
+
+        <!-- Appointment Details Modal -->
+        <div class="modal fade custom-modal" id="appointmentDetail">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Appointment Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="info-details">
+                            <li>
+                                <div class="details-header">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <span class="title h3">#<span data-field="id"></span></span>
+                                            <span class="text" data-field="timeSlot.date"></span>
+                                            <span class="text">
+                                                <span class="text-info" data-field="timeSlot.timeStart"></span><span> - </span><span class="text-info" data-field="timeSlot.timeEnd"></span>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="text-right" data-field="statusBadge"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="title">Booking Date:</span>
+                                <span class="text" data-field="createdDate"></span>
+                            </li>
+                            <li>
+                                <span class="title">Status:</span>
+                                <span class="text" data-field="statusText"></span>
+                            </li>
+                            <li>
+                                <span class="title">Logs:</span>
+                                <table class="table table-bordered mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th>Datetime</th>
+                                            <th>Content</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-field="logs"></tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Appointment Details Modal --> 
+        
+    </div>
+
+    <div layout:fragment="customScripts">
+        <!-- Circle Progress JS -->
+        <script src="/assets/js/circle-progress.min.js"></script>
+        <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="/assets/js/table-appointments.js"></script>
+
+        <script>
+            
+            $('.appointments-table').each((i,e) => {
+
+                const $table = $(e);
+
+                $table.DataTable({
+                    searching: false,
+                    bInfo: false,
+                    bLengthChange: false,
+                    ordering: false,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    ajax: {
+                        url: $table.data('url'),
+                        data: {
+                            page: 0,
+                            length: 5,
+                        },
+                        dataSrc: (resp) => appointmentUtils.parsePatientTableData(resp)
+                    },
+                    drawCallback(settings, json) {
+                        /**
+                         * Handle button action
+                         * */
+                        $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
+                            e.preventDefault();
+                            appointmentUtils.view($(this).data('appointment-id'));
+                        })
+    
+                        $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
+                            e.preventDefault();
+                            appointmentUtils.cancel($(this).data('appointment-id'));
+                        })
+                    }
+                });
+            })
+        </script>
+
+    </div>
+
+</body>
+</html>

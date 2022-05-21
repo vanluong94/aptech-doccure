@@ -26,23 +26,15 @@
 										<img src="#" th:src="${doctor.theAvatar}" class="img-fluid" alt="User Image">
 									</div>
 									<div class="doc-info-cont">
-										<h4 class="doc-name" th:text="${doctor.fullName}">Dr. Darren Elder</h4>
-										<p class="doc-speciality" th:text="${doctor?.clinic?.specialities}">BDS, MDS - Oral & Maxillofacial Surgery</p>
+										<h4 class="doc-name" th:text="${doctor.fullName}"></h4>
+										<p class="doc-speciality" th:text="${doctor?.clinic?.specialities}"></p>
 										<div class="doc-department">
 											<th:block th:each="speciality : ${doctor?.specialities}">
 												<img src="#" th:src="'/files/' + ${speciality.image}" class="img-fluid" th:alt="${speciality.name}"> <span th:text="${speciality.name}"></span>
 											</th:block>
 										</div>
-										<div class="rating">
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star"></i>
-											<span class="d-inline-block average-rating">(35)</span>
-										</div>
 										<div class="clinic-details">
-											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> Newyork, USA - <a href="javascript:void(0);" onclick="(() => {
+											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span> - <a href="javascript:void(0);" onclick="(() => {
 											let locationBtn = document.getElementById('doc_locations_nav_btn');
 											locationBtn.scrollIntoView();
 											locationBtn.click();
@@ -50,14 +42,14 @@
 											<ul class="clinic-gallery">
 												<li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
 													<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
-														<img src="/assets/img/features/feature-01.jpg" th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
+														<img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
 													</a>
 												</li>
 											</ul>
 										</div>
 										<div class="clinic-services">
 										<span th:each="service : ${doctor?.services}">
-											<a href="/search.html" th:text="${service.name}">Dental Fillings</a>
+											<a href="/search.html" th:text="${service.name}"></a>
 										</span>
 										</div>
 									</div>
@@ -65,16 +57,15 @@
 								<div class="doc-info-right">
 									<div class="clini-infos">
 										<ul>
-											<li><i class="far fa-thumbs-up"></i> 99%</li>
-											<li><i class="far fa-comment"></i> 35 Feedback</li>
 											<li><i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span></li>
 										</ul>
 									</div>
 									<div class="doctor-action d-block">
 										<div class="row form-row">
 											<div class="col-6">
-												<a href="javascript:void(0)" class="btn btn-white fav-btn w-100">
-													<i class="far fa-bookmark d-block"></i>
+												<a href="javascript:void(0)" class="btn fav-btn w-100" th:classappend="${isDoctorFavorite ? 'btn-info' : 'btn-white'}" th:attr="data-doctor=${doctor.id}">
+													<i class="d-block far fa-bookmark"></i>
+													<i class="d-block fas fa-check"></i>
 													<small>Bookmark</small>
 												</a>
 											</div>
@@ -87,7 +78,7 @@
 										</div>
 									</div>
 									<div class="clinic-booking">
-										<a class="apt-btn" href="booking.html">Book Appointment</a>
+										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}">Book Appointment</a>
 									</div>
 								</div>
 							</div>
@@ -107,9 +98,6 @@
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="doc_locations_nav_btn" href="#doc_locations" data-toggle="tab">Locations</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
 									</li>
 								</ul>
 							</nav>
@@ -272,146 +260,6 @@
 								</div>
 								<!-- /Locations Content -->
 
-								<!-- Reviews Content -->
-								<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
-
-									<!-- Review Listing -->
-									<div class="widget review-listing">
-										<ul class="comments-list">
-
-											<!-- Comment List -->
-											<li>
-												<div class="comment">
-													<img class="avatar avatar-sm rounded-circle" alt="User Image" src="assets/img/avatar-patient.png">
-													<div class="comment-body">
-														<div class="meta-data">
-															<span class="comment-author">Richard Wilson</span>
-															<span class="comment-date">Reviewed 2 Days ago</span>
-															<div class="review-count rating">
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star"></i>
-															</div>
-														</div>
-														<p class="recommended"><i class="far fa-thumbs-up"></i> I recommend the doctor</p>
-														<p class="comment-content">
-															Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-															sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-															Ut enim ad minim veniam, quis nostrud exercitation.
-															Curabitur non nulla sit amet nisl tempus
-														</p>
-													</div>
-												</div>
-
-											</li>
-											<!-- /Comment List -->
-
-											<!-- Comment List -->
-											<li>
-												<div class="comment">
-													<img class="avatar avatar-sm rounded-circle" alt="User Image" src="assets/img/patients/patient2.jpg">
-													<div class="comment-body">
-														<div class="meta-data">
-															<span class="comment-author">Travis Trimble</span>
-															<span class="comment-date">Reviewed 4 Days ago</span>
-															<div class="review-count rating">
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star filled"></i>
-																<i class="fas fa-star"></i>
-															</div>
-														</div>
-														<p class="comment-content">
-															Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-															sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-															Ut enim ad minim veniam, quis nostrud exercitation.
-															Curabitur non nulla sit amet nisl tempus
-														</p>
-													</div>
-												</div>
-											</li>
-											<!-- /Comment List -->
-
-										</ul>
-
-										<!-- Show All -->
-										<div class="all-feedback text-center">
-											<a href="#" class="btn btn-primary btn-sm">
-												Show all feedback <strong>(167)</strong>
-											</a>
-										</div>
-										<!-- /Show All -->
-
-									</div>
-									<!-- /Review Listing -->
-
-									<!-- Write Review -->
-									<div class="write-review">
-										<h4>Write a review for <strong>Dr. Darren Elder</strong></h4>
-
-										<!-- Write Review Form -->
-										<form class="form-review">
-											<div class="form-group">
-												<label>Review</label>
-												<div class="star-rating">
-													<input id="star-5" type="radio" name="rating" value="star-5">
-													<label for="star-5" title="5 stars">
-														<i class="active fa fa-star"></i>
-													</label>
-													<input id="star-4" type="radio" name="rating" value="star-4">
-													<label for="star-4" title="4 stars">
-														<i class="active fa fa-star"></i>
-													</label>
-													<input id="star-3" type="radio" name="rating" value="star-3">
-													<label for="star-3" title="3 stars">
-														<i class="active fa fa-star"></i>
-													</label>
-													<input id="star-2" type="radio" name="rating" value="star-2">
-													<label for="star-2" title="2 stars">
-														<i class="active fa fa-star"></i>
-													</label>
-													<input id="star-1" type="radio" name="rating" value="star-1">
-													<label for="star-1" title="1 star">
-														<i class="active fa fa-star"></i>
-													</label>
-												</div>
-											</div>
-											<div class="form-group">
-												<label>Title of your review</label>
-												<input class="form-control" type="text" placeholder="If you could say it in one sentence, what would you say?">
-											</div>
-											<div class="form-group">
-												<label>Your review</label>
-												<textarea id="review_desc" maxlength="100" class="form-control"></textarea>
-
-												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
-											</div>
-											<p class="recommend-btn my-2">
-												<span>Recommend?</span>
-												<input type="radio" name="recommended" value="1" id="reviewRecommend" class="d-none">
-												<label for="reviewRecommend" class="like-btn btn btn-sm">
-													<i class="far fa-thumbs-up"></i> Yes
-												</label>
-												<input type="radio" name="recommended" value="0" id="reviewNotRecommend" class="d-none">
-												<label for="reviewNotRecommend" class="dislike-btn btn btn-sm">
-													<i class="far fa-thumbs-down"></i> No
-												</label>
-											</p>
-											<div class="submit-section">
-												<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
-											</div>
-										</form>
-										<!-- /Write Review Form -->
-
-									</div>
-									<!-- /Write Review -->
-
-								</div>
-								<!-- /Reviews Content -->
-
 							</div>
 						</div>
 					</div>
@@ -436,9 +284,24 @@
 
 		<!-- Custom JS -->
 		<script src="/assets/js/script.js"></script>
+
+		<script>
+			jQuery(function($){
+				$('.fav-btn').on('click', function(e){
+					let $btn = $(this);
+					e.preventDefault();
+					favoriteDoctorToggle($btn, (resp) => {
+						if (resp.data.isFavorite) {
+							$btn.addClass('btn-info').removeClass('btn-white');
+						} else {
+							$btn.removeClass('btn-info').addClass('btn-white');
+						}
+					})
+				})
+			})
+		</script>
 	</div>
 
 </body>
 
-<!-- Mirrored from doccure-html.dreamguystech.com/template/doctor-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 22 Mar 2021 19:28:34 GMT -->
 </html>

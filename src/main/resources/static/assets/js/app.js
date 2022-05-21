@@ -27,7 +27,7 @@ const addLoadingOverlay = ($el) => {
         $el = $($el);
     }
     
-    $el.addClass('position-relative')
+    $el.addClass('position-relative').css('min-height', '100px');
     $el.append($loadingOverlay);
 
 }
@@ -41,3 +41,30 @@ const removeLoadingOverlay = ($el) => {
     $el.find('.loading-overlay').remove();
 }
 
+/**
+ * Handle favorite toggle feature
+ * @param {*} $btn 
+ * @param {*} callback 
+ */
+const favoriteDoctorToggle = ($btn, callback) => {
+    $.ajax({
+        url: `/ajax/favorite/${$btn.data('doctor')}`,
+        method: 'post',
+        headers: {
+            ...getAjaxCsrfTokenHeader(),
+        },
+        beforeSend() {
+            $btn.addClass('disabled');
+        },
+        success(resp) {
+            callback(resp);
+        },
+        complete(xhr) {
+            $btn.removeClass('disabled');
+
+            if (xhr.responseJSON && !xhr.responseJSON.isSuccess && xhr.responseJSON.message) {
+                alert(xhr.responseJSON.message);
+            } 
+        }
+    });
+}

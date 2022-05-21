@@ -1,20 +1,17 @@
 package vn.aptech.doccure.entities;
 
-import org.hibernate.Hibernate;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 public class DoctorServiceId implements Serializable {
     @MapsId
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "doctor_id", nullable = false, foreignKey = @ForeignKey(name = "service_doctor_fk"))
     private User doctor;
 
     @MapsId
     @ManyToOne
-    @JoinColumn(name = "service_id")
+    @JoinColumn(name = "service_id", nullable = false, foreignKey = @ForeignKey(name = "service_service_fk"))
     private Service service;
 }

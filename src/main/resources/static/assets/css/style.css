@@ -3662,7 +3662,7 @@ html.menu-opened body {
 .doctor-action a + a {
 	margin-left: 8px;
 }
-.doctor-action .fav-btn:hover {
+/* .doctor-action .fav-btn:hover {
 	background-color: #fb1612;
 	border-color: #fb1612;
 	color: #fff;
@@ -3671,12 +3671,32 @@ html.menu-opened body {
 	background-color: #09e5ab;
 	border-color: #09e5ab;
 	color: #fff;
-}
+} 
 .call-btn:hover, .call-btn:focus {
 	background-color: #09e5ab;
 	border-color: #09e5ab;
 	color: #fff;
+}*/
+.fav-btn.btn-info:hover {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #272b41;
 }
+
+.fav-btn.btn-white:hover {
+    background-color: #009efb;
+    border: 1px solid #009efb;
+    color: #ffff;
+}
+
+.fav-btn.btn-info > i.fa-bookmark {
+    display: none !important;
+}
+
+.fav-btn.btn-white > i.fa-check {
+    display: none !important;
+}
+
 .user-tabs .nav-tabs > li > a {
 	border: 0;
 	border-bottom: 3px solid transparent;
@@ -4106,6 +4126,7 @@ html.menu-opened body {
     padding: 20px;
 }
 .time-slot ul {
+    display: flex;
     list-style: none;
     margin-right: -5px;
     margin-left: -5px;

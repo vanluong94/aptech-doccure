@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class AjaxResponse {
     public static ResponseEntity<Object> response(HttpStatus status, boolean error, String message, Object responseObj) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         try {
             map.put("status", status.value());
             map.put("isSuccess", !error);
