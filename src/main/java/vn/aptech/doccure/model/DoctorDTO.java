@@ -17,6 +17,10 @@ public class DoctorDTO {
         this.doctor = doctor;
     }
 
+    public static DoctorDTO from(User doctor) {
+        return new DoctorDTO(doctor);
+    }
+
     public Long getId() {
         return this.doctor.getId();
     }

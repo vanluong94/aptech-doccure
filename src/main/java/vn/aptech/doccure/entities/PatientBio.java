@@ -16,16 +16,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class PatientBio implements Serializable  {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @Column(name = "patient_id", nullable = false)
+    private Long patientId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "patient_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "patient_bio_user_fk")
-    )
+    @MapsId
+    @OneToOne
+    @JoinColumn(name = "patient_id", nullable = false, foreignKey = @ForeignKey(name = "patient_bio_user_fk"))
     private User patient;
 
     @Column(name = "bloodType", length = 10)

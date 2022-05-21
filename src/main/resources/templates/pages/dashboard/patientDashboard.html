@@ -48,10 +48,10 @@
                                 <div class="card">
                                     <div class="card-body text-center">
                                         <div class="mb-3">
-                                            <img src="assets/img/patient-gender.png" alt="" width="55">
+                                            <img src="/assets/img/patient-gender.png" alt="" width="55">
                                         </div>
                                         <h5>Gender</h5>
-                                        <h6>Female</h6>
+                                        <h6 th:text="${patientDto.gender}"></h6>
                                     </div>
                                 </div>
                             </div>
@@ -59,10 +59,10 @@
                                 <div class="card">
                                     <div class="card-body text-center">
                                         <div class="mb-3">
-                                            <img src="assets/img/patient-blood-type.png" alt="" width="55">
+                                            <img src="/assets/img/patient-blood-type.png" alt="" width="55">
                                         </div>
                                         <h5>Blood Type</h5>
-                                        <h6>AB+</h6>
+                                        <h6 th:text="${patientDto.bloodType}"></h6>
                                     </div>
                                 </div>
                             </div>
@@ -70,10 +70,10 @@
                                 <div class="card">
                                     <div class="card-body text-center">
                                         <div class="mb-3">
-                                            <img src="assets/img/patient-height.png" alt="" width="55">
+                                            <img src="/assets/img/patient-height.png" alt="" width="55">
                                         </div>
                                         <h5>Height</h5>
-                                        <h6>160 <small>cm</small></h6>
+                                        <h6><span th:text="${patientDto.height}"></span> <small>cm</small></h6>
                                     </div>
                                 </div>
                             </div>
@@ -81,10 +81,10 @@
                                 <div class="card">
                                     <div class="card-body text-center">
                                         <div class="mb-3">
-                                            <img src="assets/img/patient-weight.png" alt="" width="55">
+                                            <img src="/assets/img/patient-weight.png" alt="" width="55">
                                         </div>
                                         <h5>Weight</h5>
-                                        <h6>50 <small>kg</small></h6>
+                                        <h6><span th:text="${patientDto.weight}"></span> <small>kg</small></h6>
                                     </div>
                                 </div>
                             </div>
