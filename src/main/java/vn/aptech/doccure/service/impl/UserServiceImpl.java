@@ -91,12 +91,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findTop10ByOrderByIdDesc() {
-        return repo.findTop10ByOrderByIdDesc();
+    public List<User> findTop10ByRolesInOrderByIdDesc(Set<Role> roles) {
+        return repo.findTop10ByRolesInOrderByIdDesc(roles);
     }
 
     @Override
-    public List<User> findTop10ByRolesInOrderByIdDesc(Set<Role> roles) {
-        return repo.findTop10ByRolesInOrderByIdDesc(roles);
+    public Long countByRolesIn(Set<Role> roles) {
+        return repo.countByRolesIn(roles);
     }
 }

@@ -25,7 +25,8 @@ public interface UserService extends UserDetailsService {
 
     User getCurrentUser();
 
-    List<User> findTop10ByOrderByIdDesc();
-
     List<User> findTop10ByRolesInOrderByIdDesc(Set<Role> roles);
+
+    Long countByRolesIn(Set<Role> roles);
+
 }
