@@ -12,7 +12,8 @@
                     <img th:src="${user.theAvatar}" alt="User Image">
                 </a>
                 <div class="profile-det-info">
-                    <h3 th:text="${user.fullName}"></h3>
+                    <h3 th:text="${user.fullName}" class="mb-0"></h3>
+                    <p class="small text-secondary">@<span th:text="${user.username}"></span></p>
                     <div class="patient-details">
                         <h5 th:if="${patientDto.dob}"><i class="fas fa-birthday-cake"></i> <span th:text="${patientDto.dob}"></span>, <span th:text="${patientDto.age + ' years old'}"></span></h5>
                         <h5 class="mb-0" th:if="${patientDto.city}"><i class="fas fa-map-marker-alt"></i> <span th:text="${patientDto.city}"></span></h5>

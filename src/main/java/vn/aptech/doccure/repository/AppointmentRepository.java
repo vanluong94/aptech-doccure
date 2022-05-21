@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.User;
@@ -32,4 +33,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     )
     List<Appointment> findAllPastIncomplete();
 
+    Long countByDoctor(User doctor);
+
+    Long countByDoctorAndTimeSlotTimeStartBetween(User doctor, LocalDateTime startTimestamp, LocalDateTime endTimestamp);
+
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.doctor = :doctor")
+    Long countPatientByDoctor(@Param("doctor") User doctor);
 }

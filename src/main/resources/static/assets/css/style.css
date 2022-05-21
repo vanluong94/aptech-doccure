@@ -4625,6 +4625,7 @@ html.menu-opened body {
     text-align: center;
     margin: 0 auto;
     transform: translateY(-50%);
+	width: 40px;
 }
 .circle-bar > div canvas {
 	width: 90px !important;

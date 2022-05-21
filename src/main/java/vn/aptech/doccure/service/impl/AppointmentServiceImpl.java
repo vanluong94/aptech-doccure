@@ -92,4 +92,29 @@ public class AppointmentServiceImpl implements AppointmentService {
                 pageable
         );
     }
+
+    @Override
+    public Long countByDoctor(User doctor) {
+        return appointmentRepository.countByDoctor(doctor);
+    }
+
+    @Override
+    public Long countTodayByDoctor(User doctor) {
+        return appointmentRepository.countByDoctorAndTimeSlotTimeStartBetween(
+                doctor,
+                LocalDateTime.of(
+                        LocalDate.now(),
+                        LocalTime.of(0, 0)
+                ),
+                LocalDateTime.of(
+                        LocalDate.now().plusDays(1),
+                        LocalTime.of(0, 0)
+                )
+        );
+    }
+
+    @Override
+    public Long countPatientByDoctor(User doctor) {
+        return appointmentRepository.countPatientByDoctor(doctor);
+    }
 }

@@ -15,7 +15,7 @@
                     <h3 th:text="${user.fullName}" class="mb-0"></h3>
                     <p th:text="${'@' + user.username}" class="small text-secondary"></p>
                     <div class="patient-details">
-                        <h5 class="mb-0">BDS, MDS - Oral & Maxillofacial Surgery</h5>
+                        <h5 class="mb-0 text-wrap" th:text="${doctorDto.eduSpecialtiesText}"></h5>
                     </div>
                 </div>
             </div>
