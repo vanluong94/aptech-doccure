@@ -13,6 +13,7 @@ import vn.aptech.doccure.storage.StorageService;
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
 @EnableScheduling
+@EnableJpaRepositories
 public class DoccureApplication {
 
     public static void main(String[] args) {
