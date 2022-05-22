@@ -64,6 +64,22 @@ public class AppointmentController {
         return AjaxResponse.responseSuccess(respData, "success");
     }
 
+    @GetMapping("/mineByTimeRange")
+    @ResponseBody
+    @Secured("ROLE_DOCTOR")
+    public ResponseEntity<Object> getMineByTimeRange(@RequestParam Long doctorId, @RequestParam LocalDateTime start, @RequestParam LocalDateTime end, Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+
+        System.out.println(start.toString());
+        System.out.println(end.toString());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
     @GetMapping("/mine")
     @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     @ResponseBody
