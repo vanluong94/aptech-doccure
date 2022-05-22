@@ -31,6 +31,7 @@ const appointmentUtils = {
     
                     switch(row.status) {
                         case 0:
+                            output += `<div class="btn btn-sm bg-success-light mr-1" data-apmt-action="confirm" data-appointment-id="${row.id}"><i class="fas fa-check"></i> Confirm</div>`;
                             output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
                             break;
                     }
@@ -153,7 +154,7 @@ const appointmentUtils = {
             });
         }
     },
-    conform(apmtId) {
+    confirm(apmtId) {
         if (confirm(`Are you sure that you want to confirm this appointment?`)) {
             $.ajax({
                 url: `/ajax/appointments/${apmtId}/confirm`,
