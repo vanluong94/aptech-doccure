@@ -8,16 +8,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.service.EmailService;
 import vn.aptech.doccure.service.RoleService;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.validator.RegisterValidator;
 
+import javax.mail.MessagingException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,9 @@ class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("login")
     String login() {
@@ -70,8 +74,19 @@ class AuthController {
             return "auth/register";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
-        redirect.addFlashAttribute("globalMessage", "Register successfully.");
+        if (userService.save(user) != null) {
+            try {
+                emailService.sendMessage(user.getEmail(), "Hello, " + user.getUsername() +"!",
+                        "Congratulations, you have successfully registered an account. Please <a href=\"http://localhost:8080/login\">click here</a> to login.\n" +
+                        "\n<br/><br/>" +
+                        "<strong>[Doccure]</strong>");
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+            redirect.addFlashAttribute("successMessage", "Register successfully.");
+        } else {
+            redirect.addFlashAttribute("errorMessage", "Register fail.");
+        }
         return "redirect:/login";
     }
 }
