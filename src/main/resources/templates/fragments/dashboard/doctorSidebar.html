@@ -35,8 +35,8 @@
                             <span>Appointments</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-calendar.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/calendar' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/calendar}">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Calendar</span>
                         </a>

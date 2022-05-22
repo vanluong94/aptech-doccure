@@ -9,9 +9,12 @@ import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.User;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+
+    List<Appointment> findAllByDoctorAndStatusInAndTimeSlotTimeStartBetween(User doctor, Collection<Short> status, LocalDateTime startDate, LocalDateTime endDate);
 
     Page<Appointment> findAllByPatientOrderByCreatedDateDesc(User patient, Pageable pageable);
 

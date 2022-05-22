@@ -88,7 +88,7 @@ const appointmentUtils = {
         $.ajax({
             url: `/ajax/appointments/${apmtId}/get`,
             beforeSend() {
-                
+                addLoadingOverlay($info);
                 $fields.empty();
             },
             success(resp) {

@@ -2516,7 +2516,7 @@ html.menu-opened body {
 	border-radius: 2px;
 	border: none;
 	color: #fff !important;
-	cursor: move;
+	cursor: pointer;
 	font-size: 13px;
 	margin: 1px 7px;
 	padding: 5px 5px;
