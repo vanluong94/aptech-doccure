@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -18,14 +19,14 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "appointments")
+@Table(value = "appointments")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class Appointment implements Serializable {
 
-    public static interface STATUS {
+    public interface STATUS {
         short PENDING = 0;
         short CONFIRMED = 1;
         short COMPLETED = 2;

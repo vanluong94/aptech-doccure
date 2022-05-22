@@ -1,23 +1,19 @@
 package vn.aptech.doccure.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.common.Constants;
-import vn.aptech.doccure.entities.Role;
-import vn.aptech.doccure.entities.Speciality;
-import vn.aptech.doccure.request.SearchDoctorRequest;
 import vn.aptech.doccure.service.RoleService;
 import vn.aptech.doccure.service.SpecialityService;
 import vn.aptech.doccure.service.UserService;
 
-import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/search")

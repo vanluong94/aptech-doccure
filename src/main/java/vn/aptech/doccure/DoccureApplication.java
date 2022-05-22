@@ -2,9 +2,7 @@ package vn.aptech.doccure;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -14,9 +12,7 @@ import vn.aptech.doccure.storage.StorageService;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
-@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class}) // exclude spring white label page
 @EnableScheduling
-@EnableJpaRepositories
 public class DoccureApplication {
 
     public static void main(String[] args) {

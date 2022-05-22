@@ -23,3 +23,6 @@ create table persistent_logins
 
 ## Skipping Tests with Maven 
 `mvn -DskipTests package`
+
+
+java -jar file.jar --spring.profiles.active=production

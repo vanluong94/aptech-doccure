@@ -17,25 +17,12 @@
                 <div class="col-md-8 col-12">
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="${/}">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Search</li>
                         </ol>
                     </nav>
-                    <h2 class="breadcrumb-title">2245 matches found for : Dentist In Bangalore</h2>
-                </div>
-                <div class="col-md-4 col-12 d-md-block d-none">
-                    <div class="sort-by">
-                        <span class="sort-title">Sort by</span>
-                        <span class="sortby-fliter">
-									<select class="select">
-										<option>Select</option>
-										<option class="sorting">Rating</option>
-										<option class="sorting">Popular</option>
-										<option class="sorting">Latest</option>
-										<option class="sorting">Free</option>
-									</select>
-								</span>
-                    </div>
+                    <h2 class="breadcrumb-title" th:unless="${#lists.isEmpty(doctors)}"><span th:text="${#lists.size(doctors)}"></span> matches found for:
+                        <span th:text="${param.query}"></span> In <span th:text="${param.location}"></span></h2>
                 </div>
             </div>
         </div>
@@ -57,12 +44,6 @@
                         </div>
                         <div class="card-body">
                             <form action="#" th:action="@{/search}" method="GET">
-                                <div class="filter-widget">
-                                    <div class="cal-icon">
-                                        <input type="text" class="form-control datetimepicker" placeholder="Select Date"
-                                               th:name="timeSlot" th:value="${param.timeSlot}">
-                                    </div>
-                                </div>
                                 <div class="filter-widget">
                                     <input th:name="location" th:value="${param.location}" type="text" class="form-control" placeholder="Search Location">
                                 </div>

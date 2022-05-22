@@ -1,12 +1,18 @@
 package vn.aptech.doccure.entities;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
-@Table(name = "user_addresses")
+@Table(value = "user_addresses")
 public class UserAddress {
     @Id
     @Column(name = "user_id", nullable = false)
@@ -34,4 +40,17 @@ public class UserAddress {
 
     @Column(name = "postal_code", length = 10)
     private Integer postalCode;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        UserAddress that = (UserAddress) o;
+        return userId != null && Objects.equals(userId, that.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

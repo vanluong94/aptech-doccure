@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "patient_bio")
+@Table(value = "patient_bio")
 @Setter
 @Getter
 @NoArgsConstructor
