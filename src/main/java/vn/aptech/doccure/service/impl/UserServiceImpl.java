@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repository.UserRepository;
+import vn.aptech.doccure.repositories.UserRepository;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.utils.StringUtils;
 

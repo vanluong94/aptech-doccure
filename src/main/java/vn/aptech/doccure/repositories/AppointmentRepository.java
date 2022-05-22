@@ -1,4 +1,4 @@
-package vn.aptech.doccure.repository;
+package vn.aptech.doccure.repositories;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

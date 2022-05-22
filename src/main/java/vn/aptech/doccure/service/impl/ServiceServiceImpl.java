@@ -2,7 +2,7 @@ package vn.aptech.doccure.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import vn.aptech.doccure.entities.Service;
-import vn.aptech.doccure.repository.ServiceRepository;
+import vn.aptech.doccure.repositories.ServiceRepository;
 import vn.aptech.doccure.service.ServiceService;
 
 @org.springframework.stereotype.Service
