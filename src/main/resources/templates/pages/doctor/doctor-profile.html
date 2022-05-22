@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="https://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{layout}"
 >
@@ -98,6 +99,9 @@
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="doc_locations_nav_btn" href="#doc_locations" data-toggle="tab">Locations</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
 									</li>
 								</ul>
 							</nav>
@@ -259,7 +263,94 @@
 
 								</div>
 								<!-- /Locations Content -->
+								<!-- Reviews Content -->
+								<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
 
+									<!-- Review Listing -->
+									<div class="widget review-listing">
+										<ul class="comments-list" th:each="review : ${reviews}">
+											<!-- Comment List -->
+											<li>
+												<div class="comment">
+													<img class="avatar avatar-sm rounded-circle" alt="User Image" th:src="${review.patient.theAvatar}">
+													<div class="comment-body">
+														<div class="meta-data">
+															<span class="comment-author" th:text="${review.patient.fullName}"></span>
+															<span class="comment-date" th:text="${#temporals.format(review.patient.createdDate, 'dd-MM-yyyy HH:mm')}"></span>
+															<div class="review-count rating">
+																<i class="fas fa-star" th:classappend="${review.rating >= 1 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating >= 2 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating >= 3 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating >= 4 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating == 5 ? 'filled' : ''}"></i>
+															</div>
+														</div>
+														<div><strong th:text="${review.title}"></strong></div>
+														<p class="comment-content" th:text="${review.content}"></p>
+													</div>
+												</div>
+
+											</li>
+											<!-- /Comment List -->
+										</ul>
+									</div>
+									<!-- /Review Listing -->
+
+									<!-- Write Review -->
+									<div class="write-review" sec:authorize="isAuthenticated()">
+										<h4>Write a review for <strong th:text="${doctor.fullName}"></strong></h4>
+
+										<!-- Write Review Form -->
+										<form class="form-review" action="#" th:action="@{/doctor/profile/{id}(id=${doctor.id})}" th:object="${review}" method="post">
+											<input type="hidden" th:field="*{doctorId}">
+											<input type="hidden" th:field="*{patientId}">
+											<div class="form-group">
+												<label>Review</label>
+												<div class="star-rating">
+													<input id="star-5" type="radio" name="rating" value="5">
+													<label for="star-5" title="5 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-4" type="radio" name="rating" value="4">
+													<label for="star-4" title="4 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-3" type="radio" name="rating" value="3">
+													<label for="star-3" title="3 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-2" type="radio" name="rating" value="2">
+													<label for="star-2" title="2 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-1" type="radio" name="rating" value="1">
+													<label for="star-1" title="1 star">
+														<i class="active fa fa-star"></i>
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Title of your review</label>
+												<input th:field="*{title}" class="form-control" type="text" placeholder="If you could say it in one sentence, what would you say?">
+											</div>
+											<div class="form-group">
+												<label>Your review</label>
+												<textarea th:field="*{content}" id="review_desc" maxlength="100" class="form-control"></textarea>
+
+												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
+											</div>
+											<div class="submit-section">
+												<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
+											</div>
+										</form>
+										<!-- /Write Review Form -->
+
+									</div>
+									<div sec:authorize="!isAuthenticated()">Please login to write a review.</div>
+									<!-- /Write Review -->
+
+								</div>
+								<!-- /Reviews Content -->
 							</div>
 						</div>
 					</div>

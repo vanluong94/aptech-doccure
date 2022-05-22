@@ -6,16 +6,15 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.*;
-import vn.aptech.doccure.service.AppointmentService;
-import vn.aptech.doccure.service.PatientFavoriteService;
-import vn.aptech.doccure.service.TimeSlotService;
-import vn.aptech.doccure.service.UserService;
+import vn.aptech.doccure.model.ReviewRequestDTO;
+import vn.aptech.doccure.service.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,28 +36,56 @@ public class DoctorController {
     @Autowired
     private PatientFavoriteService favoriteService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     @GetMapping("/profile/{id}")
     public ModelAndView profile(@PathVariable("id") Long id, Authentication authentication) {
         ModelAndView modelAndView;
         Optional<User> user = userService.findById(id);
         if (user.isPresent() && user.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
-            modelAndView = new ModelAndView("/pages/doctor/doctor-profile");
+            modelAndView = new ModelAndView("pages/doctor/doctor-profile");
             if (user.get().getClinic() != null) {
                 user.get().getClinic().parseImages();
             }
             modelAndView.addObject("doctor", user.get());
+            Iterable<Review> reviews = reviewService.findAll();
+            modelAndView.addObject("reviews", reviews);
 
             if (authentication != null) {
                 User currentUser = (User) authentication.getPrincipal();
+                ReviewRequestDTO review = new ReviewRequestDTO();
+                review.setDoctorId(id);
+                review.setPatientId(currentUser.getId());
+                modelAndView.addObject("review", review);
                 modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
             } else {
                 modelAndView.addObject("isDoctorFavorite", false);
             }
 
         } else {
-            modelAndView = new ModelAndView("/pages/404");
+            modelAndView = new ModelAndView("pages/404");
         }
         return modelAndView;
+    }
+
+    @PostMapping("/profile/{id}")
+    public String submitReview(@PathVariable("id") Long id, @ModelAttribute("review") ReviewRequestDTO review, BindingResult result, RedirectAttributes redirect) {
+        if (result.hasErrors()) {
+            return "redirect:/doctor/profile/" + id;
+        }
+        Review review1 = new Review();
+        review1.setRating(review.getRating());
+        review1.setTitle(review.getTitle());
+        review1.setContent(review.getContent());
+        review1.setDoctor(new User(review.getDoctorId()));
+        review1.setPatient(new User(review.getPatientId()));
+        if (reviewService.save(review1) != null) {
+            redirect.addFlashAttribute("successMessage", "Add review successfully.");
+        } else {
+            redirect.addFlashAttribute("errorMessage", "Can't add review.");
+        }
+        return "redirect:/doctor/profile/" + id;
     }
 
     @Secured("ROLE_PATIENT")

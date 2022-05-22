@@ -1,15 +1,23 @@
 package vn.aptech.doccure.entities;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Table;
 
+import javax.persistence.*;
+
+@Getter
+@Setter
 @Entity
-@Table(name = "reviews")
-public class Review implements Serializable  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+@Table(value = "reviews")
+public class Review extends AbstractEntity {
+    private Short rating;
+
+    @Column(length = 100)
+    private String title;
+
+    @Column(length = 100)
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false, foreignKey = @ForeignKey(name = "review_doctor_fk"))
