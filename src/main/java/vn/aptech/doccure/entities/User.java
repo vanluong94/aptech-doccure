@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,7 +22,7 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
-@Table(value = "users")
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {

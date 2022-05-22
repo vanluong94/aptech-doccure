@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.PatientFavorite;
 import vn.aptech.doccure.entities.PatientFavoriteId;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repositories.PatientFavoriteRepository;
+import vn.aptech.doccure.repository.PatientFavoriteRepository;
 import vn.aptech.doccure.service.PatientFavoriteService;
 
 import java.util.Optional;

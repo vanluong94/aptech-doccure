@@ -3,7 +3,7 @@ package vn.aptech.doccure.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.Review;
-import vn.aptech.doccure.repositories.ReviewRepository;
+import vn.aptech.doccure.repository.ReviewRepository;
 import vn.aptech.doccure.service.ReviewService;
 
 @Service

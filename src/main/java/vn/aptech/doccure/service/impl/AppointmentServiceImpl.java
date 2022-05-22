@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repositories.AppointmentRepository;
+import vn.aptech.doccure.repository.AppointmentRepository;
 import vn.aptech.doccure.service.AppointmentService;
 
 import java.time.LocalDate;

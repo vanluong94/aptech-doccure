@@ -2,7 +2,6 @@ package vn.aptech.doccure.entities;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -12,7 +11,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(value = "user_addresses")
+@Table(name = "user_addresses")
 public class UserAddress {
     @Id
     @Column(name = "user_id", nullable = false)
