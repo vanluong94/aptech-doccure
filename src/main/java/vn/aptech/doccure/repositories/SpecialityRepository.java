@@ -1,6 +1,5 @@
-package vn.aptech.doccure.repository;
+package vn.aptech.doccure.repositories;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import vn.aptech.doccure.entities.Speciality;
 

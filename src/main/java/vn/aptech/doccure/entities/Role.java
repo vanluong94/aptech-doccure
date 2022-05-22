@@ -2,6 +2,7 @@ package vn.aptech.doccure.entities;
 
 import lombok.*;
 
+import org.springframework.data.relational.core.mapping.Table;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "roles")
+@Table(value = "roles")
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

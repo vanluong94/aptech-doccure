@@ -3882,6 +3882,7 @@ html.menu-opened body {
 }
 .review-listing > ul li .comment .comment-body {
     margin-left: 16px;
+	width: 100%;
 }
 .review-listing > ul li .comment .comment-body .meta-data {
     position: relative;

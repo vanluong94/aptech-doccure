@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.data.relational.core.mapping.Table;
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "doctor_bio")
+@Table(value = "doctor_bio")
 public class DoctorBio implements Serializable {
 
     @Id

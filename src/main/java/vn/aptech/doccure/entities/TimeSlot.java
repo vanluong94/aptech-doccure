@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import vn.aptech.doccure.utils.DateUtils;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name = "time_slots")
+@Table(value = "time_slots")
 @Getter
 @Setter
 @AllArgsConstructor

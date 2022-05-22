@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,7 +23,7 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(value = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -151,6 +152,10 @@ public class User implements UserDetails {
     private boolean accountNonLocked = true;
     @Transient
     private boolean credentialsNonExpired = true;
+
+    public User(Long id) {
+        this.id = id;
+    }
 
     @Override
     public boolean isEnabled() {

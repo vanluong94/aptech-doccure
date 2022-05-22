@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import vn.aptech.doccure.common.AjaxResponse;
 import vn.aptech.doccure.entities.TimeSlotDefault;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repository.TimeSlotDefaultRepository;
-import vn.aptech.doccure.repository.UserRepository;
+import vn.aptech.doccure.repositories.TimeSlotDefaultRepository;
+import vn.aptech.doccure.repositories.UserRepository;
 
 import java.util.*;
 
