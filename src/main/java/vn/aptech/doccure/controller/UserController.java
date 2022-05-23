@@ -166,7 +166,6 @@ public class UserController {
         } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
             return "pages/patientDashboard";
         }
-
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 

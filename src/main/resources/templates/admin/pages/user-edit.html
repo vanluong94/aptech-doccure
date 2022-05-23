@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}"
+>
+<head></head>
+    <body>
+        <div class="main-wrapper" layout:fragment="layoutContent">
+            <div class="header">
+                <div class="header-left">
+                    <a href="index.html" class="logo">
+                        <img src="assets/img/logo.png" alt="Logo">
+                    </a>
+                    <a href="index.html" class="logo logo-small">
+                        <img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
+                    </a>
+                </div>
+                <a id="toggle_btn">
+                    <i class="fa fa-align-left"></i>
+                </a>
+                <a class="mobile_btn" id="mobile_btn">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <ul class="nav user-menu">
+                    <li class="nav-item dropdown has-arrow">
+                        <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                            <span class="user-img"><img class="rounded-circle" src="assets/img/profiles/avatar-01.jpg" width="31" alt="Ryan Taylor"></span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="user-header">
+                                <div class="avatar avatar-sm">
+                                    <img src="assets/img/profiles/avatar-01.jpg" alt="User Image" class="avatar-img rounded-circle">
+                                </div>
+                                <div class="user-text">
+                                    <h6>Ryan Taylor</h6>
+                                    <p class="text-muted mb-0">Administrator</p>
+                                </div>
+                            </div>
+                            <a class="dropdown-item" href="service-edit.html">My Profile</a>
+                            <a class="dropdown-item" href="settings.html">Settings</a>
+                            <a class="dropdown-item" href="login.html">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-inner slimscroll">
+                    <div id="sidebar-menu" class="sidebar-menu">
+                        <ul>
+                            <li class="menu-title">
+                                <span>Main</span>
+                            </li>
+                            <li>
+                                <a href="index.html"><i class="fa fa-home"></i> <span>Dashboard</span></a>
+                            </li>
+                            <li>
+                                <a href="appointment-list.html"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
+                            </li>
+                            <li class="submenu">
+                                <a href="#" class="subdrop"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="specialities.html">All Specialities</a></li>
+                                    <li><a href="specialities-edit.html">Add new Speciality</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-medkit"></i> <span>Services</span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="service-list.html">All Services</a></li>
+                                    <li><a href="service-edit.html">Add new Service</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="doctor-list.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                            </li>
+                            <li>
+                                <a href="patient-list.html"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
+                            </li>
+                            <li class="submenu active">
+                                <a href="#"><i class="fa fa-users"></i> <span>Users</span> <span class="menu-arrow"></span></a>
+                                <ul style="display: block;">
+                                    <li><a href="user-list.html">All Users</a></li>
+                                    <li><a href="user-edit.html">Add new User</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="reviews.html"><i class="fa fa-star"></i> <span>Reviews</span></a>
+                            </li>
+                            <li>
+                                <a href="settings.html"><i class="fa fa-cogs"></i> <span>Settings</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+                    <div class="page-header">
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="page-title">Edit User</h3>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="user-list.html">Users</a></li>
+                                    <li class="breadcrumb-item active">Edit User</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">#PT001</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row justify-content-center">
+                                            <div class="col-4 col-sm-2">
+                                                <img class="rounded-circle d-block w-100" alt="User Image" src="assets/img/profiles/avatar-01.jpg">
+                                            </div>
+                                            <div class="col-12 col-sm-10">
+                                                <div class="row form-row">
+                                                    <div class="col-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>First Name</label>
+                                                            <input type="text" class="form-control" value="John">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Last Name</label>
+                                                            <input type="text" class="form-control" value="Doe">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Date of Birth</label>
+                                                            <div class="cal-icon">
+                                                                <input type="text" class="form-control" value="24-07-1983">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label>Status</label>
+                                                            <select name="status" class="form-control">
+                                                                <option value="1">Enabled</option>
+                                                                <option value="0">Disabled</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-row">
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Email ID</label>
+                                                    <input type="email" class="form-control" value="johndoe@example.com">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Mobile</label>
+                                                    <input type="text" value="+1 202-555-0125" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <h5 class="form-title"><span>Address</span></h5>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                <label>Address</label>
+                                                    <input type="text" class="form-control" value="4663 Agriculture Lane">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>City</label>
+                                                    <input type="text" class="form-control" value="Miami">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>State</label>
+                                                    <input type="text" class="form-control" value="Florida">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Zip Code</label>
+                                                    <input type="text" class="form-control" value="22434">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Country</label>
+                                                    <input type="text" class="form-control" value="United States">
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <h5 class="form-title"><span>Role</span></h5>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label>Role</label>
+                                                    <select name="role" id="" class="form-control" required>
+                                                        <option value="">----- Select Role -----</option>
+                                                        <option value="">Administrator</option>
+                                                        <option value="">Doctor</option>
+                                                        <option value="">Patient</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
