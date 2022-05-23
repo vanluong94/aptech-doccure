@@ -20,9 +20,6 @@
     <link rel="stylesheet" href="/assets/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
 
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="/assets/css/style.css">
-
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="/assets/js/html5shiv.min.js"></script>
@@ -30,6 +27,14 @@
     <![endif]-->
     <script src="/assets/js/app.js"></script>
     <link href="/assets/css/select2.min.css" rel="stylesheet" />
+
+    <th:block layout:fragment="headerBeforeStyle"></th:block>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <th:block layout:fragment="headerAfterStyle"></th:block>
+
 </head>
 <body>
 
@@ -51,7 +56,7 @@
     </div>
     <!-- /Main Wrapper -->
 
-    <div layout:fragment="layoutExtra"></div>
+    <th:block layout:fragment="layoutExtra"></th:block>
 
     <!-- jQuery -->
     <script src="/assets/js/jquery.min.js"></script>
@@ -67,7 +72,7 @@
     <script src="/assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
     <script src="/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 
-    <div layout:fragment="customScripts"></div>
+    <th:block layout:fragment="customScripts"></th:block>
 
     <!-- Custom JS -->
     <script src="/assets/js/select2.min.js"></script>

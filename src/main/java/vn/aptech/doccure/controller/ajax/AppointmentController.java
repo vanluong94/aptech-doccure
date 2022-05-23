@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -13,9 +14,11 @@ import vn.aptech.doccure.common.AjaxResponse;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.model.CalendarAppointmentDTO;
 import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.TimeSlotService;
 import vn.aptech.doccure.utils.AppointmentUtils;
+import vn.aptech.doccure.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,6 +65,25 @@ public class AppointmentController {
         respData.put("results", weekdays);
 
         return AjaxResponse.responseSuccess(respData, "success");
+    }
+
+    @GetMapping("/myCalendar")
+    @ResponseBody
+    @Secured("ROLE_DOCTOR")
+    public ResponseEntity<Object> getMyCalendar(@RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start, @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date end, Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
+
+        LocalDateTime startingDate = DateUtils.convertDateToLocalDateTime(start);
+        LocalDateTime endingDate = DateUtils.convertDateToLocalDateTime(end);
+
+        List<Appointment> appointments = appointmentService.findAvailableByDoctorTimeRange(user, startingDate, endingDate);
+        List<Object> events = new LinkedList<>();
+        for (Appointment appointment : appointments) {
+            events.add(CalendarAppointmentDTO.from(appointment));
+        }
+
+        return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
     @GetMapping("/mine")

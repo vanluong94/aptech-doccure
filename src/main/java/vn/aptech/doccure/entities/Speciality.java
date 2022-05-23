@@ -2,7 +2,6 @@ package vn.aptech.doccure.entities;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -16,7 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(value = "specialities")
+@Table(name = "specialities")
 public class Speciality implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

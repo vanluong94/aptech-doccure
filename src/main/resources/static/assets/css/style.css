@@ -4626,6 +4626,7 @@ html.menu-opened body {
     text-align: center;
     margin: 0 auto;
     transform: translateY(-50%);
+	width: 40px;
 }
 .circle-bar > div canvas {
 	width: 90px !important;
@@ -5651,7 +5652,7 @@ html.menu-opened body {
 	border-radius: 2px;
 	border: none;
 	color: #fff !important;
-	cursor: move;
+	cursor: pointer;
 	font-size: 13px;
 	margin: 1px 7px;
 	padding: 5px 5px;

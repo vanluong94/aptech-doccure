@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public interface AppointmentService {
 
     List<Appointment> findAllPastIncomplete();
 
+    List<Appointment> findAvailableByDoctorTimeRange(User doctor, LocalDateTime startingDate, LocalDateTime endingDate);
+
     Page<Appointment> findAllByPatient(User patient, Pageable pageable);
 
     Page<Appointment> findAllByDoctor(User doctor, Pageable pageable);
@@ -29,5 +32,11 @@ public interface AppointmentService {
     Page<Appointment> findTodayByDoctor(User doctor, Pageable pageable);
 
     Page<Appointment> findTodayByPatient(User patient, Pageable pageable);
+
+    Long countByDoctor(User doctor);
+
+    Long countTodayByDoctor(User doctor);
+
+    Long countPatientByDoctor(User doctor);
 
 }

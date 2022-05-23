@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.web.multipart.MultipartFile;
 import vn.aptech.doccure.utils.JSONUtils;
 
@@ -25,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(value = "doctor_clinics")
+@Table(name = "doctor_clinics")
 public class DoctorClinic implements Serializable {
     @Id
     @Column(name = "doctor_id")

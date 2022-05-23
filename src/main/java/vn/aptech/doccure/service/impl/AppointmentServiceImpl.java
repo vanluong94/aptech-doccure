@@ -12,6 +12,7 @@ import vn.aptech.doccure.service.AppointmentService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> findAllPastIncomplete() {
         return appointmentRepository.findAllPastIncomplete();
+    }
+
+    @Override
+    public List<Appointment> findAvailableByDoctorTimeRange(User doctor, LocalDateTime startingDate, LocalDateTime endingDate) {
+        return appointmentRepository.findAllByDoctorAndStatusInAndTimeSlotTimeStartBetween(
+                doctor,
+                Arrays.asList(
+                        Appointment.STATUS.CONFIRMED,
+                        Appointment.STATUS.PENDING
+                ),
+                startingDate,
+                endingDate
+        );
     }
 
     @Override
@@ -91,5 +105,30 @@ public class AppointmentServiceImpl implements AppointmentService {
                 ),
                 pageable
         );
+    }
+
+    @Override
+    public Long countByDoctor(User doctor) {
+        return appointmentRepository.countByDoctor(doctor);
+    }
+
+    @Override
+    public Long countTodayByDoctor(User doctor) {
+        return appointmentRepository.countByDoctorAndTimeSlotTimeStartBetween(
+                doctor,
+                LocalDateTime.of(
+                        LocalDate.now(),
+                        LocalTime.of(0, 0)
+                ),
+                LocalDateTime.of(
+                        LocalDate.now().plusDays(1),
+                        LocalTime.of(0, 0)
+                )
+        );
+    }
+
+    @Override
+    public Long countPatientByDoctor(User doctor) {
+        return appointmentRepository.countPatientByDoctor(doctor);
     }
 }

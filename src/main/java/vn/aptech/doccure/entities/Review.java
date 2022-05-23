@@ -2,14 +2,13 @@ package vn.aptech.doccure.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
-@Table(value = "reviews")
+@Table(name = "reviews")
 public class Review extends AbstractEntity {
     private Short rating;
 
