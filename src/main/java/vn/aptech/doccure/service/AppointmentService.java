@@ -39,4 +39,6 @@ public interface AppointmentService {
 
     Long countPatientByDoctor(User doctor);
 
+    Page<User> findPatientsByDoctor(User doctor, Pageable pageable);
+
 }

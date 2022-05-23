@@ -128,11 +128,6 @@ public class User implements UserDetails {
     @Column(name = "modified_date", columnDefinition = "datetime default current_timestamp")
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
-    public User(Integer enabled, Set<Role> roles) {
-        this.enabled = enabled;
-//        this.roles = roles;
-    }
-
     /*
      * Dùng annotation Transient báo cho Spring biết
      * không mapping field database
@@ -152,8 +147,26 @@ public class User implements UserDetails {
     @Transient
     private boolean credentialsNonExpired = true;
 
+    public User(Integer enabled, Set<Role> roles) {
+        this.enabled = enabled;
+//        this.roles = roles;
+    }
+
     public User(Long id) {
         this.id = id;
+    }
+
+    public User(Long id, String username, String firstName, String lastName, String phone, Date dob, String avatar, Short gender, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.dob = dob;
+        this.avatar = avatar;
+        this.gender = gender;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
     }
 
     @Override

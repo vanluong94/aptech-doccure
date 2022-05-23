@@ -40,4 +40,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE a.doctor = :doctor")
     Long countPatientByDoctor(@Param("doctor") User doctor);
+
+    @Query("SELECT u FROM Appointment a JOIN a.patient u WHERE a.doctor = :doctor GROUP BY a.patient")
+    Page<User> findPatientByDoctor(@Param("doctor") User doctor, Pageable pageable);
 }

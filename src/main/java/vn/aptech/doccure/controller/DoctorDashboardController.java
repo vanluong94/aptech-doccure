@@ -1,19 +1,22 @@
 package vn.aptech.doccure.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.entities.DoctorClinic;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.model.PatientDTO;
+import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
 
@@ -30,6 +33,10 @@ public class DoctorDashboardController {
 
     @Autowired
     StorageService storageService;
+
+    @Autowired
+    AppointmentService appointmentService;
+
     @GetMapping("/time-slot-settings")
     public String timeSlotsPage() {
         return "/pages/dashboard/doctorTimeSlots";
@@ -101,4 +108,21 @@ public class DoctorDashboardController {
         return "pages/dashboard/doctorCalendar";
     }
 
+    @GetMapping("/my-patients")
+    public String myPatientsPage(@RequestParam(name = "page", defaultValue = "1") Integer page, Authentication authentication, Model model) {
+        User doctor = (User) authentication.getPrincipal();
+        Pageable pageable = PageRequest.of(--page, 10);
+
+        List<PatientDTO> patients = new LinkedList<>();
+        Page<User> results = appointmentService.findPatientsByDoctor(doctor, pageable);
+
+        for (User patient : results.getContent()) {
+            patients.add(PatientDTO.from(patient));
+        }
+
+        model.addAttribute("patients", patients);
+        model.addAttribute("results", results);
+
+        return "pages/dashboard/doctorMyPatients";
+    }
 }

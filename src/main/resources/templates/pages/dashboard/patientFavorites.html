@@ -99,18 +99,18 @@
                             <ul class="pagination" th:object="${favoriteResult}">
                                 <!-- PREVIOUS -->
                                 <li class="page-item" th:classappend="${favoriteResult.hasPrevious() ? '' : 'disabled'}">
-                                    <a class="page-link" th:if="${favoriteResult.hasPrevious()}" th:href="@{/dashboard/favorites} + ${favoriteResult.previousPageable().getPageNumber()}" tabindex="-1">Previous</a>
+                                    <a class="page-link" th:if="${favoriteResult.hasPrevious()}" th:href="@{/dashboard/favorites?page=} + ${favoriteResult.previousPageable().getPageNumber()}" tabindex="-1">Previous</a>
                                     <a class="page-link" th:unless="${favoriteResult.hasPrevious()}" href="#" tabindex="-1">Previous</a>
                                 </li>
     
                                 <!-- PAGES -->
-                                <li class="page-item" th:each="i : ${#numbers.sequence(1,favoriteResult.totalPages,1)}" th:classappend="${favoriteResult.number == i ? 'active' : ''}">
-                                    <a th:href="@{/dashboard/favorites} + ${i}" th:text="${i}" class="page-link"><span class="sr-only" th:if="${favoriteResult.number == i}">(current)</span></a>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(1,favoriteResult.totalPages,1)}" th:classappend="${favoriteResult.number + 1 == i ? 'active' : ''}">
+                                    <a th:href="@{/dashboard/favorites?page=} + ${i}" th:text="${i}" class="page-link"><span class="sr-only" th:if="${favoriteResult.number + 1 == i}">(current)</span></a>
                                 </li>
     
                                 <!-- NEXT -->
                                 <li class="page-item" th:classappend="${favoriteResult.hasNext() ? '' : 'disabled'}">
-                                    <a class="page-link" th:if="${favoriteResult.hasNext()}" th:href="@{/dashboard/favorites} + ${favoriteResult.nextPageable().getPageNumber()}" tabindex="-1">Next</a>
+                                    <a class="page-link" th:if="${favoriteResult.hasNext()}" th:href="@{/dashboard/favorites?page=} + ${favoriteResult.nextPageable().getPageNumber()}" tabindex="-1">Next</a>
                                     <a class="page-link" th:unless="${favoriteResult.hasNext()}" href="#" tabindex="-1">Next</a>
                                 </li>
                             </ul>

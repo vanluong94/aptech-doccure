@@ -131,4 +131,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Long countPatientByDoctor(User doctor) {
         return appointmentRepository.countPatientByDoctor(doctor);
     }
+
+    @Override
+    public Page<User> findPatientsByDoctor(User doctor, Pageable pageable) {
+        return appointmentRepository.findPatientByDoctor(doctor, pageable);
+    }
 }

@@ -22,6 +22,10 @@ public class PatientDTO {
         return new PatientDTO(patient);
     }
 
+    public String getUrl() {
+        return "#";
+    }
+
     public String getCity() {
         if (this.patient.getPatientAddress() != null) {
             return this.patient.getPatientAddress().getCity() + ", " + this.patient.getPatientAddress().getCountry();
