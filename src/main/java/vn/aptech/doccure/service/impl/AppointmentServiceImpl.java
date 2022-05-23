@@ -136,4 +136,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Page<User> findPatientsByDoctor(User doctor, Pageable pageable) {
         return appointmentRepository.findPatientByDoctor(doctor, pageable);
     }
+
+    @Override
+    public Page<Appointment> findByDoctorAndPatient(User doctor, User patient, Pageable pageable) {
+        return appointmentRepository.findAllByDoctorAndPatient(doctor, patient, pageable);
+    }
 }

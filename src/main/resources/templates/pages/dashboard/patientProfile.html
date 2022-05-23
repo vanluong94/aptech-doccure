@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Profile - Doccure</title>
+</head>
+<body>
+
+<div class="page-content" layout:fragment="layoutContent">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-12">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard/my-patients}">My Patients</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Patient Profile</li>
+                        </ol>
+                    </nav>
+                    <h2 class="breadcrumb-title">Patient Profile</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Breadcrumb -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <!-- Profile Sidebar -->
+                <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+                    <!-- Profile Widget -->
+                    <div class="card widget-profile pat-widget-profile" th:object="${patient}">
+                        <div class="card-body">
+                            <div class="pro-widget-content">
+                                <div class="profile-info-widget">
+                                    <a href="#" class="booking-doc-img">
+                                        <img th:src="*{patient.theAvatar}" alt="User Image">
+                                    </a>
+                                    <div class="profile-det-info">
+                                        <h3 th:text="*{patient.fullName}"></h3>
+                                        
+                                        <div class="patient-details">
+                                            <h5><b>Patient ID :</b> <span th:text="*{patient.id}"></span></h5>
+                                            <h5 class="mb-0" th:if="*{city}"><i class="fas fa-map-marker-alt"></i> <th:block th:text="*{city}"></th:block></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="patient-info">
+                                <ul>
+                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{patient.phone}"></span></li>
+                                    <li th:if="${patient.age != null}">Age <span><th:block th:text="${patient.age + ' Years'}"></th:block></span></li>
+                                    <li>Gender <span th:text="*{gender}"></span></li>
+                                    <li>Blood Group <span><th:block th:text="*{bloodType}"></th:block></span></li>
+                                    <li>Height <span><th:block th:text="*{height}"></th:block> kg</span></li>
+                                    <li>Weight <span><th:block th:text="*{weight}"></th:block> cm</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Profile Widget -->
+
+                </div>
+                <!-- / Profile Sidebar -->
+
+                <div class="col-md-7 col-lg-8 col-xl-9">
+                    <table id="appointmentsTable" class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th>Doctor</th>
+                            <th>Appt Date</th>
+                            <th>Starting Time</th>
+                            <th>Ending Time</th>
+                            <th>Booking Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+</div>
+
+<div layout:fragment="layoutExtra">
+
+    <!-- Appointment Details Modal -->
+    <div class="modal fade custom-modal" id="appointmentDetail">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Appointment Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="info-details">
+                        <li>
+                            <div class="details-header">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="title h3">#<span data-field="id"></span></span>
+                                        <span class="text" data-field="timeSlot.date"></span>
+                                        <span class="text">
+                                            <span class="text-info" data-field="timeSlot.timeStart"></span><span> - </span><span class="text-info" data-field="timeSlot.timeEnd"></span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-right" data-field="statusBadge"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="title">Booking Date:</span>
+                            <span class="text" data-field="createdDate"></span>
+                        </li>
+                        <li>
+                            <span class="title">Status:</span>
+                            <span class="text" data-field="statusText"></span>
+                        </li>
+                        <li>
+                            <span class="title">Logs:</span>
+                            <table class="table table-bordered mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>Datetime</th>
+                                        <th>Content</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-field="logs"></tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Appointment Details Modal --> 
+
+</div>
+
+<div layout:fragment="customScripts">
+
+    <!-- <script src="/assets/plugins/datatables/datatables.min.js"></script> -->
+    <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/js/table-appointments.js"></script>
+    <script th:inline="javascript">
+
+        const patientId = /*[[${patient.patient.id}]]*/ 0;
+
+        $('#appointmentsTable').DataTable({
+            searching: false,
+            bInfo: false,
+            bLengthChange: false,
+            dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
+            ordering: false,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: `/ajax/appointments/mine/byPatient/${patientId}`,
+                data: function(d) {
+                    var info = $('#appointmentsTable').DataTable().page.info();
+                    return {
+                        page: info.page,
+                        length: d.length,
+                    };
+                },
+                dataSrc: (resp) => {
+                    return resp.data.map((row) => {
+                        return Object.keys(row)
+                        .filter((key) => ['id', 'patient'].indexOf(key) == -1) // exclude these field in results
+                        .map((key) => {
+                
+                            let output = row[key];
+                
+                            if (key == 'doctor') {
+                                output = appointmentUtils.renderUserTd(row.doctor);
+                            } else if (key == 'timeStart' || key == 'timeEnd') {
+                                output = `<span class="text-info">${row[key]}</span>`;
+                            } else if (key == 'status') {
+                                output = appointmentUtils.renderStatusPill(row.status);
+                            } else if (key == 'action') {
+                                output = `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="far fa-eye"></i> View</div>`;
+                            }
+                
+                            return output;
+                        })
+                    });
+                }
+            },
+            drawCallback(settings, json) {
+
+                /**
+                 * Custom datatable pagination style
+                 * */
+                let $pagination = $('#appointmentsTable_paginate')
+                let $pageItemsWrapper = $pagination.find('> span')
+
+                $pagination.addClass('pagination');
+
+                $pageItemsWrapper.find('a').insertAfter($pageItemsWrapper)
+                $pageItemsWrapper.remove();
+
+                $pagination.find('a').each(function(i,e){
+                    let $e = $(e);
+                    $e.addClass('page-link btn rounded-0 text-sm');
+                    $e.wrap(`<span class="page-item ${$e.hasClass('current') ? 'active' : ''}"></span>`)
+                });
+
+                /**
+                 * Handle button action
+                 * */
+                let $table = $('#appointmentsTable');
+                $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
+                    e.preventDefault();
+                    appointmentUtils.view($(this).data('appointment-id'));
+                })
+            }
+        });
+        
+    </script>
+</div>
+
+</body>
+</html>

@@ -41,4 +41,6 @@ public interface AppointmentService {
 
     Page<User> findPatientsByDoctor(User doctor, Pageable pageable);
 
+    Page<Appointment> findByDoctorAndPatient(User doctor, User patient, Pageable pageable);
+
 }

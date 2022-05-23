@@ -16,6 +16,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     List<Appointment> findAllByDoctorAndStatusInAndTimeSlotTimeStartBetween(User doctor, Collection<Short> status, LocalDateTime startDate, LocalDateTime endDate);
 
+    Page<Appointment> findAllByDoctorAndPatient(User doctor, User patient, Pageable pageable);
+
     Page<Appointment> findAllByPatientOrderByCreatedDateDesc(User patient, Pageable pageable);
 
     Page<Appointment> findAllByDoctorOrderByCreatedDateDesc(User doctor, Pageable pageable);
