@@ -4,6 +4,7 @@ import lombok.Data;
 import vn.aptech.doccure.SpringContext;
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.TimeSlotService;
 
 import java.time.format.DateTimeFormatter;
@@ -15,6 +16,10 @@ public class DoctorDTO {
 
     public DoctorDTO(User doctor) {
         this.doctor = doctor;
+    }
+
+    public static DoctorDTO from(User doctor) {
+        return new DoctorDTO(doctor);
     }
 
     public Long getId() {
@@ -51,6 +56,18 @@ public class DoctorDTO {
 //        }
 //        return StringUtils.join(services, ", ");
         return "Periodontology and Oral Implantology, BDS"; // dummy data
+    }
+
+    public Long getTotalAppointments() {
+        return SpringContext.getBean(AppointmentService.class).countByDoctor(this.doctor);
+    }
+
+    public Long getTodayTotalAppointments() {
+        return SpringContext.getBean(AppointmentService.class).countTodayByDoctor(this.doctor);
+    }
+
+    public Long getTotalPatients() {
+        return SpringContext.getBean(AppointmentService.class).countPatientByDoctor(this.doctor);
     }
 
 }

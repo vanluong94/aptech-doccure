@@ -96,4 +96,9 @@ public class DoctorDashboardController {
         return "redirect:/dashboard/clinic-settings";
     }
 
+    @GetMapping("/calendar")
+    public String calendarPage() {
+        return "pages/dashboard/doctorCalendar";
+    }
+
 }

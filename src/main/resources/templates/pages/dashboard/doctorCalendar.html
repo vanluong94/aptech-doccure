@@ -6,9 +6,17 @@
 >
 <head>
     <meta charset="UTF-8">
-    <title>My Appointments - Doccure</title>
+    <title>Doctor Calendar | Dashboard- Doccure</title>
 </head>
 <body>
+
+<th:block layout:fragment="headerBeforeStyle">
+    <!-- Datetimepicker CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css">
+    
+    <!-- Full Calander CSS -->
+    <link rel="stylesheet" href="/assets/plugins/fullcalendar/fullcalendar.min.css">
+</th:block>
 
 <div class="page-content" layout:fragment="layoutContent">
 
@@ -21,10 +29,10 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
                             <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Appointments</li>
+                            <li class="breadcrumb-item active" aria-current="page">Calendar</li>
                         </ol>
                     </nav>
-                    <h2 class="breadcrumb-title">Appointments</h2>
+                    <h2 class="breadcrumb-title">Dashboard</h2>
                 </div>
             </div>
         </div>
@@ -36,28 +44,18 @@
         <div class="container-fluid">
 
             <div class="row">
-
-                <!-- Profile Sidebar -->
                 <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
-                    <div th:replace="fragments/dashboard/patientSidebar :: sidebar"></div>
+                    <div th:replace="fragments/dashboard/doctorSidebar :: sidebar"></div>
                 </div>
-                <!-- / Profile Sidebar -->
 
                 <div class="col-md-7 col-lg-8 col-xl-9">
-                    <table id="appointmentsTable" class="table table-hover table-center mb-0">
-                        <thead>
-                        <tr>
-                            <th>Doctor</th>
-                            <th>Appt Date</th>
-                            <th>Starting Time</th>
-                            <th>Ending Time</th>
-                            <th>Booking Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -65,10 +63,10 @@
 
     </div>
     <!-- /Page Content -->
+
 </div>
 
 <div layout:fragment="layoutExtra">
-
     <!-- Appointment Details Modal -->
     <div class="modal fade custom-modal" id="appointmentDetail">
         <div class="modal-dialog modal-dialog-centered">
@@ -109,10 +107,10 @@
                             <span class="title">Logs:</span>
                             <table class="table table-bordered mt-2">
                                 <thead>
-                                    <tr>
-                                        <th>Datetime</th>
-                                        <th>Content</th>
-                                    </tr>
+                                <tr>
+                                    <th>Datetime</th>
+                                    <th>Content</th>
+                                </tr>
                                 </thead>
                                 <tbody data-field="logs"></tbody>
                             </table>
@@ -122,72 +120,22 @@
             </div>
         </div>
     </div>
-    <!-- /Appointment Details Modal --> 
-
+    <!-- /Appointment Details Modal -->
 </div>
 
 <div layout:fragment="customScripts">
+    <!-- Datetimepicker JS -->
+    <script src="/assets/js/moment.min.js"></script>
+    <script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+    
+    <!-- Full Calendar JS -->
+    <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/assets/plugins/fullcalendar/fullcalendar.min.js"></script>
 
-    <!-- <script src="assets/plugins/datatables/datatables.min.js"></script> -->
-    <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/assets/js/table-appointments.js"></script>
-    <script>
 
-        $('#appointmentsTable').DataTable({
-            searching: false,
-            bInfo: false,
-            bLengthChange: false,
-            dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
-            ordering: false,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '/ajax/appointments/mine',
-                data: function(d) {
-                    var info = $('#appointmentsTable').DataTable().page.info();
-                    return {
-                        page: info.page,
-                        length: d.length,
-                    };
-                },
-                dataSrc: (resp) => appointmentUtils.parsePatientTableData(resp)
-            },
-            drawCallback(settings, json) {
-
-                /**
-                 * Custom datatable pagination style
-                 * */
-                let $pagination = $('#appointmentsTable_paginate')
-                let $pageItemsWrapper = $pagination.find('> span')
-
-                $pagination.addClass('pagination');
-
-                $pageItemsWrapper.find('a').insertAfter($pageItemsWrapper)
-                $pageItemsWrapper.remove();
-
-                $pagination.find('a').each(function(i,e){
-                    let $e = $(e);
-                    $e.addClass('page-link btn rounded-0 text-sm');
-                    $e.wrap(`<span class="page-item ${$e.hasClass('current') ? 'active' : ''}"></span>`)
-                });
-
-                /**
-                 * Handle button action
-                 * */
-                let $table = $('#appointmentsTable');
-                $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
-                    e.preventDefault();
-                    appointmentUtils.view($(this).data('appointment-id'));
-                })
-
-                $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
-                    e.preventDefault();
-                    appointmentUtils.cancel($(this).data('appointment-id'));
-                })
-            }
-        });
-        
-    </script>
+    <!-- Doctor Calendar JS -->
+    <script src="/assets/js/doctor-calendar.js"></script>
 </div>
 
 </body>

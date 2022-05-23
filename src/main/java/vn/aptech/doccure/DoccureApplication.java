@@ -19,6 +19,7 @@ import java.util.Properties;
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
 @EnableScheduling
+@EnableJpaRepositories
 @EnableAsync
 public class DoccureApplication {
 

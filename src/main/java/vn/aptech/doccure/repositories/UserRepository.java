@@ -3,8 +3,8 @@ package vn.aptech.doccure.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.Role;
+import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.User;
 
 import java.util.Collection;

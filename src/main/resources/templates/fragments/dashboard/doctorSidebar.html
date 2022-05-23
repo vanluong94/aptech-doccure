@@ -15,7 +15,7 @@
                     <h3 th:text="${user.fullName}" class="mb-0"></h3>
                     <p th:text="${'@' + user.username}" class="small text-secondary"></p>
                     <div class="patient-details">
-                        <h5 class="mb-0">BDS, MDS - Oral & Maxillofacial Surgery</h5>
+                        <h5 class="mb-0 text-wrap" th:text="${doctorDto.eduSpecialtiesText}"></h5>
                     </div>
                 </div>
             </div>
@@ -35,8 +35,8 @@
                             <span>Appointments</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-calendar.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/calendar' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/calendar}">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Calendar</span>
                         </a>

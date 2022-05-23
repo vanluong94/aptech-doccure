@@ -4,16 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import vn.aptech.doccure.common.Constants;
-import vn.aptech.doccure.utils.DoctorUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -25,7 +22,7 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
-@Table(value = "users")
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -61,7 +58,7 @@ public class User implements UserDetails {
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "dob")
+    @Column(name = "dob", columnDefinition = "date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
 
@@ -74,21 +71,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private Set<Review> patientReviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    private Set<Appointment> appointments = new LinkedHashSet<>();
-
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = TimeSlot.class, orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<TimeSlot> timeSlots = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = TimeSlotDefault.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @OrderBy("weekday ASC, time_start ASC")
     private Set<TimeSlotDefault> timeSlotsDefault = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
-    private Set<Appointment> patientAppointments = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "patient")
-    private Set<PatientBio> patientBios = new LinkedHashSet<>();
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
@@ -125,6 +113,12 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private DoctorBio bio;
+
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private PatientBio patientBio;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private UserAddress patientAddress;
 
     @CreatedDate
     @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
@@ -219,6 +213,17 @@ public class User implements UserDetails {
 
             return "/assets/img/" + filename;
         }
+    }
+
+    public String getGenderText() {
+        if (gender != null) {
+            if (gender.equals(Constants.Genders.MALE)) {
+                return "Male";
+            } else if (gender.equals(Constants.Genders.FEMALE)) {
+                return "Female";
+            }
+        }
+        return "Unknown";
     }
 
     @Override

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -15,7 +14,7 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Setter
-@Table(value = "time_slots_default")
+@Table(name = "time_slots_default")
 @IdClass(TimeSlotDefaultId.class)
 @NoArgsConstructor
 @AllArgsConstructor
