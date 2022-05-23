@@ -95,13 +95,13 @@
 							<nav class="user-tabs mb-4">
 								<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
 									<li class="nav-item">
-										<a class="nav-link active" href="#doc_overview" data-toggle="tab">Overview</a>
+										<a class="nav-link" th:classappend="${#strings.equals('reviews', param.tabActive) ? '' : 'active'}" href="#doc_overview" data-toggle="tab">Overview</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="doc_locations_nav_btn" href="#doc_locations" data-toggle="tab">Locations</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
+										<a class="nav-link" th:classappend="${#strings.equals('reviews', param.tabActive) ? 'active' : ''}" href="#doc_reviews" data-toggle="tab">Reviews</a>
 									</li>
 								</ul>
 							</nav>
@@ -111,7 +111,7 @@
 							<div class="tab-content pt-0">
 
 								<!-- Overview Content -->
-								<div role="tabpanel" id="doc_overview" class="tab-pane fade show active">
+								<div role="tabpanel" id="doc_overview" class="tab-pane fade" th:classappend="${#strings.equals('reviews', param.tabActive) ? '' : 'show active'}">
 									<div class="row">
 										<div class="col-md-12 col-lg-9">
 
@@ -264,10 +264,16 @@
 								</div>
 								<!-- /Locations Content -->
 								<!-- Reviews Content -->
-								<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
+								<div role="tabpanel" id="doc_reviews" class="tab-pane fade" th:classappend="${#strings.equals('reviews', param.tabActive) ? 'show active' : ''}">
 
+									<div class="card" th:if="${#lists.isEmpty(reviews)}">
+										<div class="card-body text-center">
+											<h3>No Comments Yet.</h3>
+											<p>Be the first to comment on <span th:text="${doctor.fullName}"></span></p>
+										</div>
+									</div>
 									<!-- Review Listing -->
-									<div class="widget review-listing">
+									<div class="widget review-listing" th:unless="${#lists.isEmpty(reviews)}">
 										<ul class="comments-list" th:each="review : ${reviews}">
 											<!-- Comment List -->
 											<li>
@@ -300,6 +306,8 @@
 									<div class="write-review" sec:authorize="isAuthenticated()">
 										<h4>Write a review for <strong th:text="${doctor.fullName}"></strong></h4>
 
+										<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+										<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 										<!-- Write Review Form -->
 										<form class="form-review" action="#" th:action="@{/doctor/profile/{id}(id=${doctor.id})}" th:object="${review}" method="post">
 											<input type="hidden" th:field="*{doctorId}">
@@ -330,11 +338,12 @@
 												</div>
 											</div>
 											<div class="form-group">
-												<label>Title of your review</label>
-												<input th:field="*{title}" class="form-control" type="text" placeholder="If you could say it in one sentence, what would you say?">
+												<label for="review_title">Title of your review</label>
+												<input th:field="*{title}" id="review_title" class="form-control" maxlength="100" type="text" placeholder="If you could say it in one sentence, what would you say?">
+												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="titleChars">100</span> characters remaining</small></div>
 											</div>
 											<div class="form-group">
-												<label>Your review</label>
+												<label for="review_desc">Your review</label>
 												<textarea th:field="*{content}" id="review_desc" maxlength="100" class="form-control"></textarea>
 
 												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
@@ -346,7 +355,7 @@
 										<!-- /Write Review Form -->
 
 									</div>
-									<div sec:authorize="!isAuthenticated()">Please login to write a review.</div>
+									<div sec:authorize="!isAuthenticated()">You must be <a th:href="@{/login}" class="text-success">logged in</a> to post a comment.</div>
 									<!-- /Write Review -->
 
 								</div>

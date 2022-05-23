@@ -80,12 +80,16 @@ public class DoctorController {
         review1.setContent(review.getContent());
         review1.setDoctor(new User(review.getDoctorId()));
         review1.setPatient(new User(review.getPatientId()));
-        if (reviewService.save(review1) != null) {
-            redirect.addFlashAttribute("successMessage", "Add review successfully.");
-        } else {
-            redirect.addFlashAttribute("errorMessage", "Can't add review.");
+        try {
+            if (reviewService.save(review1) != null) {
+                redirect.addFlashAttribute("successMessage", "Your comment was posted successfully! Thank you!");
+            } else {
+                redirect.addFlashAttribute("errorMessage", "Can't publish your rating and review right now. Try again?");
+            }
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/doctor/profile/" + id;
+        return "redirect:/doctor/profile/" + id + "?tabActive=reviews#doc_reviews";
     }
 
     @Secured("ROLE_PATIENT")
