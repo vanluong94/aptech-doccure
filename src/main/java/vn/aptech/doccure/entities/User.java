@@ -18,6 +18,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 @Setter
@@ -224,6 +225,26 @@ public class User implements UserDetails {
             }
         }
         return "Unknown";
+    }
+
+    public double getAvgReview() {
+        if (doctorReviews.isEmpty()) {
+            return 0;
+        }
+        double totalAvg = 0;
+        int totalRate = 0;
+        try {
+            for (Review review : doctorReviews) {
+                if (review.getRating() != null) {
+                    totalRate++;
+                    totalAvg += review.getRating();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return totalRate > 0 ? totalAvg / totalRate : 0;
     }
 
     @Override

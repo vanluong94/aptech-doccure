@@ -83,9 +83,17 @@
                                         <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
                                         <i class="fas fa-check-circle verified"></i>
                                     </h3>
-                                    <p class="speciality" th:text="${doctor?.clinic?.specialities}"></p>
+                                    <p class="speciality" th:if="${doctor?.clinic?.specialities != null}" th:text="${doctor?.clinic?.specialities}"></p>
+                                    <div class="rating" th:unless="${#lists.isEmpty(doctor?.doctorReviews)}">
+                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 1 ? 'filled' : ''}"></i>
+                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 2 ? 'filled' : ''}"></i>
+                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 3 ? 'filled' : ''}"></i>
+                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 4 ? 'filled' : ''}"></i>
+                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 5 ? 'filled' : ''}"></i>
+                                        <span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
+                                    </div>
                                     <ul class="available-info">
-                                        <li> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span></li>
+                                        <li th:if="${doctor?.clinic?.city != null}"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span></li>
                                         <li> <i class="far fa-clock"></i> Available on Fri, 22 Mar</li>
                                     </ul>
                                     <div class="row row-sm">

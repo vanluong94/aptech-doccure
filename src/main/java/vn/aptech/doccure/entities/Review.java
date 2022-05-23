@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "reviews")
 public class Review extends AbstractEntity {
-    private Short rating;
+    private Double rating;
 
     @Column(length = 100)
     private String title;
