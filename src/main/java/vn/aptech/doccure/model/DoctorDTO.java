@@ -1,17 +1,22 @@
 package vn.aptech.doccure.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import vn.aptech.doccure.SpringContext;
+import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.TimeSlotService;
 
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 @Data
 public class DoctorDTO {
 
+    @JsonIgnore
     private User user;
 
     public DoctorDTO(User doctor) {
@@ -50,12 +55,12 @@ public class DoctorDTO {
     }
 
     public String getSpecialtiesText() {
-//        List<String> services = new LinkedList<>();
-//        for (Service service : doctor.getServices()) {
-//            services.add(service.getName());
-//        }
-//        return StringUtils.join(services, ", ");
-        return "Periodontology and Oral Implantology, BDS"; // dummy data
+        return StringUtils.join(
+                this.user.getServices()
+                        .stream().map((Service service) -> service.getName())
+                        .collect(Collectors.toList()),
+        ", "
+        );
     }
 
     public Long getTotalAppointments() {

@@ -1,5 +1,6 @@
 package vn.aptech.doccure.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import vn.aptech.doccure.entities.User;
 
@@ -12,6 +13,7 @@ import java.time.ZoneId;
 @Data
 public class PatientDTO {
 
+    @JsonIgnore
     private User user;
 
     public PatientDTO(User patient) {

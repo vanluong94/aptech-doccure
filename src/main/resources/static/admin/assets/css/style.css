@@ -4651,24 +4651,24 @@ table.table-inbox tbody tr.checked {
 |							|
 =============================
 */
-#appt_details .info-details {
+#appointmentDetail .info-details {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-#appt_details .info-details li .title {
+#appointmentDetail .info-details li .title {
     color: #272b41;
     font-weight: 500;
 }
-#appt_details .info-details li .text {
+#appointmentDetail .info-details li .text {
     color: #757575;
     display: block;
     font-size: 16px;
     overflow: hidden;
 }
-#appt_details .info-details li {
+#appointmentDetail .info-details li {
 	margin-bottom: 10px;
 }
-#appt_details .info-details li:last-child {
+#appointmentDetail .info-details li:last-child {
 	margin-bottom: 0;
 }

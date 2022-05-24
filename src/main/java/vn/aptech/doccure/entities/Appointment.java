@@ -101,9 +101,11 @@ public class Appointment implements Serializable {
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
     @Transient
+    @JsonIgnore
     private DoctorDTO doctorDTO;
 
     @Transient
+    @JsonIgnore
     private PatientDTO patientDTO;
 
     public Appointment(User doctor, User patient, TimeSlot originalTimeSlot, Short status) {

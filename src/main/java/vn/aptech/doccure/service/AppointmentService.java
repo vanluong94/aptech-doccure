@@ -47,4 +47,6 @@ public interface AppointmentService {
 
     List<Appointment> findTop10Latest();
 
+    Page<Appointment> findAll(Pageable pageable);
+
 }

@@ -50,6 +50,8 @@
 </div>
 <!-- /Main Wrapper -->
 
+<th:block layout:fragment="layoutExtra"></th:block>
+
 <div id="preloader">
     <div class="triple-spinner"></div>
 </div>
@@ -64,12 +66,13 @@
 <!-- Slimscroll JS -->
 <script src="/admin/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<script src="/admin/assets/plugins/raphael/raphael.min.js"></script>
+<!-- <script src="/admin/assets/plugins/raphael/raphael.min.js"></script>
 <script src="/admin/assets/plugins/morris/morris.min.js"></script>
-<script src="/admin/assets/js/chart.morris.js"></script>
+<script src="/admin/assets/js/chart.morris.js"></script> -->
 
 <!-- Custom JS -->
 <script  src="/admin/assets/js/script.js"></script>
+<script  src="/assets/js/app.js"></script>
 <script>
     jQuery(document).ready(function($){
         setTimeout(() => {
@@ -86,6 +89,9 @@
         modal.find('.modal-body input').val(id)
     });
 </script>
+
+<th:block layout:fragment="customScripts"></th:block>
+
 </body>
 
 </html>

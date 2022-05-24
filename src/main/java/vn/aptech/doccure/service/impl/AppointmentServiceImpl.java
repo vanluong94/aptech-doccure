@@ -151,4 +151,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<Appointment> findTop10Latest() {
         return appointmentRepository.findTop5ByOrderByCreatedDateDesc();
     }
+
+    @Override
+    public Page<Appointment> findAll(Pageable pageable) {
+        return appointmentRepository.findAll(pageable);
+    }
 }

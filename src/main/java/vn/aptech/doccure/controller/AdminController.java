@@ -47,4 +47,9 @@ public class AdminController {
 
         return modelAndView;
     }
+
+    @GetMapping("/appointments")
+    public String appointments() {
+        return "admin/pages/appointments";
+    }
 }

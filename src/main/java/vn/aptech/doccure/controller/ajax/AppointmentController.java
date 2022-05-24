@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vn.aptech.doccure.common.AjaxResponse;
+import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.User;
@@ -38,6 +39,22 @@ public class AppointmentController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/getAll")
+    @ResponseBody
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<Object> getAll(@RequestParam Integer page, @RequestParam Integer length) {
+        Map<String, Object> response = new HashMap<>();
+
+        Pageable pageable = PageRequest.of(page, length, Sort.by("createdDate").descending());
+        Page<Appointment> results = appointmentService.findAll(pageable);
+
+        response.put("data", AppointmentUtils.toDataTable(results.getContent()));
+        response.put("recordsTotal", results.getTotalElements());
+        response.put("recordsFiltered", results.getTotalElements());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping("/getByDoctor")
     @ResponseBody
@@ -198,7 +215,7 @@ public class AppointmentController {
 
     @GetMapping("/{id}/get")
     @ResponseBody
-    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT", "ROLE_ADMIN"})
     public ResponseEntity<Object> getById(@PathVariable Long id, Authentication authentication) {
 
         Map<String, Object> response = new HashMap<>();
@@ -216,7 +233,7 @@ public class AppointmentController {
         User user = (User) authentication.getPrincipal();
         Appointment appointment = appointmentOptional.get();
 
-        if (!appointment.getDoctor().equals(user) && !appointment.getPatient().equals(user) ) {
+        if (!user.hasRole(Constants.Roles.ROLE_ADMIN) && !appointment.getDoctor().equals(user) && !appointment.getPatient().equals(user) ) {
             return AjaxResponse.responseFail(response, "you are not allowed to perform action on this appointment");
         }
 

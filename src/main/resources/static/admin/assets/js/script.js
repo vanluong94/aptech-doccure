@@ -109,14 +109,6 @@ Version      : 1.3
 		$('[data-toggle="tooltip"]').tooltip();
 	}
 	
-    // Datatable
-
-    if ($('.datatable').length > 0) {
-        $('.datatable').DataTable({
-            "bFilter": false,
-        });
-    }
-	
 	// Email Inbox
 
 	if($('.clickable-row').length > 0 ){
