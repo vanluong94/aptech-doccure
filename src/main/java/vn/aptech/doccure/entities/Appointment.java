@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import vn.aptech.doccure.model.DoctorDTO;
+import vn.aptech.doccure.model.PatientDTO;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -98,6 +100,12 @@ public class Appointment implements Serializable {
     @LastModifiedDate
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
+    @Transient
+    private DoctorDTO doctorDTO;
+
+    @Transient
+    private PatientDTO patientDTO;
+
     public Appointment(User doctor, User patient, TimeSlot originalTimeSlot, Short status) {
         this.doctor = doctor;
         this.patient = patient;
@@ -118,5 +126,19 @@ public class Appointment implements Serializable {
             default:
                 return "";
         }
+    }
+
+    public DoctorDTO getDoctorDTO() {
+        if (doctorDTO == null) {
+            doctorDTO = DoctorDTO.from(this.doctor);
+        }
+        return doctorDTO;
+    }
+
+    public PatientDTO getPatientDTO() {
+        if (patientDTO == null) {
+            patientDTO = PatientDTO.from(this.patient);
+        }
+        return patientDTO;
     }
 }

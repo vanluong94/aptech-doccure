@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface AppointmentService {
 
+    Long count();
+
     Optional<Appointment> findById(Long id);
 
     Appointment saveAndFlush(Appointment appointment);
@@ -42,5 +44,7 @@ public interface AppointmentService {
     Page<User> findPatientsByDoctor(User doctor, Pageable pageable);
 
     Page<Appointment> findByDoctorAndPatient(User doctor, User patient, Pageable pageable);
+
+    List<Appointment> findTop10Latest();
 
 }

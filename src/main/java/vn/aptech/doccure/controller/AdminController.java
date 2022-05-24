@@ -1,15 +1,13 @@
 package vn.aptech.doccure.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Role;
-import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.RoleService;
 import vn.aptech.doccure.service.UserService;
 
@@ -28,6 +26,9 @@ public class AdminController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private AppointmentService appointmentService;
+
     @GetMapping
     public ModelAndView admin() {
         ModelAndView modelAndView = new ModelAndView("admin/pages/dashboard");
@@ -37,9 +38,13 @@ public class AdminController {
         patientRoles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
         modelAndView.addObject("countDoctors", userService.countByRolesIn(doctorRoles));
         modelAndView.addObject("countPatients", userService.countByRolesIn(patientRoles));
+        modelAndView.addObject("countAppointments", appointmentService.count());
 
         modelAndView.addObject("listDoctors", userService.findTop10ByRolesInOrderByIdDesc(doctorRoles));
         modelAndView.addObject("listPatients", userService.findTop10ByRolesInOrderByIdDesc(patientRoles));
+
+        modelAndView.addObject("listAppointments", appointmentService.findTop10Latest());
+
         return modelAndView;
     }
 }
