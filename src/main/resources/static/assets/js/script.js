@@ -55,6 +55,11 @@ Version      : 1.3
 		 length = maxLength-length;
 		$('#chars').text(length);
 	});
+	$('#review_title').on('keyup change', function () {
+		var length = $(this).val().length;
+		 length = maxLength-length;
+		$('#titleChars').text(length);
+	});
 	
 	// Select 2
 	
