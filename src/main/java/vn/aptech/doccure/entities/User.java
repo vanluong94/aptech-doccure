@@ -191,6 +191,17 @@ public class User implements UserDetails {
         return "Dr. " + getFullName();
     }
 
+    public String getGenderString(){
+        if(gender == Constants.Genders.MALE) return "Male";
+        else if(gender == Constants.Genders.FEMALE) return "Female";
+        else return "Null";
+    }
+
+    public String getStatusString(){
+        if(this.isEnabled()) return "Activated";
+        else return "Locked";
+    }
+
     public String getTheAvatar() {
         if (avatar != null && !avatar.isEmpty()) {
             return avatar;

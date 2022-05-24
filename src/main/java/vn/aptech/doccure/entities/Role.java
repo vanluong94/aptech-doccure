@@ -24,4 +24,11 @@ public class Role implements Serializable {
     public Role(String name) {
         this.name = name;
     }
+
+    public String getRoleString(){
+        if(name.equals(Constants.Roles.ROLE_DOCTOR)) return "Doctor";
+        else if(name.equals(Constants.Roles.ROLE_PATIENT)) return "Patient";
+        else if(name.equals(Constants.Roles.ROLE_ADMIN)) return "Admin";
+        else return "Null";
+    }
 }

@@ -103,6 +103,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllByRolesInOrderByIdAsc(Set<Role> roles) {
+        return repo.findAllByRolesInOrderByIdAsc(roles);
+    }
+
+    @Override
     public Long countByRolesIn(Set<Role> roles) {
         return repo.countByRolesIn(roles);
     }
