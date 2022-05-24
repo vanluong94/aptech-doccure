@@ -47,13 +47,13 @@
                             <div class="pro-widget-content">
                                 <div class="profile-info-widget">
                                     <a href="#" class="booking-doc-img">
-                                        <img th:src="*{patient.theAvatar}" alt="User Image">
+                                        <img th:src="*{user.theAvatar}" alt="User Image">
                                     </a>
                                     <div class="profile-det-info">
-                                        <h3 th:text="*{patient.fullName}"></h3>
+                                        <h3 th:text="*{user.fullName}"></h3>
                                         
                                         <div class="patient-details">
-                                            <h5><b>Patient ID :</b> <span th:text="*{patient.id}"></span></h5>
+                                            <h5><b>Patient ID :</b> <span th:text="*{user.id}"></span></h5>
                                             <h5 class="mb-0" th:if="*{city}"><i class="fas fa-map-marker-alt"></i> <th:block th:text="*{city}"></th:block></h5>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
                             </div>
                             <div class="patient-info">
                                 <ul>
-                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{patient.phone}"></span></li>
+                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{user.phone}"></span></li>
                                     <li th:if="${patient.age != null}">Age <span><th:block th:text="${patient.age + ' Years'}"></th:block></span></li>
                                     <li>Gender <span th:text="*{gender}"></span></li>
                                     <li>Blood Group <span><th:block th:text="*{bloodType}"></th:block></span></li>

@@ -47,13 +47,13 @@
                                             <div class="pro-widget-content">
                                                 <div class="profile-info-widget">
                                                     <a th:href="*{url}" class="booking-doc-img">
-                                                        <img th:src="*{patient.theAvatar}" alt="User Image">
+                                                        <img th:src="*{user.theAvatar}" alt="User Image">
                                                     </a>
                                                     <div class="profile-det-info">
                                                         <h3><a th:href="*{url}">Richard Wilson</a></h3>
                                                         
                                                         <div class="patient-details">
-                                                            <h5><b>Patient ID :</b> <th:block th:text="*{patient.id}"></th:block></h5>
+                                                            <h5><b>Patient ID :</b> <th:block th:text="*{user.id}"></th:block></h5>
                                                             <h5 class="mb-0" th:if="${patient.city != null}"><i class="fas fa-map-marker-alt"></i> <th:block th:text="*{city}"></th:block></h5>
                                                         </div>
                                                     </div>
@@ -61,7 +61,7 @@
                                             </div>
                                             <div class="patient-info">
                                                 <ul>
-                                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{patient.phone}"></span></li>
+                                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{user.phone}"></span></li>
                                                     <li th:if="${patient.age != null}">Age <span><th:block th:text="${patient.age + ' Years'}"></th:block><th:block th:if="${patient.patient.gender != null}" th:text="${', ' + patient.gender}"></th:block></span></li>
                                                     <li>Blood Group <span th:text="*{bloodType}"></span></li>
                                                 </ul>

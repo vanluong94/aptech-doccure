@@ -12,10 +12,10 @@ import java.time.format.DateTimeFormatter;
 @Data
 public class DoctorDTO {
 
-    private User doctor;
+    private User user;
 
     public DoctorDTO(User doctor) {
-        this.doctor = doctor;
+        this.user = doctor;
     }
 
     public static DoctorDTO from(User doctor) {
@@ -23,19 +23,19 @@ public class DoctorDTO {
     }
 
     public Long getId() {
-        return this.doctor.getId();
+        return this.user.getId();
     }
 
     public String getTitle() {
-        return "Dr. " + this.doctor.getFullName();
+        return "Dr. " + this.user.getFullName();
     }
 
     public String getCity() {
-        return this.doctor.getClinic().getCity() + ", " + this.doctor.getClinic().getCountry();
+        return this.user.getClinic().getCity() + ", " + this.user.getClinic().getCountry();
     }
 
     public String getUpcomingAvailableDate() {
-        TimeSlot timeSlot = SpringContext.getBean(TimeSlotService.class).findUpcomingAvailable(this.doctor);
+        TimeSlot timeSlot = SpringContext.getBean(TimeSlotService.class).findUpcomingAvailable(this.user);
         if (timeSlot != null) {
             return timeSlot.getTimeStart().format(DateTimeFormatter.ofPattern("eee, dd MMM"));
         }
@@ -59,15 +59,15 @@ public class DoctorDTO {
     }
 
     public Long getTotalAppointments() {
-        return SpringContext.getBean(AppointmentService.class).countByDoctor(this.doctor);
+        return SpringContext.getBean(AppointmentService.class).countByDoctor(this.user);
     }
 
     public Long getTodayTotalAppointments() {
-        return SpringContext.getBean(AppointmentService.class).countTodayByDoctor(this.doctor);
+        return SpringContext.getBean(AppointmentService.class).countTodayByDoctor(this.user);
     }
 
     public Long getTotalPatients() {
-        return SpringContext.getBean(AppointmentService.class).countPatientByDoctor(this.doctor);
+        return SpringContext.getBean(AppointmentService.class).countPatientByDoctor(this.user);
     }
 
 }
