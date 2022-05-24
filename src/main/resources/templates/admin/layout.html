@@ -27,6 +27,8 @@
     <script src="/admin/assets/js/html5shiv.min.js"></script>
     <script src="/admin/assets/js/respond.min.js"></script>
     <![endif]-->
+
+    <link rel="stylesheet" href="/assets/css/preloader.css">
 </head>
 <body>
 
@@ -48,6 +50,10 @@
 </div>
 <!-- /Main Wrapper -->
 
+<div id="preloader">
+    <div class="triple-spinner"></div>
+</div>
+
 <!-- jQuery -->
 <script src="/admin/assets/js/jquery-3.2.1.min.js"></script>
 
@@ -65,6 +71,11 @@
 <!-- Custom JS -->
 <script  src="/admin/assets/js/script.js"></script>
 <script>
+    jQuery(document).ready(function($){
+        setTimeout(() => {
+            $('#preloader').fadeOut()
+        }, 300)
+    });
     $('#confirmModal').on('shown.bs.modal', function (event) {
         console.log('eventtttttttt');
         let button = $(event.relatedTarget); // Button that triggered the modal
