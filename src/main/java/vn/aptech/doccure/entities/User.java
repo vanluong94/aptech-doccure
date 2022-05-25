@@ -129,8 +129,8 @@ public class User implements UserDetails {
     @Column(name = "modified_date", columnDefinition = "datetime default current_timestamp")
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
-    @Column
-    private String resetPasswordToken;
+    @Column(unique = true)
+    private Long resetPasswordToken;
 
     public User(Integer enabled, Set<Role> roles) {
         this.enabled = enabled;

@@ -3,6 +3,7 @@ package vn.aptech.doccure.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.Base64Utils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,7 @@ import vn.aptech.doccure.validator.RegisterValidator;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -96,9 +98,61 @@ class AuthController {
         return "redirect:/login";
     }
 
+    @GetMapping("/change-password")
+    public String changePassword(@RequestParam("reset_password_token") String token, Model model, RedirectAttributes redirect) {
+        try {
+            String decode = new String(Base64Utils.decodeFromString(token));
+            long currentTimeMillis = System.currentTimeMillis();
+            String[] parts = decode.split("-");
+            String username = parts[0];
+            long expirationTime = Long.parseLong(parts[1]);
+            if (currentTimeMillis <= expirationTime) {
+                if (userService.existsByUsername(username)) {
+                    model.addAttribute("username", username);
+                    return "auth/change-password";
+                } else {
+                    redirect.addFlashAttribute("errorMessage", "This user could not be found.");
+                }
+            } else {
+                redirect.addFlashAttribute("errorMessage", "Your password reset token has expired.");
+            }
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "The password reset token is invalid.");
+        }
+        return "redirect:/forgot-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, RedirectAttributes redirect) {
+        if (StringUtils.isNullOrBlank(password)) {
+            redirect.addFlashAttribute("errorMessage", "Password must not be null or empty!");
+        }
+        if (StringUtils.isNullOrBlank(confirmPassword)) {
+            redirect.addFlashAttribute("errorMessage", "Confirm password must not be null or empty!");
+        }
+        if (password.equals(confirmPassword)) {
+            Optional<User> user = userService.findByUsername(username);
+            if (user.isPresent()) {
+                user.get().setPassword(passwordEncoder.encode(password));
+                user.get().setModifiedDate(LocalDateTime.now());
+                user.get().setResetPasswordToken(null);
+                if (userService.save(user.get()) != null) {
+                    redirect.addFlashAttribute("successMessage", "Awesome, you've successfully updated your password.");
+                    return "redirect:/login";
+                } else {
+                    redirect.addFlashAttribute("errorMessage", "A system error has occurred. Please try again later...");
+                }
+            } else {
+                redirect.addFlashAttribute("errorMessage", "This user could not be found.");
+            }
+        } else {
+            redirect.addFlashAttribute("errorMessage", "The Confirm Password confirmation does not match.");
+        }
+        return "redirect:/change-password";
+    }
+
     @GetMapping("/forgot-password")
     public String forgotPassword() {
-        // Kiểm tra token hết hạn thì hiển thị thông báo: Your password reset token has expired.
         return "auth/forgot-password";
     }
 
@@ -110,14 +164,15 @@ class AuthController {
         Optional<User> user = userService.findByEmail(email);
         if (user.isPresent()) {
             try {
-                String token = Base64Utils.encodeToString(email.getBytes(StandardCharsets.UTF_8));
-                user.get().setResetPasswordToken(token);
+                long expirationTime = System.currentTimeMillis() + Constants.TEN_MINUTES;
+                user.get().setResetPasswordToken(expirationTime);
+                String encode = Base64Utils.encodeToString((user.get().getUsername() + "-" + expirationTime).getBytes(StandardCharsets.UTF_8));
                 if (userService.save(user.get()) != null) {
                     emailService.sendMessage(email, "Reset password instructions",
-                            "Hello, " + user.get().getFullName() + "!<br><br>" +
+                            "Hello, " + user.get().getUsername() + "!<br><br>" +
                                     "A request has been received to change the password for your Doccure account.\n" +
                                     "\n<br><br>" +
-                                    "<div style=\"text-align: center;\"><a target=\"_blank\" href=\"http://localhost:8080/forgot-password?reset_password_token=" + token + "\">Reset My Password</a></div><br><br>" +
+                                    "<div style=\"text-align: center;\"><a target=\"_blank\" href=\"http://localhost:8080/change-password?reset_password_token=" + encode + "\">Reset My Password</a></div><br><br>" +
                                     "If you did not forgot your password you can safely ignore this email.<br><br>" +
                                     "<strong>[Doccure]</strong>");
                 } else {
