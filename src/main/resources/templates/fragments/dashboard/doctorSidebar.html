@@ -41,8 +41,8 @@
                             <span>Calendar</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-my-patients.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/my-patients' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/my-patients}">
                             <i class="fas fa-user-injured"></i>
                             <span>My Patients</span>
                         </a>

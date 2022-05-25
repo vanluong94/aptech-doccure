@@ -23,6 +23,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     private AppointmentRepository appointmentRepository;
 
     @Override
+    public Long count() {
+        return appointmentRepository.count();
+    }
+
+    @Override
     public Optional<Appointment> findById(Long id) {
         return appointmentRepository.findById(id);
     }
@@ -130,5 +135,25 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Long countPatientByDoctor(User doctor) {
         return appointmentRepository.countPatientByDoctor(doctor);
+    }
+
+    @Override
+    public Page<User> findPatientsByDoctor(User doctor, Pageable pageable) {
+        return appointmentRepository.findPatientByDoctor(doctor, pageable);
+    }
+
+    @Override
+    public Page<Appointment> findByDoctorAndPatient(User doctor, User patient, Pageable pageable) {
+        return appointmentRepository.findAllByDoctorAndPatient(doctor, patient, pageable);
+    }
+
+    @Override
+    public List<Appointment> findTop10Latest() {
+        return appointmentRepository.findTop5ByOrderByCreatedDateDesc();
+    }
+
+    @Override
+    public Page<Appointment> findAll(Pageable pageable) {
+        return appointmentRepository.findAll(pageable);
     }
 }

@@ -18,7 +18,7 @@ public class AppointmentUtils {
             doctor.put("avatar", apmt.getDoctor().getTheAvatar());
             doctor.put("url", DoctorUtils.getDoctorProfileUrl(apmt.getDoctor()));
             doctor.put("title", apmt.getDoctor().getDoctorTitle());
-            doctor.put("subtitle", "Dental");
+            doctor.put("subtitle", apmt.getDoctorDTO().getSpecialtiesText());
 
             patient.put("avatar", apmt.getPatient().getTheAvatar());
             patient.put("url", "#");

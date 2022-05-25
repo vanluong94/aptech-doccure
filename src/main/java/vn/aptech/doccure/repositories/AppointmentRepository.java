@@ -16,6 +16,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     List<Appointment> findAllByDoctorAndStatusInAndTimeSlotTimeStartBetween(User doctor, Collection<Short> status, LocalDateTime startDate, LocalDateTime endDate);
 
+    Page<Appointment> findAllByDoctorAndPatient(User doctor, User patient, Pageable pageable);
+
     Page<Appointment> findAllByPatientOrderByCreatedDateDesc(User patient, Pageable pageable);
 
     Page<Appointment> findAllByDoctorOrderByCreatedDateDesc(User doctor, Pageable pageable);
@@ -40,4 +42,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE a.doctor = :doctor")
     Long countPatientByDoctor(@Param("doctor") User doctor);
+
+    @Query("SELECT u FROM Appointment a JOIN a.patient u WHERE a.doctor = :doctor GROUP BY a.patient")
+    Page<User> findPatientByDoctor(@Param("doctor") User doctor, Pageable pageable);
+
+    List<Appointment> findTop5ByOrderByCreatedDateDesc();
 }

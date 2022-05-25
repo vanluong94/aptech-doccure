@@ -133,14 +133,12 @@ public class UserController {
     }
 
     @GetMapping("dashboard")
-    @Secured({"ROLE_ADMIN", "ROLE_DOCTOR", "ROLE_PATIENT"})
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     public String dashboard(HttpServletRequest request) {
         if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
             return "pages/dashboard/doctorDashboard";
         } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
             return "pages/dashboard/patientDashboard";
-        } else if (request.isUserInRole(Constants.Roles.ROLE_ADMIN)) {
-            return "admin/pages/dashboard";
         }
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);

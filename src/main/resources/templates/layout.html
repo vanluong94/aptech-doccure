@@ -31,6 +31,7 @@
     <th:block layout:fragment="headerBeforeStyle"></th:block>
 
     <!-- Main CSS -->
+    <link rel="stylesheet" href="/assets/css/preloader.css">
     <link rel="stylesheet" href="/assets/css/style.css">
 
     <th:block layout:fragment="headerAfterStyle"></th:block>
@@ -58,6 +59,10 @@
 
     <th:block layout:fragment="layoutExtra"></th:block>
 
+    <div id="preloader">
+        <div class="triple-spinner"></div>
+    </div>
+
     <!-- jQuery -->
     <script src="/assets/js/jquery.min.js"></script>
 
@@ -77,5 +82,13 @@
     <!-- Custom JS -->
     <script src="/assets/js/select2.min.js"></script>
     <script src="/assets/js/script.js"></script>
+
+    <script>
+        jQuery(document).ready(function($){
+            setTimeout(() => {
+                $('#preloader').fadeOut()
+            }, 300)
+        });
+    </script>
 </body>
 </html>
