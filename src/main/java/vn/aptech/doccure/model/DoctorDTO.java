@@ -27,10 +27,6 @@ public class DoctorDTO {
         return new DoctorDTO(doctor);
     }
 
-    public static DoctorDTO from(User doctor) {
-        return new DoctorDTO(doctor);
-    }
-
     public Long getId() {
         return this.user.getId();
     }
@@ -77,18 +73,6 @@ public class DoctorDTO {
 
     public Long getTotalPatients() {
         return SpringContext.getBean(AppointmentService.class).countPatientByDoctor(this.user);
-    }
-
-    public Long getTotalAppointments() {
-        return SpringContext.getBean(AppointmentService.class).countByDoctor(this.doctor);
-    }
-
-    public Long getTodayTotalAppointments() {
-        return SpringContext.getBean(AppointmentService.class).countTodayByDoctor(this.doctor);
-    }
-
-    public Long getTotalPatients() {
-        return SpringContext.getBean(AppointmentService.class).countPatientByDoctor(this.doctor);
     }
 
 }
