@@ -73,7 +73,7 @@
 											<i class="fa fa-calendar-check-o" aria-hidden="true"></i>
 										</span>
                             <div class="dash-count">
-                                <h3>0</h3>
+                                <h3 th:text="${countAppointments}">0</h3>
                             </div>
                         </div>
                         <div class="dash-widget-info">
@@ -202,118 +202,34 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-01.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Ruby Perrin</a>
-                                        </h2>
-                                    </td>
-                                    <td>Dental</td>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient1.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Charlene Reed </a>
-                                        </h2>
-                                    </td>
-                                    <td>9 Nov 2019 <span class="text-primary d-block">11.00 AM - 11.15 AM</span></td>
-                                    <td>
-                                        <div class="status-toggle">
-                                            <input type="checkbox" id="status_1" class="check" checked>
-                                            <label for="status_1" class="checktoggle">checkbox</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-02.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Darren Elder</a>
-                                        </h2>
-                                    </td>
-                                    <td>Dental</td>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient2.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Travis Trimble </a>
-                                        </h2>
-                                    </td>
+                                    <tr th:each="appointment : ${listAppointments}" th:object="${appointment}">
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a th:href="@{/doctor/profile/{id}(id=*{doctor.id})}" class="avatar avatar-sm mr-2">
+                                                    <img class="avatar-img rounded-circle" th:src="*{doctor.theAvatar}" alt="User Image"></a>
+                                                <a th:href="@{/doctor/profile/{id}(id=*{doctor.id})}" th:text="*{doctor.doctorTitle}"></a>
+                                            </h2>
+                                        </td>
+                                        <td><span th:text="*{doctorDTO.specialtiesText}"></span></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="#" class="avatar avatar-sm mr-2">
+                                                    <img class="avatar-img rounded-circle" th:src="*{patient.theAvatar}" alt="User Image">
+                                                </a>
+                                                <a href="#" th:text="*{patient.fullName}"></a>
+                                            </h2>
+                                        </td>
+                                        <td><th:block th:text="${#temporals.format(appointment.timeSlot.timeStart, 'dd MMM yyyy')}"></th:block> <span class="text-primary d-block"><th:block th:text="${#temporals.format(appointment.timeSlot.timeStart, 'h.m a')}"></th:block> - <th:block th:text="${#temporals.format(appointment.timeSlot.timeEnd, 'h.m a')}"></th:block></span></td>
 
-                                    <td>5 Nov 2019 <span class="text-primary d-block">11.00 AM - 11.35 AM</span></td>
-                                    <td>
-                                        <div class="status-toggle">
-                                            <input type="checkbox" id="status_2" class="check" checked>
-                                            <label for="status_2" class="checktoggle">checkbox</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-03.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Deborah Angel</a>
-                                        </h2>
-                                    </td>
-                                    <td>Cardiology</td>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient3.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Carl Kelly</a>
-                                        </h2>
-                                    </td>
-                                    <td>11 Nov 2019 <span class="text-primary d-block">12.00 PM - 12.15 PM</span></td>
-                                    <td>
-                                        <div class="status-toggle">
-                                            <input type="checkbox" id="status_3" class="check" checked>
-                                            <label for="status_3" class="checktoggle">checkbox</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-04.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Sofia Brient</a>
-                                        </h2>
-                                    </td>
-                                    <td>Urology</td>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient4.jpg" alt="User Image"></a>
-                                            <a href="profile.html"> Michelle Fairfax</a>
-                                        </h2>
-                                    </td>
-                                    <td>7 Nov 2019<span class="text-primary d-block">1.00 PM - 1.20 PM</span></td>
-                                    <td>
-                                        <div class="status-toggle">
-                                            <input type="checkbox" id="status_4" class="check" checked>
-                                            <label for="status_4" class="checktoggle">checkbox</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/doctors/doctor-thumb-05.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Dr. Marvin Campbell</a>
-                                        </h2>
-                                    </td>
-                                    <td>Orthopaedics</td>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="/admin/assets/img/patients/patient5.jpg" alt="User Image"></a>
-                                            <a href="profile.html">Gina Moore</a>
-                                        </h2>
-                                    </td>
-
-                                    <td>15 Nov 2019 <span class="text-primary d-block">1.00 PM - 1.15 PM</span></td>
-                                    <td>
-                                        <div class="status-toggle">
-                                            <input type="checkbox" id="status_5" class="check" checked>
-                                            <label for="status_5" class="checktoggle">checkbox</label>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        <td>
+                                            <th:block th:switch="*{status}">
+                                                <th:block th:case="0"><div class="btn bg-warning-light btn-sm">Pending</div></th:block>
+                                                <th:block th:case="1"><div class="btn bg-info-light btn-sm">Confirm</div></th:block>
+                                                <th:block th:case="2"><div class="btn bg-success-light btn-sm">Completed</div></th:block>
+                                                <th:block th:case="3"><div class="btn bg-danger-light btn-sm">Cancelled</div></th:block>
+                                            </th:block>    
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

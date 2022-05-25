@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,14 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vn.aptech.doccure.common.AjaxResponse;
+import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.model.CalendarAppointmentDTO;
 import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.TimeSlotService;
+import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.utils.AppointmentUtils;
 import vn.aptech.doccure.utils.DateUtils;
 
@@ -33,6 +36,25 @@ public class AppointmentController {
 
     @Autowired
     private TimeSlotService timeSlotService;
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/getAll")
+    @ResponseBody
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<Object> getAll(@RequestParam Integer page, @RequestParam Integer length) {
+        Map<String, Object> response = new HashMap<>();
+
+        Pageable pageable = PageRequest.of(page, length, Sort.by("createdDate").descending());
+        Page<Appointment> results = appointmentService.findAll(pageable);
+
+        response.put("data", AppointmentUtils.toDataTable(results.getContent()));
+        response.put("recordsTotal", results.getTotalElements());
+        response.put("recordsFiltered", results.getTotalElements());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping("/getByDoctor")
     @ResponseBody
@@ -167,9 +189,33 @@ public class AppointmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/mine/byPatient/{id}")
+    @Secured("ROLE_DOCTOR")
+    @ResponseBody
+    public ResponseEntity<Object> getMineByPatient(@PathVariable("id") Long id, @RequestParam Integer page, @RequestParam Integer length, Authentication authentication) {
+
+        User doctor = (User) authentication.getPrincipal();
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (doctor.isDoctor()) {
+            Optional<User> userResult = userService.findById(id);
+            if (userResult.isPresent()) {
+                Pageable pageable = PageRequest.of(page, length, Sort.by("createdDate").descending());
+                Page<Appointment> results = appointmentService.findByDoctorAndPatient(doctor, userResult.get(), pageable);
+
+                response.put("data", AppointmentUtils.toDataTable(results.getContent()));
+                response.put("recordsTotal", results.getTotalElements());
+                response.put("recordsFiltered", results.getTotalElements());
+            }
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/get")
     @ResponseBody
-    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT", "ROLE_ADMIN"})
     public ResponseEntity<Object> getById(@PathVariable Long id, Authentication authentication) {
 
         Map<String, Object> response = new HashMap<>();
@@ -187,7 +233,7 @@ public class AppointmentController {
         User user = (User) authentication.getPrincipal();
         Appointment appointment = appointmentOptional.get();
 
-        if (!appointment.getDoctor().equals(user) && !appointment.getPatient().equals(user) ) {
+        if (!user.hasRole(Constants.Roles.ROLE_ADMIN) && !appointment.getDoctor().equals(user) && !appointment.getPatient().equals(user) ) {
             return AjaxResponse.responseFail(response, "you are not allowed to perform action on this appointment");
         }
 

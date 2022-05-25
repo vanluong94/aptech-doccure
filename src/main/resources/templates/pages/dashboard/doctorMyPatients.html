@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>My Patients | Dashboard - Doccure</title>
+</head>
+<body>
+    <div class="page-content" layout:fragment="layoutContent">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-12">
+                        <nav aria-label="breadcrumb" class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">My Patients</li>
+                            </ol>
+                        </nav>
+                        <h2 class="breadcrumb-title">My Patients</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <!-- Page Content -->
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+                        <div th:replace="fragments/dashboard/doctorSidebar :: sidebar"></div>
+                    </div>
+                    <div class="col-md-7 col-lg-8 col-xl-9">
+                    
+                        <th:block th:unless="${results.empty}">
+                            <div class="row row-grid">
+                                <div class="col-md-6 col-lg-4 col-xl-3" th:each="patient : ${patients}">
+                                    <div class="card widget-profile pat-widget-profile" th:object="${patient}">
+                                        <div class="card-body">
+                                            <div class="pro-widget-content">
+                                                <div class="profile-info-widget">
+                                                    <a th:href="*{url}" class="booking-doc-img">
+                                                        <img th:src="*{user.theAvatar}" alt="User Image">
+                                                    </a>
+                                                    <div class="profile-det-info">
+                                                        <h3><a th:href="*{url}">Richard Wilson</a></h3>
+                                                        
+                                                        <div class="patient-details">
+                                                            <h5><b>Patient ID :</b> <th:block th:text="*{user.id}"></th:block></h5>
+                                                            <h5 class="mb-0" th:if="${patient.city != null}"><i class="fas fa-map-marker-alt"></i> <th:block th:text="*{city}"></th:block></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="patient-info">
+                                                <ul>
+                                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{user.phone}"></span></li>
+                                                    <li th:if="${patient.age != null}">Age <span><th:block th:text="${patient.age + ' Years'}"></th:block><th:block th:if="${patient.patient.gender != null}" th:text="${', ' + patient.gender}"></th:block></span></li>
+                                                    <li>Blood Group <span th:text="*{bloodType}"></span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- PAGINATION -->
+                            <div class="d-flex justify-content-end mt-1 mb-4">
+                                <ul class="pagination" th:object="${results}">
+                                    <!-- PREVIOUS -->
+                                    <li class="page-item" th:classappend="${results.hasPrevious() ? '' : 'disabled'}">
+                                        <a class="page-link" th:if="${results.hasPrevious()}" th:href="@{/dashboard/my-patients?page=} + ${results.previousPageable().getPageNumber()}" tabindex="-1">Previous</a>
+                                        <a class="page-link" th:unless="${results.hasPrevious()}" href="#" tabindex="-1">Previous</a>
+                                    </li>
+        
+                                    <!-- PAGES -->
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(1,results.totalPages,1)}" th:classappend="${results.number + 1 == i ? 'active' : ''}">
+                                        <span th:if="${results.number + 1 == i}" th:text="${i}" class="page-link"><span class="sr-only">(current)</span></span>
+                                        <a th:unless="${results.number + 1 == i}" th:href="@{/dashboard/my-patients?page=} + ${i}" th:text="${i}" class="page-link"></a>
+                                    </li>
+        
+                                    <!-- NEXT -->
+                                    <li class="page-item" th:classappend="${results.hasNext() ? '' : 'disabled'}">
+                                        <a class="page-link" th:if="${results.hasNext()}" th:href="@{/dashboard/my-patients?page=} + ${results.nextPageable().getPageNumber()}" tabindex="-1">Next</a>
+                                        <a class="page-link" th:unless="${results.hasNext()}" href="#" tabindex="-1">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </th:block>
+
+                        <p th:if="${results.empty}" class="text-center h5 py-5">No patient found</p>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>		
+        <!-- /Page Content -->
+    </div>
+</body>
+</html>

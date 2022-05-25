@@ -12,65 +12,96 @@ const appointmentUtils = {
      * Table data processor
      */
     parseDoctorTableData(resp) {
-        return resp.data.map((row) => {
-            return Object.keys(row)
-            .filter((key) => ['id', 'doctor', 'bookingDate'].indexOf(key) == -1) // exclude these field in results
-            .map((key) => {
-    
-                let output = row[key];
-    
-                if (key == 'patient') {
-                    output = this.renderUserTd(row.patient);
-                } else if (key == 'timeStart' || key == 'timeEnd') {
-                    output = `<span class="text-info">${row[key]}</span>`;
-                } else if (key == 'status') {
-                    output = this.renderStatusPill(row.status);
-                } else if (key == 'action') {
-    
-                    output = `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="far fa-eye"></i> View</div>`;
-    
-                    switch(row.status) {
-                        case 0:
-                            output += `<div class="btn btn-sm bg-success-light mr-1" data-apmt-action="confirm" data-appointment-id="${row.id}"><i class="fas fa-check"></i> Confirm</div>`;
-                            output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
-                            break;
+        if (resp.data) {
+            return resp.data.map((row) => {
+                return Object.keys(row)
+                .filter((key) => ['id', 'doctor', 'bookingDate'].indexOf(key) == -1) // exclude these field in results
+                .map((key) => {
+        
+                    let output = row[key];
+        
+                    if (key == 'patient') {
+                        output = this.renderUserTd(row.patient);
+                    } else if (key == 'timeStart' || key == 'timeEnd') {
+                        output = `<span class="text-info">${row[key]}</span>`;
+                    } else if (key == 'status') {
+                        output = this.renderStatusPill(row.status);
+                    } else if (key == 'action') {
+        
+                        output = `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="far fa-eye"></i> View</div>`;
+        
+                        switch(row.status) {
+                            case 0:
+                                output += `<div class="btn btn-sm bg-success-light mr-1" data-apmt-action="confirm" data-appointment-id="${row.id}"><i class="fas fa-check"></i> Confirm</div>`;
+                                output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
+                                break;
+                        }
+        
                     }
-    
-                }
-    
-                return output;
-            })
-        });
+        
+                    return output;
+                })
+            });
+        }
+        return [];
     },
     parsePatientTableData(resp) {
-        return resp.data.map((row) => {
-            return Object.keys(row)
-            .filter((key) => ['id', 'patient'].indexOf(key) == -1) // exclude these field in results
-            .map((key) => {
-    
-                let output = row[key];
-    
-                if (key == 'doctor') {
-                    output = this.renderUserTd(row.doctor);
-                } else if (key == 'timeStart' || key == 'timeEnd') {
-                    output = `<span class="text-info">${row[key]}</span>`;
-                } else if (key == 'status') {
-                    output = this.renderStatusPill(row.status);
-                } else if (key == 'action') {
-    
-                    output = `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="far fa-eye"></i> View</div>`;
-    
-                    switch(row.status) {
-                        case 0:
-                            output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
-                            break;
+        if (resp.data) {
+            return resp.data.map((row) => {
+                return Object.keys(row)
+                .filter((key) => ['id', 'patient'].indexOf(key) == -1) // exclude these field in results
+                .map((key) => {
+        
+                    let output = row[key];
+        
+                    if (key == 'doctor') {
+                        output = this.renderUserTd(row.doctor);
+                    } else if (key == 'timeStart' || key == 'timeEnd') {
+                        output = `<span class="text-info">${row[key]}</span>`;
+                    } else if (key == 'status') {
+                        output = this.renderStatusPill(row.status);
+                    } else if (key == 'action') {
+        
+                        output = `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="far fa-eye"></i> View</div>`;
+        
+                        switch(row.status) {
+                            case 0:
+                                output += `<div class="btn btn-sm bg-danger-light mr-1" data-apmt-action="cancel" data-appointment-id="${row.id}"><i class="fas fa-times"></i> Cancel</div>`;
+                                break;
+                        }
+        
                     }
-    
-                }
-    
-                return output;
-            })
-        });
+        
+                    return output;
+                })
+            });
+        }
+        return [];
+    },
+    parseAdminTableData(resp) {
+        if (resp.data) {
+            return resp.data.map((row) => {
+                return Object.values({
+                    doctor: `<h2 class="table-avatar">
+                        <a href="${row.doctor.url}" class="avatar avatar-sm mr-2">
+                            <img class="avatar-img rounded-circle" src="${row.doctor.avatar}">
+                        </a>
+                        <a href="${row.doctor.url}">${row.doctor.title}</a>
+                    </h2>`,
+                    speciality: row.doctor.subtitle,
+                    patient: `<h2 class="table-avatar">
+                        <a href="#" class="avatar avatar-sm mr-2">
+                            <img class="avatar-img rounded-circle" src="${row.patient.avatar}">
+                        </a>
+                        <a href="#">${row.patient.title}</a>
+                    </h2>`,
+                    appointmentTime: `${row.apmtDate} <span class="text-primary d-block">${row.timeStart} - ${row.timeEnd}</span>`,
+                    status: this.renderStatusPill(row.status),
+                    action: `<div class="btn btn-sm bg-info-light mr-1" data-apmt-action="view" data-appointment-id="${row.id}"><i class="fa fa-eye"></i> View</div>`
+                });
+            });
+        }
+        return [];
     },
 
     /**

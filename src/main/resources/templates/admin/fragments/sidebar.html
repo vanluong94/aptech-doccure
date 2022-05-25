@@ -14,11 +14,11 @@
                     <li>
                         <a th:href="@{/}"><i class="fa fa-home"></i> <span>Site</span></a>
                     </li>
-                    <li class="active">
-                        <a th:href="@{/dashboard}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
+                    <li th:classappend="${#request.getRequestURI() == '/admin' ? 'active' : ''}">
+                        <a th:href="@{/admin}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
                     </li>
-                    <li>
-                        <a href="/admin/appointment-list.html"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/appointments' ? 'active' : ''}">
+                        <a th:href="@{/admin/appointments}"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
                     </li>
                     <li class="submenu">
                         <a href="#"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.TimeSlot;
@@ -53,6 +54,7 @@ public class ScheduledTasks {
     }
 
     @Scheduled(fixedRate = 60*60*1000)
+    @Transactional
     public void appointmentsAutoComplete() {
 
         List<Appointment> appointments = appointmentService.findAllPastIncomplete();
