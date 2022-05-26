@@ -194,17 +194,6 @@ public class User implements UserDetails {
         return "Dr. " + getFullName();
     }
 
-    public String getGenderString(){
-        if(gender == Constants.Genders.MALE) return "Male";
-        else if(gender == Constants.Genders.FEMALE) return "Female";
-        else return "Null";
-    }
-
-    public String getStatusString(){
-        if(this.isEnabled()) return "Activated";
-        else return "Locked";
-    }
-
     public String getTheAvatar() {
         if (avatar != null && !avatar.isEmpty()) {
             return avatar;
@@ -237,6 +226,14 @@ public class User implements UserDetails {
             } else if (gender.equals(Constants.Genders.FEMALE)) {
                 return "Female";
             }
+        }
+        return "Unknown";
+    }
+
+    public String getStatusText(){
+        if(enabled != null){
+            if(this.isEnabled()) return "Activated";
+            else return "Locked";
         }
         return "Unknown";
     }

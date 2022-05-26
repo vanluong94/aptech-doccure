@@ -142,45 +142,12 @@
 													</td>
 													<td th:text="${doctor.username}"></td>
 													<td th:each="role : ${doctor.roles}">
-														<span th:text="${role.roleString}"></span>
+														<span th:text="${role.roleText}"></span>
 													</td>
-													<td th:text="${doctor.genderString}"></td>
+													<td th:text="${doctor.genderText}"></td>
 													<td th:text="${doctor.email}"></td>
 													<td th:text="${doctor.phone}"></td>
-													<td th:text="${doctor.statusString}"></td>
-<!--													<td>-->
-<!--														<th:block th:each="speciality : ${doctor?.specialities}">-->
-<!--															<span th:text="${speciality.name}"></span>-->
-<!--														</th:block>-->
-<!--													</td>-->
-<!--													<td>-->
-<!--														<th:block th:each="service : ${doctor?.services}">-->
-<!--															<span class="badge badge-pill border-dark border" th:text="${service.name}"></span>-->
-<!--														</th:block>-->
-<!--													</td>-->
-<!--													<td>-->
-<!--														<i class="fa fa-star text-warning"></i>-->
-<!--														<i class="fa fa-star text-warning"></i>-->
-<!--														<i class="fa fa-star text-warning"></i>-->
-<!--														<i class="fa fa-star text-warning"></i>-->
-<!--														<i class="fa fa-star text-secondary"></i>-->
-<!--													</td>-->
-
-<!--													<td th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></td>-->
-
-<!--													<td class="text-right">-->
-<!--														<div class="actions">-->
-<!--															<a class="btn btn-sm bg-info-light" data-toggle="modal" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">-->
-<!--																<i class="fa fa-eye"></i> View-->
-<!--															</a>-->
-<!--															<a class="btn btn-sm bg-success-light" th:href="@{/admin/doctors/{id}(id=${doctor.id})}">-->
-<!--																<i class="fa fa-pencil"></i> Edit-->
-<!--															</a>-->
-<!--															<a  data-toggle="modal" href="#delete_modal" class="btn btn-sm bg-danger-light">-->
-<!--																<i class="fa fa-trash"></i> Delete-->
-<!--															</a>-->
-<!--														</div>-->
-<!--													</td>-->
+													<td th:text="${doctor.statusText}"></td>
 												</tr>
 											</tbody>
 										</table>
