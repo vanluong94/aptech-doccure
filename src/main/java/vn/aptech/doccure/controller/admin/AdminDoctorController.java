@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.service.RoleService;
@@ -35,8 +36,8 @@ public class AdminDoctorController {
         modelAndView.addObject("doctors", userService.findAllByRolesInOrderByIdAsc(doctorRoles));
         return modelAndView;
     }
-    @GetMapping("{id}")
-    public ModelAndView editDoctor(@PathVariable("id") Long id){
+    @GetMapping("/edit/{id}")
+    public ModelAndView editDoctor(@PathVariable("id") Long id, RedirectAttributes redirect){
         ModelAndView modelAndView = new ModelAndView("/admin/pages/users/user-edit");
         return modelAndView;
     }

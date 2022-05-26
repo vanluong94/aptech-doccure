@@ -196,7 +196,7 @@ public class User implements UserDetails {
 
     public String getTheAvatar() {
         if (avatar != null && !avatar.isEmpty()) {
-            return avatar;
+            return "/files/" + avatar;
         } else {
             String filename;
             if (hasRole(Constants.Roles.ROLE_DOCTOR)) {
