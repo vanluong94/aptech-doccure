@@ -30,7 +30,7 @@ public class AdminPatientController {
     private RoleService roleService;
     @GetMapping
     public ModelAndView getPatientList(){
-        ModelAndView modelAndView = new ModelAndView("/admin/pages/users/patient-list");
+        ModelAndView modelAndView = new ModelAndView("/admin/pages/patients/patient-list");
         Set<Role> patientRoles = new HashSet<>();
         patientRoles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
         modelAndView.addObject("patients", userService.findAllByRolesInOrderByIdAsc(patientRoles));

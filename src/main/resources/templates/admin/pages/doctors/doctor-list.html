@@ -3,273 +3,107 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{admin/layout}"
 >
-<head>
+	<head>
 
-</head>
+	</head>
     <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper" layout:fragment="layoutContent">
-		
-			<!-- Header -->
-            <div class="header">
-			
-				<!-- Logo -->
-                <div class="header-left">
-                    <a href="index.html" class="logo">
-						<img src="assets/img/logo.png" alt="Logo">
-					</a>
-					<a href="index.html" class="logo logo-small">
-						<img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
-					</a>
-                </div>
-				<!-- /Logo -->
-				
-				<a href="javascript:void(0);" id="toggle_btn">
-					<i class="fa fa-align-left"></i>
-				</a>
-
-				<!-- Mobile Menu Toggle -->
-				<a class="mobile_btn" id="mobile_btn">
-					<i class="fa fa-bars"></i>
-				</a>
-				<!-- /Mobile Menu Toggle -->
-				
-				<!-- Header Right Menu -->
-				<ul class="nav user-menu">
-					
-					<!-- User Menu -->
-					<li class="nav-item dropdown has-arrow">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-							<span class="user-img"><img class="rounded-circle" src="assets/img/profiles/avatar-01.jpg" width="31" alt="Ryan Taylor"></span>
-						</a>
-						<div class="dropdown-menu">
-							<div class="user-header">
-								<div class="avatar avatar-sm">
-									<img src="assets/img/profiles/avatar-01.jpg" alt="User Image" class="avatar-img rounded-circle">
-								</div>
-								<div class="user-text">
-									<h6>Ryan Taylor</h6>
-									<p class="text-muted mb-0">Administrator</p>
-								</div>
-							</div>
-							<a class="dropdown-item" href="profile.html">My Profile</a>
-							<a class="dropdown-item" href="settings.html">Settings</a>
-							<a class="dropdown-item" href="login.html">Logout</a>
-						</div>
-					</li>
-					<!-- /User Menu -->
-					
-				</ul>
-				<!-- /Header Right Menu -->
-				
-            </div>
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-inner slimscroll">
-					<div id="sidebar-menu" class="sidebar-menu">
-						<ul>
-							<li class="menu-title"> 
-								<span>Main</span>
-							</li>
-							<li> 
-								<a href="index.html"><i class="fa fa-home"></i> <span>Dashboard</span></a>
-							</li>
-							<li> 
-								<a href="appointment-list.html"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
-							</li>
-							<li class="submenu">
-								<a href="#"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="specialities.html">All Specialities</a></li>
-									<li><a href="specialities-edit.html">Add new Speciality</a></li>
-								</ul>
-							</li>
-							<li class="submenu">
-								<a href="#"><i class="fa fa-medkit"></i> <span>Services</span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="service-list.html">All Services</a></li>
-									<li><a href="service-edit.html">Add new Service</a></li>
-								</ul>
-							</li>
-							<li class="active"> 
-								<a href="doctor-list.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
-							</li>
-							<li> 
-								<a href="patient-list.html"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
-							</li>
-							<li class="submenu">
-								<a href="#"><i class="fa fa-users"></i> <span>Users</span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="user-list.html">All Users</a></li>
-									<li><a href="user-edit.html">Add new User</a></li>
-								</ul>
-							</li>
-							<li> 
-								<a href="reviews.html"><i class="fa fa-star"></i> <span>Reviews</span></a>
-							</li>
-							<li> 
-								<a href="settings.html"><i class="fa fa-cogs"></i> <span>Settings</span></a>
-							</li>
-						</ul>
-					</div>
-                </div>
-            </div>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-                <div class="content container-fluid">
-				
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">List of Doctors</h3>
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item"><a href="user-list.html">Users</a></li>
-									<li class="breadcrumb-item active">Doctor</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
-					
+        <div class="page-wrapper" layout:fragment="layoutContent">
+			<div class="content container-fluid">
+				<!-- Page Header -->
+				<div class="page-header">
 					<div class="row">
-						<div class="col-sm-12">
-							<div class="card">
-								<div class="card-body">
+						<div class="col-sm-7 col-auto">
+							<h3 class="page-title">List of Doctors</h3>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+								<li class="breadcrumb-item active">Doctors</li>
+							</ul>
+						</div>
+<!--							<div class="col-sm-5 col">-->
+<!--								<a th:href="@{/admin/doctors/create}" class="btn btn-primary float-right mt-2">Add</a>-->
+<!--							</div>-->
+					</div>
+				</div>
+				<!-- /Page Header -->
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+								<div class="table-responsive">
 									<div class="table-responsive">
 										<table class="datatable table table-hover table-center mb-0">
-											<thead>
-												<tr>
-													<th>Doctor Name</th>
-													<th>Speciality</th>
-													<th>Services</th>
-													<th>Reviews</th>
-													<th>City</th>
-													<th>Actions</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="doctor : ${doctors}">
-													<td>
-														<h2 class="table-avatar">
-															<a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" th:src="${doctor.theAvatar}" alt="User Image"></a>
-															<a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
-														</h2>
-													</td>
-													<td>
-														<th:block th:each="speciality : ${doctor?.specialities}">
-															<span th:text="${speciality.name}"></span>
-														</th:block>
-													</td>
-													<td>
-														<th:block th:each="service : ${doctor?.services}">
-															<span class="badge badge-pill border-dark border" th:text="${service.name}"></span>
-														</th:block>
-													</td>
-													<td>
-														<i class="fa fa-star text-warning"></i>
-														<i class="fa fa-star text-warning"></i>
-														<i class="fa fa-star text-warning"></i>
-														<i class="fa fa-star text-warning"></i>
-														<i class="fa fa-star text-secondary"></i>
-													</td>
-													
-													<td th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></td>
-													
-													<td class="text-right">
-														<div class="actions">
-                                                            <a class="btn btn-sm bg-info-light" data-toggle="modal" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">
-																<i class="fa fa-eye"></i> View
-															</a>
-															<a class="btn btn-sm bg-success-light" th:href="@{/admin/doctors/{id}(id=${doctor.id})}">
-																<i class="fa fa-pencil"></i> Edit
-															</a>
-															<a  data-toggle="modal" href="#delete_modal" class="btn btn-sm bg-danger-light">
-																<i class="fa fa-trash"></i> Delete
-															</a>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>User Name</th>
+												<th>User Role</th>
+												<th>Gender</th>
+												<th>Email</th>
+												<th>Phone</th>
+												<th>Status</th>
+												<th class="text-right">Actions</th>
+											</tr>
+										</thead>
+										<tbody th:if="${#lists.isEmpty(doctors)}">
+											<tr>No Data</tr>
+										</tbody>
+										<tbody th:unless="${#lists.isEmpty(doctors)}">
+											<tr th:each="doctor : ${doctors}">
+												<td>
+													<h2 class="table-avatar">
+														<a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" class="avatar avatar-sm mr-2">
+															<img class="avatar-img rounded-circle" alt="User Image" src="#" th:src="${doctor.theAvatar}"></a>
+														<a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
+													</h2>
+												</td>
+												<td th:text="${doctor.username}"></td>
+												<td th:each="role : ${doctor.roles}">
+													<span th:text="${role.roleText}"></span>
+												</td>
+												<td th:text="${doctor.genderText}"></td>
+												<td th:text="${doctor.email}"></td>
+												<td th:text="${doctor.phone}"></td>
+												<td th:text="${doctor.statusText}"></td>
+												<td class="text-right">
+													<div class="actions">
+														<a class="btn btn-sm bg-success-light"
+														   th:href="@{/admin/users/edit/{id}(id=${doctor.id})}"
+														   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
+														<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
+																data-target="#confirmModal"
+																th:attr="data-whatever=${doctor.id}"
+																th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
+														</button>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 									</div>
 								</div>
 							</div>
-						</div>			
+						</div>
 					</div>
-					
-				</div>			
+				</div>
 			</div>
-			<!-- /Page Wrapper -->
-		
-        </div>
-		<!-- /Main Wrapper -->
-
-		<!-- User Modal -->
-		<div class="modal fade" id="user_modal" aria-hidden="true" role="dialog">
-			<div class="modal-dialog modal-dialog-centered" role="document" >
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Ryan Taylor</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="profile-header">
-							<div class="row align-items-center">
-								<div class="col-auto profile-image">
-									<a href="#">
-										<img class="rounded-circle" alt="User Image" src="assets/img/profiles/avatar-01.jpg">
-									</a>
-								</div>
-								<div class="col ml-md-n2 profile-user-info">
-									<h4 class="user-name mb-0">Ryan Taylor</h4>
-									<h6 class="text-muted">ryantaylor@admin.com</h6>
-									<div class="user-Location"><i class="fa fa-map-marker"></i> Florida, United States</div>
-									<div class="about-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-								</div>
-								<div class="col-auto profile-btn">
-									
-									<a href="#" class="btn btn-primary">
-										Edit
-									</a>
+			<div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" >
+					<div class="modal-content">
+						<form action="#" th:action="@{/admin/users/delete}" method="post">
+							<div class="modal-body">
+								<div class="form-content p-2">
+									<h4 class="modal-title">Delete</h4>
+									<p class="mb-4">Are you sure want to delete?</p>
+									<input type="hidden" name="id" id="id">
+									<button type="submit" class="btn btn-primary">Confirm</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 								</div>
 							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- /User Modal -->
-
-		<!-- Delete Modal -->
-		<div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-			<div class="modal-dialog modal-dialog-centered" role="document" >
-				<div class="modal-content">
-				<!--	<div class="modal-header">
-						<h5 class="modal-title">Delete</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>-->
-					<div class="modal-body">
-						<div class="form-content p-2">
-							<h4 class="modal-title">Delete</h4>
-							<p class="mb-4">Are you sure want to delete?</p>
-							<button type="button" class="btn btn-primary">Save </button>
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /Delete Modal -->
+        </div>
     </body>
 </html>

@@ -32,4 +32,7 @@ public class Role implements Serializable {
         else if(name.equals(Constants.Roles.ROLE_PATIENT)) return "Patient";
         else return "Unknown";
     }
+    public String getRoleValueText(){
+        return this.id.toString();
+    }
 }

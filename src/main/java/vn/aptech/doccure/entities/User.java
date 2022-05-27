@@ -230,6 +230,14 @@ public class User implements UserDetails {
         return "Unknown";
     }
 
+    public String getGenderValueText(){
+        return gender.toString();
+    }
+
+    public String getStatusValueText(){
+        return enabled.toString();
+    }
+
     public String getStatusText(){
         if(enabled != null){
             if(this.isEnabled()) return "Activated";
