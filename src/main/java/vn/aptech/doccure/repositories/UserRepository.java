@@ -53,12 +53,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " LEFT JOIN u.roles r" +
             " WHERE s.slug = :slug" +
             " AND r.name in (:roles)")
-    List<User> findAllByServiceSlug(@Param("slug") String slug, @Param("roles") Collection<String> roles);
+    List<User> findAllBySpecialitySlug(@Param("slug") String slug, @Param("roles") Collection<String> roles);
 
     @Query(value = "SELECT u FROM User u" +
             " LEFT JOIN u.services s" +
             " LEFT JOIN u.roles r" +
             " WHERE s.slug = :slug" +
             " AND r.name in (:roles)")
-    List<User> findAllBySpecialitySlug(@Param("slug") String slug, @Param("roles") Collection<String> roles);
+    List<User> findAllByServiceSlug(@Param("slug") String slug, @Param("roles") Collection<String> roles);
 }

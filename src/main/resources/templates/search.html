@@ -54,15 +54,15 @@
                                     <h4>Gender</h4>
                                     <div>
                                         <label class="custom_check">
-                                            <input type="checkbox" th:name="gender" value="1"
-                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '1')}">
+                                            <input type="checkbox" th:name="gender" value="0"
+                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '0')}">
                                             <span class="checkmark"></span> Male Doctor
                                         </label>
                                     </div>
                                     <div>
                                         <label class="custom_check">
-                                            <input type="checkbox" th:name="gender" value="0"
-                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '0')}">
+                                            <input type="checkbox" th:name="gender" value="1"
+                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '1')}">
                                             <span class="checkmark"></span> Female Doctor
                                         </label>
                                     </div>
@@ -143,9 +143,11 @@
                                             <p class="doc-speciality" th:text="${doctor?.clinic?.specialities}"></p>
                                             <h5 class="doc-department">
                                                 <th:block th:each="speciality : ${doctor?.specialities}">
-                                                    <img src="#" th:src="'/files/' + ${speciality.image}"
+                                                    <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
+                                                        <img src="#" th:src="'/files/' + ${speciality.image}"
                                                          class="img-fluid" th:alt="${speciality.name}"> <span
                                                         th:text="${speciality.name}"></span>
+                                                    </a>
                                                 </th:block>
                                             </h5>
                                             <div class="clinic-details">
