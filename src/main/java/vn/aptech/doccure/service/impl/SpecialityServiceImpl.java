@@ -30,6 +30,11 @@ public class SpecialityServiceImpl implements SpecialityService {
     }
 
     @Override
+    public Optional<Speciality> findBySlug(String slug) {
+        return repo.findBySlug(slug);
+    }
+
+    @Override
     public Speciality save(Speciality speciality) {
         return repo.save(speciality);
     }

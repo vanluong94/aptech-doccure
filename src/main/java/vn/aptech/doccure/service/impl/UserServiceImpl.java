@@ -112,13 +112,23 @@ public class UserServiceImpl implements UserService {
         return repo.findAllByGenderInAndSpecialitiesIn(gender, specialities);
     }
 
-    public List<User> findAllWithAdvanceSearch(String location, String query, Collection<Short> gender, Collection<Long> specialities, Collection<String> roles) {
+    public List<User> findAllWithAdvanceSearch(String location, String query, Collection<Short> gender, Collection<Long> specialities, Collection<Long> services, Collection<String> roles) {
         if (StringUtils.isNullOrBlank(location)) {
             location = null;
         }
         if (StringUtils.isNullOrBlank(query)) {
             query = null;
         }
-        return repo.findAllWithAdvanceSearch(location, query, gender, specialities, roles);
+        return repo.findAllWithAdvanceSearch(location, query, gender, specialities, services, roles);
+    }
+
+    @Override
+    public List<User> findAllBySpecialitySlug(String slug, Collection<String> roles) {
+        return repo.findAllBySpecialitySlug(slug, roles);
+    }
+
+    @Override
+    public List<User> findAllByServiceSlug(String slug, Collection<String> roles) {
+        return repo.findAllByServiceSlug(slug, roles);
     }
 }

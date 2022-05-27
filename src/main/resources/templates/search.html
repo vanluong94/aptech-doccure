@@ -17,7 +17,7 @@
                 <div class="col-md-8 col-12">
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a th:href="${/}">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="${#request.contextPath}">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Search</li>
                         </ol>
                     </nav>
@@ -71,10 +71,41 @@
                                     <h4>Select Specialist</h4>
                                     <div th:each="speaciality : ${specialities}">
                                         <label class="custom_check">
+                                            <th:block th:if="${specialityId != null}">
+                                                <input type="checkbox"
+                                                       th:checked="${specialityId == speaciality.id}"
+                                                       th:name="specialities" th:value="${speaciality.id}">
+                                            </th:block>
+                                            <th:block th:if="${specialityId == null}">
+                                                <input type="checkbox"
+                                                       th:checked="${param.specialities != null && #arrays.contains(param.specialities, speaciality.id + '')}"
+                                                       th:name="specialities" th:value="${speaciality.id}">
+                                            </th:block>
                                             <input type="checkbox"
                                                    th:checked="${param.specialities != null && #arrays.contains(param.specialities, speaciality.id + '')}"
                                                    th:name="specialities" th:value="${speaciality.id}">
                                             <span class="checkmark"></span> <span th:text="${speaciality.name}"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="filter-widget">
+                                    <h4>Select Services</h4>
+                                    <div th:each="service : ${services}">
+                                        <label class="custom_check">
+                                            <th:block th:if="${serviceId != null}">
+                                                <input type="checkbox"
+                                                       th:checked="${serviceId == service.id}"
+                                                       th:name="services" th:value="${service.id}">
+                                            </th:block>
+                                            <th:block th:if="${specialityId == null}">
+                                                <input type="checkbox"
+                                                       th:checked="${param.services != null && #arrays.contains(param.services, service.id + '')}"
+                                                       th:name="services" th:value="${service.id}">
+                                            </th:block>
+                                            <input type="checkbox"
+                                                   th:checked="${param.services != null && #arrays.contains(param.services, service.id + '')}"
+                                                   th:name="services" th:value="${service.id}">
+                                            <span class="checkmark"></span> <span th:text="${service.name}"></span>
                                         </label>
                                     </div>
                                 </div>

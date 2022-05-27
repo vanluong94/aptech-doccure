@@ -50,10 +50,13 @@
                     <div class="col-lg-3" th:each="speciality : ${specialities}">
                         <div class="category-box">
                             <div class="category-image">
-                                <img th:src="'/files/' + ${speciality.image}" alt="">
+                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
+                                    <img th:src="'/files/' + ${speciality.image}" th:alt="${speciality.name}">
+                                </a>
                             </div>
                             <div class="category-content">
-                                <h4 th:text="${speciality.name}"></h4>
+                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}"><h4 th:text="${speciality.name}"></h4></a>
+                                <span th:text="${speciality?.users?.size() + ' Doctors'}"></span>
                             </div>
                         </div>
                     </div>
