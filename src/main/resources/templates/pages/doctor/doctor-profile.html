@@ -36,12 +36,24 @@
 												</a>
 											</th:block>
 										</div>
+										<div class="rating" th:unless="${#lists.isEmpty(doctor?.doctorReviews)}">
+											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 1 ? 'filled' : ''}"></i>
+											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 2 ? 'filled' : ''}"></i>
+											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 3 ? 'filled' : ''}"></i>
+											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 4 ? 'filled' : ''}"></i>
+											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 5 ? 'filled' : ''}"></i>
+											<span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
+										</div>
 										<div class="clinic-details">
-											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span> - <a href="javascript:void(0);" onclick="(() => {
-											let locationBtn = document.getElementById('doc_locations_nav_btn');
-											locationBtn.scrollIntoView();
-											locationBtn.click();
-										})()">Get Directions</a></p>
+											<p class="doc-location">
+												<i class="fas fa-map-marker-alt"></i>
+												<th:block th:if="${doctor?.clinic?.city != null}">
+													<span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
+												</th:block>
+												<th:block th:if="${doctor?.clinic?.city == null}">
+													<span>Unknown</span>
+												</th:block>
+											</p>
 											<ul class="clinic-gallery">
 												<li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
 													<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
@@ -60,7 +72,14 @@
 								<div class="doc-info-right">
 									<div class="clini-infos">
 										<ul>
-											<li><i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span></li>
+											<li><i class="far fa-comment"></i> <span th:text="${doctor?.doctorReviews?.size()}"></span> Feedback</li>
+											<li><i class="fas fa-map-marker-alt"></i>
+												<th:block th:if="${doctor?.clinic?.city != null}">
+													<span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
+												</th:block>
+												<th:block th:if="${doctor?.clinic?.city == null}">
+													<span>Unknown</span>
+												</th:block></li>
 										</ul>
 									</div>
 									<div class="doctor-action d-block">
