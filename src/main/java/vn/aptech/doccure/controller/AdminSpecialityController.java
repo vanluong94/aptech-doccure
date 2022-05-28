@@ -102,17 +102,21 @@ public class AdminSpecialityController {
         }
         Speciality specialitySave = specialityService.save(speciality);
         if (specialitySave != null) {
-            redirect.addFlashAttribute("globalMessage", "Create successfully.");
+            redirect.addFlashAttribute("successMessage", "Create successfully.");
         } else {
-            redirect.addFlashAttribute("globalMessage", "Error.");
+            redirect.addFlashAttribute("errorMessage", "Error.");
         }
         return "redirect:/admin/specialities";
     }
 
     @PostMapping("/delete")
     public String update(@RequestParam("id") Long id, RedirectAttributes redirect) {
-        specialityService.deleteById(id);
-        redirect.addFlashAttribute("globalMessage", "Successfully deleted a speciality");
+        try {
+            specialityService.deleteById(id);
+            redirect.addFlashAttribute("successMessage", "Successfully deleted a speciality");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "Can't not delete");
+        }
         return "redirect:/admin/specialities";
     }
 }
