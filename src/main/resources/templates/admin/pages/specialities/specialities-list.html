@@ -31,6 +31,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                        <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
                         <div class="table-responsive">
                             <table class="datatable table table-hover table-center mb-0">
                                 <thead>
@@ -51,18 +52,18 @@
                                     <th scope="row" th:text="${speciality.id}"></th>
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a th:href="@{/admin/specialities/{id}(id=${speciality.id})}" class="avatar avatar-sm mr-2">
+                                            <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}" class="avatar avatar-sm mr-2">
                                                 <img class="avatar-img" src="#" th:src="@{${'/files/' + speciality.image}}" width="85px" th:alt="${speciality.name}">
                                             </a>
                                             <a th:href="@{/admin/specialities/{id}(id=${speciality.id})}" th:text="${speciality.name}"></a>
                                         </h2>
                                     </td>
-                                    <td>20</td>
+                                    <td th:text="${speciality?.users?.size()}"></td>
                                     <td class="text-right">
                                         <div class="actions">
-<!--                                            <a class="btn btn-sm bg-info-light"-->
-<!--                                               th:href="@{/admin/specialities/{id}(id=${speciality.id})}"-->
-<!--                                               th:utext="'<i class=\'fa fa-eye\'></i> View'">View</a>-->
+                                            <a class="btn btn-sm bg-info-light"
+                                               th:href="@{/speciality/{slug}(slug=${speciality.slug})}"
+                                               th:utext="'<i class=\'fa fa-eye\'></i> View'">View</a>
                                             <a class="btn btn-sm bg-success-light"
                                                th:href="@{/admin/specialities/edit/{id}(id=${speciality.id})}"
                                                th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
