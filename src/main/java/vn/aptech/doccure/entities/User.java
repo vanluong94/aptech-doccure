@@ -194,10 +194,9 @@ public class User implements UserDetails {
         return "Dr. " + getFullName();
     }
 
-    public boolean notHasAnyRole(){
+    public boolean hasAnyRole(){
         return (this.isDoctor() | this.isPatient() | this.isAdmin());
     }
-
     public String getTheAvatar() {
         if (avatar != null && !avatar.isEmpty()) {
             return "/files/" + avatar;
