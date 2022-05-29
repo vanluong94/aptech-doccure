@@ -30,7 +30,11 @@
                                 <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
                                 <form action="#" th:action="@{/admin/users/edit}" th:object="${user}" method="post" enctype="multipart/form-data">
                                     <input type="hidden" th:field="*{id}">
-                                    <input type="hidden" th:field="*{theAvatar}">
+                                    <input type="hidden" th:field="*{username}">
+                                    <input type="hidden" th:field="*{password}">
+                                    <input type="hidden" th:field="*{avatar}">
+                                    <input type="hidden" th:field="*{statusValueText}">
+                                    <input type="hidden" th:field="*{gender}">
                                     <div th:if="${#fields.hasAnyErrors()}">
                                         <ul>
                                             <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
@@ -61,14 +65,14 @@
                                                     <div class="form-group">
                                                         <label>Date of Birth</label>
                                                         <div class="cal-icon">
-                                                            <input type="text" class="form-control" th:field="*{dob}">
+                                                            <input type="date" class="form-control" th:field="*{dob}">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-sm-6">
                                                     <label>Gender</label>
                                                     <div class="form-group">
-                                                        <select class="form-control" th:field="*{genderValueText}" required="required">
+                                                        <select class="form-control" th:field="*{gender}" required="required">
                                                             <option value="" disabled="disabled">----- Select Gender -----</option>
                                                             <option th:value="1" th:text="Male"></option>
                                                             <option th:value="0" th:text="Female"></option>

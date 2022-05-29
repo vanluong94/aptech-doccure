@@ -33,53 +33,53 @@
 								<div class="table-responsive">
 									<div class="table-responsive">
 										<table class="datatable table table-hover table-center mb-0">
-										<thead>
-											<tr>
-												<th>Name</th>
-												<th>User Name</th>
-												<th>User Role</th>
-												<th>Gender</th>
-												<th>Email</th>
-												<th>Phone</th>
-												<th>Status</th>
-												<th class="text-right">Actions</th>
-											</tr>
-										</thead>
-										<tbody th:if="${#lists.isEmpty(patients)}">
-											<tr>No Data</tr>
-										</tbody>
-										<tbody th:unless="${#lists.isEmpty(patients)}">
-											<tr th:each="patient : ${patients}">
-												<td>
-													<h2 class="table-avatar">
-														<a href="#" class="avatar avatar-sm mr-2">
-															<img class="avatar-img rounded-circle" alt="User Image" src="#" th:src="${patient.theAvatar}"></a>
-														<a href="#" th:text="${patient.fullName}"></a>
-													</h2>
-												</td>
-												<td th:text="${patient.username}"></td>
-												<td th:each="role : ${patient.roles}">
-													<span th:text="${role.roleText}"></span>
-												</td>
-												<td th:text="${patient.genderText}"></td>
-												<td th:text="${patient.email}"></td>
-												<td th:text="${patient.phone}"></td>
-												<td th:text="${patient.statusText}"></td>
-												<td class="text-right">
-													<div class="actions">
-														<a class="btn btn-sm bg-success-light"
-														   th:href="@{/admin/patients/edit/{id}(id=${patient.id})}"
-														   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
-														<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
-																data-target="#confirmModal"
-																th:attr="data-whatever=${patient.id}"
-																th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
-														</button>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>User Name</th>
+													<th>User Role</th>
+													<th>Gender</th>
+													<th>Email</th>
+													<th>Phone</th>
+													<th>Status</th>
+													<th class="text-right">Actions</th>
+												</tr>
+											</thead>
+											<tbody th:if="${#lists.isEmpty(patients)}">
+												<tr>No Data</tr>
+											</tbody>
+											<tbody th:unless="${#lists.isEmpty(patients)}">
+												<tr th:each="patient : ${patients}">
+													<td>
+														<h2 class="table-avatar">
+															<a href="#" class="avatar avatar-sm mr-2">
+																<img class="avatar-img rounded-circle" alt="User Image" src="#" th:src="${patient.theAvatar}"></a>
+															<a href="#" th:text="${patient.fullName}"></a>
+														</h2>
+													</td>
+													<td th:text="${patient.username}"></td>
+													<td th:each="role : ${patient.roles}">
+														<span th:text="${role.roleText}"></span>
+													</td>
+													<td th:text="${patient.genderText}"></td>
+													<td th:text="${patient.email}"></td>
+													<td th:text="${patient.phone}"></td>
+													<td th:text="${patient.statusText}"></td>
+													<td class="text-right">
+														<div class="actions">
+															<a class="btn btn-sm bg-success-light"
+															   th:href="@{/admin/users/edit/{id}(id=${patient.id})}"
+															   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
+															<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
+																	data-target="#confirmModal"
+																	th:attr="data-whatever=${patient.id}"
+																	th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
+															</button>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>
@@ -88,20 +88,15 @@
 				</div>
 			</div>
         </div>
-		<div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+		<div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
 			<div class="modal-dialog modal-dialog-centered" role="document" >
 				<div class="modal-content">
-				<!--	<div class="modal-header">
-						<h5 class="modal-title">Delete</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>-->
 					<div class="modal-body">
 						<div class="form-content p-2">
 							<h4 class="modal-title">Delete</h4>
 							<p class="mb-4">Are you sure want to delete?</p>
-							<button type="button" class="btn btn-primary">Save </button>
+							<input type="hidden" name="id" id="id">
+							<button type="button" class="btn btn-primary">Confirm</button>
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 						</div>
 					</div>

@@ -15,11 +15,13 @@ import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
 import vn.aptech.doccure.utils.StringUtils;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Locale;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/specialities")
+@RolesAllowed("ROLE_ADMIN")
 public class AdminSpecialityController {
 
     @Autowired

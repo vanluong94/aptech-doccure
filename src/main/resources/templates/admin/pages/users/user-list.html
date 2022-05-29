@@ -13,10 +13,10 @@
 				<div class="page-header">
 					<div class="row">
 						<div class="col-sm-7 col-auto">
-							<h3 class="page-title">List of Doctors</h3>
+							<h3 class="page-title">List of Users</h3>
 							<ul class="breadcrumb">
 								<li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
-								<li class="breadcrumb-item active">Doctors</li>
+								<li class="breadcrumb-item active">Users</li>
 							</ul>
 						</div>
 <!--							<div class="col-sm-5 col">-->
@@ -45,34 +45,39 @@
 													<th class="text-right">Actions</th>
 												</tr>
 											</thead>
-											<tbody th:if="${#lists.isEmpty(doctors)}">
+											<tbody th:if="${#lists.isEmpty(users)}">
 												<tr>No Data</tr>
 											</tbody>
-											<tbody th:unless="${#lists.isEmpty(doctors)}">
-												<tr th:each="doctor : ${doctors}">
+											<tbody th:unless="${#lists.isEmpty(users)}">
+												<tr th:each="user : ${users}">
 													<td>
 														<h2 class="table-avatar">
-															<a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" class="avatar avatar-sm mr-2">
-																<img class="avatar-img rounded-circle" alt="User Image" src="#" th:src="${doctor.theAvatar}"></a>
-															<a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
+															<a th:href="@{/doctor/profile/{id}(id=${user.id})}" class="avatar avatar-sm mr-2">
+																<img class="avatar-img rounded-circle" alt="User Image" src="#" th:src="${user.theAvatar}"></a>
+															<a th:href="@{/doctor/profile/{id}(id=${user.id})}" th:text="${user.fullName}"></a>
 														</h2>
 													</td>
-													<td th:text="${doctor.username}"></td>
-													<td th:each="role : ${doctor.roles}">
+													<td th:text="${user.username}"></td>
+													<td th:unless="${user.notHasAnyRole()}">
+														<span>Unknown</span>
+													</td>
+													<td th:if="${user.notHasAnyRole()}" th:each="role : ${user.roles}">
 														<span th:text="${role.roleText}"></span>
 													</td>
-													<td th:text="${doctor.genderText}"></td>
-													<td th:text="${doctor.email}"></td>
-													<td th:text="${doctor.phone}"></td>
-													<td th:text="${doctor.statusText}"></td>
+													<td th:text="${user.genderText}"></td>
+													<td th:text="${user.email}"></td>
+													<td th:text="${user.phone}"></td>
+													<td th:text="${user.statusText}"></td>
 													<td class="text-right">
 														<div class="actions">
 															<a class="btn btn-sm bg-success-light"
-															   th:href="@{/admin/users/edit/{id}(id=${doctor.id})}"
+															   th:unless="${user.isAdmin()}"
+															   th:href="@{/admin/users/edit/{id}(id=${user.id})}"
 															   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
 															<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
 																	data-target="#confirmModal"
-																	th:attr="data-whatever=${doctor.id}"
+																	th:unless="${user.isAdmin()}"
+																	th:attr="data-whatever=${user.id}"
 																	th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
 															</button>
 														</div>

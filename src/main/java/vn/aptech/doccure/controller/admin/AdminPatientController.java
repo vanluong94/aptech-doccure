@@ -14,11 +14,13 @@ import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.SpecialityService;
 import vn.aptech.doccure.service.UserService;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.HashSet;
 import java.util.Set;
 
 @Controller
 @RequestMapping("admin/patients")
+@RolesAllowed("ROLE_ADMIN")
 public class AdminPatientController {
     @Autowired
     private UserService userService;

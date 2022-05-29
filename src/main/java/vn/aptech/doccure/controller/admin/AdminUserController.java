@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
+import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.entities.UserAddress;
 import vn.aptech.doccure.service.RoleService;
@@ -16,10 +17,14 @@ import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
 
+import javax.annotation.security.RolesAllowed;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin/users")
+@RolesAllowed("ROLE_ADMIN")
 public class AdminUserController {
     @Autowired
     private UserService userService;
@@ -27,6 +32,12 @@ public class AdminUserController {
     private RoleService roleService;
     @Autowired
     private StorageService storageService;
+    @GetMapping
+    public ModelAndView getUserList(){
+        ModelAndView modelAndView = new ModelAndView("/admin/pages/users/user-list");
+        modelAndView.addObject("users", userService.findAll());
+        return modelAndView;
+    }
 
     @GetMapping("/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") Long id, RedirectAttributes redirect){
@@ -60,6 +71,8 @@ public class AdminUserController {
         } catch (StorageException e) {
             user.setAvatar("150.png");
         }
+        user.getPatientAddress().setUser(user);
+        user.getPatientAddress().setUserId(user.getId());
         User userSave = userService.save(user);
         if (userSave != null) {
             redirect.addFlashAttribute("successMessage", "Update successfully.");
