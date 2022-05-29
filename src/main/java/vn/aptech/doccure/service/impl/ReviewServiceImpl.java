@@ -34,4 +34,9 @@ public class ReviewServiceImpl implements ReviewService {
     public Iterable<Review> findAll() {
         return repo.findAll();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        repo.deleteById(id);
+    }
 }

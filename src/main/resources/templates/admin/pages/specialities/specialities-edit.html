@@ -29,7 +29,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Add new Speciality</h4>
+                        <h4 class="card-title">Edit Speciality</h4>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
@@ -60,6 +60,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
+                                <a th:href="@{/admin/specialities}" class="btn btn-link"><i class="fa fa-chevron-left"></i> Back</a>
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                             </div>
                         </form>
@@ -67,7 +68,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 </body>

@@ -7,25 +7,31 @@ import vn.aptech.doccure.repositories.ServiceRepository;
 import vn.aptech.doccure.service.ServiceService;
 
 import java.util.List;
+import java.util.Optional;
 
 @org.springframework.stereotype.Service
 public class ServiceServiceImpl implements ServiceService {
 
     @Autowired
-    private ServiceRepository serviceRepository;
+    private ServiceRepository repo;
 
     @Override
     public Iterable<Service> findAll() {
-        return serviceRepository.findAll();
+        return repo.findAll();
     }
 
     @Override
     public Service save(Service service) {
-        return serviceRepository.save(service);
+        return repo.save(service);
+    }
+
+    @Override
+    public Optional<Service> findBySlug(String slug) {
+        return repo.findBySlug(slug);
     }
 
     @Override
     public List<Service> findByDoctor(User doctor) {
-        return serviceRepository.findAllByDoctors(doctor);
+        return repo.findAllByDoctors(doctor);
     }
 }

@@ -28,6 +28,7 @@ import vn.aptech.doccure.storage.StorageService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -68,12 +69,13 @@ public class UserController {
 //        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
         Authentication authentication = (Authentication) principal;
         User doctor = (User) authentication.getPrincipal();
-        ModelAndView modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
+        ModelAndView modelAndView;
         Optional<User> newUser = userService.findByUsername(doctor.getUsername());
         if (newUser.isPresent()) {
+            modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
             modelAndView.addObject("doctor", newUser.get());
         } else {
-            // Ban chua dang nhap hoac tai khoan khong ton tai
+            modelAndView = new ModelAndView("pages/404");
         }
         return modelAndView;
 //        } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
@@ -95,7 +97,7 @@ public class UserController {
                 if (file.getSize() > 0) {
                     if (file.getSize() > MAX_FILE_SIZE) {
                         redirect.addFlashAttribute("errorMessage", "Max size of 2MB");
-                        return "redirect:/dashboard/profile";
+                        return "redirect:/dashboard/profile-settings";
                     }
                     storageService.store(file);
                     doctor.setAvatar(fileName);
@@ -116,8 +118,9 @@ public class UserController {
                 System.out.println("speciality: --------------- " + speciality.getId() + "/" + speciality.getName());
             });
 
-//            doctor.getBio().setDoctor(doctor);
+            doctor.getBio().setDoctor(doctor);
             doctor.getBio().setDoctorId(doctor.getId());
+            doctor.setModifiedDate(LocalDateTime.now());
             User saveUser = userService.save(doctor);
             if (saveUser != null) {
                 // Luu thanh cong
@@ -128,8 +131,9 @@ public class UserController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            redirect.addFlashAttribute("errorMessage", "Error. Detail: " + e.getMessage());
         }
-        return "redirect:/dashboard/profile";
+        return "redirect:/dashboard/profile-settings";
     }
 
     @GetMapping("dashboard")
@@ -164,7 +168,6 @@ public class UserController {
         } else if (request.isUserInRole(Constants.Roles.ROLE_PATIENT)) {
             return "pages/patientDashboard";
         }
-
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 

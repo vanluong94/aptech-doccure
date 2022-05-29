@@ -29,7 +29,7 @@ public class DoctorBio implements Serializable {
     @Column(name = "biography")
     private String biography;
 
-    @Column(name = "rating", nullable = false, columnDefinition = "double(1,1) default 0")
+    @Column(name = "rating", columnDefinition = "double(1,1) default 0")
     private Double rating;
 
     @Lob

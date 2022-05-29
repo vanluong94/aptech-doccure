@@ -46,14 +46,20 @@
                 <div class="section-header text-center">
                     <h2>Browse by Specialities</h2>
                 </div>
-                <div class="row">
+                <div class="row" th:if="${#lists.isEmpty(specialities)}">
+                    <div class="col-md-12">No data to display.</div>
+                </div>
+                <div class="row" th:unless="${#lists.isEmpty(specialities)}">
                     <div class="col-lg-3" th:each="speciality : ${specialities}">
                         <div class="category-box">
                             <div class="category-image">
-                                <img th:src="'/files/' + ${speciality.image}" alt="">
+                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
+                                    <img th:src="'/files/' + ${speciality.image}" th:alt="${speciality.name}">
+                                </a>
                             </div>
                             <div class="category-content">
-                                <h4 th:text="${speciality.name}"></h4>
+                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}"><h4 th:text="${speciality.name}"></h4></a>
+                                <span th:text="${speciality?.users?.size() + ' Doctors'}"></span>
                             </div>
                         </div>
                     </div>
@@ -68,7 +74,10 @@
                 <div class="section-header text-center">
                     <h2>Book Our Best Doctor</h2>
                 </div>
-                <div class="row">
+                <div class="row" th:if="${#lists.isEmpty(doctors)}">
+                    <div class="col-md-12">No data to display.</div>
+                </div>
+                <div class="row" th:unless="${#lists.isEmpty(doctors)}">
                     <div class="col-lg-12">
                         <div class="doctor-slider slider">
                             <!-- Doctor Widget -->

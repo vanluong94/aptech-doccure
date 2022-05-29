@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}"
+>
+<head>
+
+</head>
+<body>
+<div class="page-wrapper" layout:fragment="layoutContent">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="page-title">Reviews</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="${#request.contextPath}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Reviews</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                        <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+                        <div class="table-responsive">
+                            <table class="datatable table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Doctor Name</th>
+                                    <th>Ratings</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody th:if="${#lists.isEmpty(reviews)}">
+                                <tr>
+                                    <td colspan="6">No data.</td>
+                                </tr>
+                                </tbody>
+                                <tbody th:unless="${#lists.isEmpty(reviews)}">
+                                <tr th:each="review : ${reviews}">
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a href="user-edit.html" class="avatar avatar-sm mr-2"><img
+                                                    class="avatar-img rounded-circle"
+                                                    th:src="${review.patient.theAvatar}" alt="User Image"></a>
+                                            <a href="user-edit.html" th:text="${review.patient.fullName}"></a>
+                                        </h2>
+                                    </td>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a href="user-edit.html" class="avatar avatar-sm mr-2"><img
+                                                    class="avatar-img rounded-circle"
+                                                    th:src="${review.doctor.theAvatar}" alt="User Image"></a>
+                                            <a href="user-edit.html" th:text="${review.doctor.fullName}"></a>
+                                        </h2>
+                                    </td>
+
+                                    <td>
+                                        <i class="fa fa-star" th:classappend="${review.rating >= 1 ? 'text-warning' : 'text-secondary'}"></i>
+                                        <i class="fa fa-star" th:classappend="${review.rating >= 2 ? 'text-warning' : 'text-secondary'}"></i>
+                                        <i class="fa fa-star" th:classappend="${review.rating >= 3 ? 'text-warning' : 'text-secondary'}"></i>
+                                        <i class="fa fa-star" th:classappend="${review.rating >= 4 ? 'text-warning' : 'text-secondary'}"></i>
+                                        <i class="fa fa-star" th:classappend="${review.rating == 5 ? 'text-warning' : 'text-secondary'}"></i>
+                                    </td>
+
+                                    <td th:text="${review.content}"></td>
+                                    <td th:text="${#temporals.format(review.patient.createdDate, 'dd-MM-yyyy HH:mm')}"></td>
+                                    <td class="text-right">
+                                        <div class="actions">
+                                            <button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
+                                                    data-target="#confirmModal" th:attr="data-whatever=${review.id}">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document" >
+        <div class="modal-content">
+            <form action="#" th:action="@{/admin/reviews/delete}" method="post">
+                <div class="modal-body text-center">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">Delete</h4>
+                        <p class="mb-4">Are you sure want to delete?</p>
+                        <input type="hidden" name="id" id="id">
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /Delete Modal -->
+</div>
+<!-- /Page Wrapper -->
+</body>
+</html>

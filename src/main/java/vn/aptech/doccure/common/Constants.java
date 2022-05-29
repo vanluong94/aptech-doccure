@@ -15,4 +15,24 @@ public interface Constants {
         short FEMALE = 0;
         short MALE = 1;
     }
+
+    interface MESSSAGE {
+        String ERROR = "errorMessage";
+        String SUCCESS = "successMessage";
+    }
+
+    interface OBJECT {
+        String SPECIALITY = "speciality";
+        String SPECIALITIES = "specialities";
+    }
+
+    interface PAGE_VIEW {
+        interface ADMIN {
+            interface SPECIALITIES {
+                String LIST_PAGE = "admin/pages/specialities/specialities-list";
+                String NEW_PAGE = "admin/pages/specialities/specialities-new";
+                String EDIT_PAGE = "admin/pages/specialities/specialities-edit";
+            }
+        }
+    }
 }
