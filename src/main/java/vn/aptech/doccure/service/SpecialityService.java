@@ -12,6 +12,8 @@ public interface SpecialityService {
 
     Optional<Speciality> findById(Long id);
 
+    Optional<Speciality> findBySlug(String slug);
+
     Speciality save(Speciality speciality);
 
     void deleteById(Long id);

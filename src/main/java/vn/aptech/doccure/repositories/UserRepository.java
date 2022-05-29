@@ -39,6 +39,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " WHERE r.name in (:roles)" +
             " AND ((:gender) IS NULL OR u.gender in (:gender))" +
             " AND ((:specialities) IS NULL OR speciality.id in (:specialities))" +
+            " AND ((:services) IS NULL OR service.id in (:services))" +
             " AND (:query IS NULL OR (u.firstName LIKE CONCAT('%',:query ,'%') OR u.lastName LIKE CONCAT('%',:query ,'%') OR service.name LIKE CONCAT('%',:query ,'%')))" +
             " AND (:location IS NULL OR (c.name like CONCAT('%',:location ,'%') OR c.city LIKE CONCAT('%',:location ,'%') OR c.country LIKE CONCAT('%',:location ,'%')))" +
             " ORDER BY u.id desc")
@@ -46,5 +47,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                         @Param("query") String query,
                                         @Param("gender") Collection<Short> gender,
                                         @Param("specialities") Collection<Long> specialities,
+                                        @Param("services") Collection<Long> services,
                                         @Param("roles") Collection<String> roles);
+
+    @Query(value = "SELECT u FROM User u" +
+            " LEFT JOIN u.specialities s" +
+            " LEFT JOIN u.roles r" +
+            " WHERE s.slug = :slug" +
+            " AND r.name in (:roles)")
+    List<User> findAllBySpecialitySlug(@Param("slug") String slug, @Param("roles") Collection<String> roles);
+
+    @Query(value = "SELECT u FROM User u" +
+            " LEFT JOIN u.services s" +
+            " LEFT JOIN u.roles r" +
+            " WHERE s.slug = :slug" +
+            " AND r.name in (:roles)")
+    List<User> findAllByServiceSlug(@Param("slug") String slug, @Param("roles") Collection<String> roles);
 }

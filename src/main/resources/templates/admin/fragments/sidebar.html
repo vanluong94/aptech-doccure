@@ -20,7 +20,7 @@
                     <li th:classappend="${#request.getRequestURI() == '/admin/appointments' ? 'active' : ''}">
                         <a th:href="@{/admin/appointments}"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
                     </li>
-                    <li class="submenu">
+                    <li class="submenu" th:classappend="${#request.getRequestURI() == '/admin/specialities' ? 'active' : ''}">
                         <a href="#"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>
                         <ul style="display: none;">
                             <li><a th:href="@{/admin/specialities}">All Specialities</a></li>
@@ -47,11 +47,8 @@
 <!--                            <li><a href="/admin/user-edit.html">Add new User</a></li>-->
                         </ul>
                     </li>
-                    <li>
-                        <a href="/admin/reviews.html"><i class="fa fa-star"></i> <span>Reviews</span></a>
-                    </li>
-                    <li>
-                        <a href="/admin/settings.html"><i class="fa fa-cogs"></i> <span>Settings</span></a>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/reviews' ? 'active' : ''}">
+                        <a href="/admin/reviews"><i class="fa fa-star"></i> <span>Reviews</span></a>
                     </li>
                 </ul>
             </div>

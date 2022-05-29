@@ -122,11 +122,14 @@
                                     </td>
                                     <td th:text="${doctor?.clinic?.specialities}"></td>
                                     <td>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-warning"></i>
-                                        <i class="fa fa-star text-secondary"></i>
+                                        <div class="rating" th:unless="${#lists.isEmpty(doctor?.doctorReviews)}" style="line-height: 18px;">
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 1 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 2 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 3 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 4 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 5 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <span class="ml-2 d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>

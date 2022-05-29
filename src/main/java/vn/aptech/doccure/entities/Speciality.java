@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,8 +33,8 @@ public class Speciality implements Serializable {
     @Column(name = "image")
     private String image;
 
-//    @ManyToMany(targetEntity = vn.aptech.doccure.entities.User.class, mappedBy = "specialities")
-//    private Set<User> users;
+    @ManyToMany(mappedBy = "specialities")
+    private Set<User> users;
 
     @Transient
     private MultipartFile imageData;
