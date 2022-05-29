@@ -8,9 +8,11 @@ import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.AppointmentService;
+import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.TimeSlotService;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -55,11 +57,10 @@ public class DoctorDTO {
     }
 
     public String getSpecialtiesText() {
+        List<Service> services = SpringContext.getBean(ServiceService.class).findByDoctor(this.user);
         return StringUtils.join(
-                this.user.getServices()
-                        .stream().map((Service service) -> service.getName())
-                        .collect(Collectors.toList()),
-        ", "
+                services.stream().map((Service service) -> service.getName()).collect(Collectors.toList()),
+                ", "
         );
     }
 
