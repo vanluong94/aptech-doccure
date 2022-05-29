@@ -15,6 +15,7 @@ import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.*;
 import vn.aptech.doccure.model.ReviewRequestDTO;
 import vn.aptech.doccure.service.*;
+import vn.aptech.doccure.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -112,14 +113,15 @@ public class DoctorController {
             LocalDateTime theDate = now.plusDays(i);
             Map<String, Object> weekdayData = new HashMap<>();
 
-            weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
-            weekdayData.put("textDate", theDate.format(dateFormatter));
+            weekdayData.put("textWeekday", DateUtils.toShortenWeekday(theDate));
+            weekdayData.put("textDate", DateUtils.toStandardDate(theDate));
             weekdayData.put("slots", timeSlotService.findAllByDoctorOnDate(user.get().getId(), theDate));
 
             weekdays.add(weekdayData);
         }
 
-        modelAndView.addObject("now", now);
+        modelAndView.addObject("nowDateText", DateUtils.toStandardDate(now));
+        modelAndView.addObject("nowWeekdayText", DateUtils.toStandardWeekday(now));
         modelAndView.addObject("doctor", user.get());
         modelAndView.addObject("weekdays", weekdays);
 
