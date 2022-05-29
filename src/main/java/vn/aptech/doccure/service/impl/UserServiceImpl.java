@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.entities.UserAddress;
 import vn.aptech.doccure.repositories.UserRepository;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.utils.StringUtils;
@@ -103,6 +104,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllByRolesInOrderByIdAsc(Set<Role> roles) {
+        return repo.findAllByRolesInOrderByIdAsc(roles);
+    }
+
+    @Override
     public Long countByRolesIn(Set<Role> roles) {
         return repo.countByRolesIn(roles);
     }
@@ -130,5 +136,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllByServiceSlug(String slug, Collection<String> roles) {
         return repo.findAllByServiceSlug(slug, roles);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        repo.deleteById(id);
     }
 }

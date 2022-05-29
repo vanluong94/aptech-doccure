@@ -194,6 +194,9 @@ public class User implements UserDetails {
         return "Dr. " + getFullName();
     }
 
+    public boolean hasAnyRole(){
+        return (this.isDoctor() | this.isPatient() | this.isAdmin());
+    }
     public String getTheAvatar() {
         if (avatar != null && !avatar.isEmpty()) {
             return "/files/" + avatar;
@@ -226,6 +229,22 @@ public class User implements UserDetails {
             } else if (gender.equals(Constants.Genders.FEMALE)) {
                 return "Female";
             }
+        }
+        return "Unknown";
+    }
+
+    public String getGenderValueText(){
+        return gender.toString();
+    }
+
+    public String getStatusValueText(){
+        return enabled.toString();
+    }
+
+    public String getStatusText(){
+        if(enabled != null){
+            if(this.isEnabled()) return "Activated";
+            else return "Locked";
         }
         return "Unknown";
     }

@@ -1,4 +1,4 @@
-package vn.aptech.doccure.controller;
+package vn.aptech.doccure.controller.admin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +18,13 @@ import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
 import vn.aptech.doccure.utils.StringUtils;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Locale;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/specialities")
+@RolesAllowed("ROLE_ADMIN")
 public class AdminSpecialityController {
     private final Logger logger = LoggerFactory.getLogger(AdminSpecialityController.class);
 

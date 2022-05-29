@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.Role;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.entities.UserAddress;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,6 +35,8 @@ public interface UserService extends UserDetailsService {
 
     List<User> findTop10ByRolesInOrderByIdDesc(Set<Role> roles);
 
+    List<User> findAllByRolesInOrderByIdAsc(Set<Role> roles);
+
     Long countByRolesIn(Set<Role> roles);
 
     List<User> findAllWithAdvanceSearch(String location, String query, Collection<Short> gender, Collection<Long> specialities, Collection<Long> services, Collection<String> roles);
@@ -42,4 +45,5 @@ public interface UserService extends UserDetailsService {
 
     List<User> findAllByServiceSlug(String slug, Collection<String> roles);
 
+    void deleteById(Long id);
 }

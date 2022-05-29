@@ -15,7 +15,7 @@
                         <a th:href="@{/}"><i class="fa fa-home"></i> <span>Site</span></a>
                     </li>
                     <li th:classappend="${#request.getRequestURI() == '/admin' ? 'active' : ''}">
-                        <a th:href="@{/admin}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
+                        <a th:href="@{/admin/pages/dashboard}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
                     </li>
                     <li th:classappend="${#request.getRequestURI() == '/admin/appointments' ? 'active' : ''}">
                         <a th:href="@{/admin/appointments}"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
@@ -35,16 +35,16 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="/admin/doctor-list.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                        <a th:href="@{/admin/doctors}"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                     </li>
                     <li>
-                        <a href="/admin/patient-list.html"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
+                        <a th:href="@{/admin/patients}"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
                     </li>
                     <li class="submenu">
                         <a href="#"><i class="fa fa-users"></i> <span>Users</span> <span class="menu-arrow"></span></a>
                         <ul style="display: none;">
-                            <li><a href="/admin/user-list.html">All Users</a></li>
-                            <li><a href="/admin/user-edit.html">Add new User</a></li>
+                            <li><a th:href="@{/admin/users}">All Users</a></li>
+<!--                            <li><a href="/admin/user-edit.html">Add new User</a></li>-->
                         </ul>
                     </li>
                     <li th:classappend="${#request.getRequestURI() == '/admin/reviews' ? 'active' : ''}">
