@@ -112,8 +112,6 @@ public class DoctorController {
 
         List<Object> weekdays = new LinkedList<>();
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter weekdayFormatter = DateTimeFormatter.ofPattern("eee");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
         for (int i=0; i<8; i++) {
             LocalDateTime theDate = now.plusDays(i);
