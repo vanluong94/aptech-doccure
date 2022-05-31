@@ -98,7 +98,7 @@
                                             <i class="fas fa-star" th:classappend="${doctor.avgReview >= 3 ? 'filled' : ''}"></i>
                                             <i class="fas fa-star" th:classappend="${doctor.avgReview >= 4 ? 'filled' : ''}"></i>
                                             <i class="fas fa-star" th:classappend="${doctor.avgReview >= 5 ? 'filled' : ''}"></i>
-                                            <span class="d-inline-block average-rating" th:text="${doctor?.doctorReviews?.size()}">(0)</span>
+                                            <span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
                                         </div>
 
                                         <p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> <th:block th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></th:block></p>

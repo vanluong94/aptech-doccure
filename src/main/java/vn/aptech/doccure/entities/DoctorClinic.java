@@ -116,4 +116,35 @@ public class DoctorClinic implements Serializable {
     public void syncParsedImages() {
         this.setImages(JSONUtils.stringify(this.getParsedImages()));
     }
+
+    public boolean hasLocation() {
+        return this.lat != null && this.lng != null;
+    }
+
+    public String getAddress() {
+
+        List<String> parts = new LinkedList<>();
+
+        if (this.addressLine1 != null && this.addressLine1.length() > 0) {
+            parts.add(this.addressLine1);
+        }
+
+        if (this.addressLine2 != null && this.addressLine2.length() > 0) {
+            parts.add(this.addressLine2);
+        }
+
+        if (this.city != null && this.city.length() > 0) {
+            parts.add(this.city);
+        }
+
+        if (this.state != null && this.state.length() > 0) {
+            parts.add(this.state);
+        }
+
+        if (this.country != null && this.country.length() > 0) {
+            parts.add(this.country);
+        }
+
+        return String.join(", ", parts);
+    }
 }

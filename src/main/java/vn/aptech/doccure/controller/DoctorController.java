@@ -40,6 +40,11 @@ public class DoctorController {
     @Autowired
     private ReviewService reviewService;
 
+    @ModelAttribute("now")
+    public LocalDateTime nowModelAttribute() {
+        return LocalDateTime.now();
+    }
+
     @GetMapping("/profile/{id}")
     public ModelAndView profile(@PathVariable("id") Long id, Authentication authentication) {
         ModelAndView modelAndView;
@@ -60,6 +65,7 @@ public class DoctorController {
                 review.setPatientId(currentUser.getId());
                 modelAndView.addObject("review", review);
                 modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
+                modelAndView.addObject("clinicOpeningTimes", timeSlotService.getAllOpeningTimes(user.get()));
             } else {
                 modelAndView.addObject("isDoctorFavorite", false);
             }

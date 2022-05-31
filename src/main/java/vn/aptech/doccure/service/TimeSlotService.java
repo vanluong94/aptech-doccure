@@ -2,6 +2,7 @@ package vn.aptech.doccure.service;
 
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.model.ClinicOpeningTimes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,4 +22,7 @@ public interface TimeSlotService {
 
     TimeSlot findUpcomingAvailable(User doctor);
 
+    ClinicOpeningTimes getOpeningTimesOnDate(User doctor, LocalDateTime date);
+
+    List<ClinicOpeningTimes> getAllOpeningTimes(User doctor);
 }
