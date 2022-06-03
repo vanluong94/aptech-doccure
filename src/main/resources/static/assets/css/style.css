@@ -2888,8 +2888,8 @@ html.menu-opened body {
 .profile-widget p.speciality {
     font-size: 13px;
     color: #757575;
-    margin-bottom: 5px;
-    min-height: 40px;
+    margin-bottom: 15px;
+    /* min-height: 40px; */
 }
 .rating {
     list-style: none;
@@ -8539,7 +8539,7 @@ ul.benifits-col li i{
 }
 
 .profile-widget .fav-btn {
-    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
 }
 
 .fav-btn.fav-active > i {
@@ -8548,4 +8548,12 @@ ul.benifits-col li i{
 
 .page-doctor-profile .fav-btn.fav-active, .page-doctor-profile .fav-btn:hover {
 	border-color: var(--info);
+}
+
+body.search-nearby footer {
+	display: none;
+}
+
+#resultsPanel {
+	min-height: 80vh !important;
 }
