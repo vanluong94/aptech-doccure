@@ -91,23 +91,25 @@
                                     </a>
                                     <div class="booking-info">
                                         <h4><a th:href="@{'/doctor/profile/' + ${doctor.id}}" th:text="${doctor.fullName}"></a></h4>
+
                                         <div class="rating">
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star"></i>
-                                            <span class="d-inline-block average-rating">35</span>
+                                            <i class="fas fa-star" th:classappend="${doctor.avgReview >= 1 ? 'filled' : ''}"></i>
+                                            <i class="fas fa-star" th:classappend="${doctor.avgReview >= 2 ? 'filled' : ''}"></i>
+                                            <i class="fas fa-star" th:classappend="${doctor.avgReview >= 3 ? 'filled' : ''}"></i>
+                                            <i class="fas fa-star" th:classappend="${doctor.avgReview >= 4 ? 'filled' : ''}"></i>
+                                            <i class="fas fa-star" th:classappend="${doctor.avgReview >= 5 ? 'filled' : ''}"></i>
+                                            <span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
                                         </div>
-                                        <p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> Newyork, USA</p>
+
+                                        <p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> <th:block th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></th:block></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-4 col-md-6">
-                                <h4 class="mb-1" th:text="${#temporals.format(now, 'dd MMMM yyyy')}"></h4>
-                                <p class="text-muted" th:text="${#temporals.format(now, 'eeee')}"></p>
+                                <h4 class="mb-1" th:text="${nowDateText}"></h4>
+                                <p class="text-muted" th:text="${nowWeekdayText}"></p>
                             </div>
                         </div>
 

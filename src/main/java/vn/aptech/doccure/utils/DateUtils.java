@@ -11,6 +11,14 @@ public class DateUtils {
         return input.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
     }
 
+    public static String toStandardWeekday(LocalDateTime input) {
+        return input.format(DateTimeFormatter.ofPattern("EEEE"));
+    }
+
+    public static String toShortenWeekday(LocalDateTime input) {
+        return input.format(DateTimeFormatter.ofPattern("EEE"));
+    }
+
     public static String toStandardTime(LocalDateTime input) {
         return input.format(DateTimeFormatter.ofPattern("hh:mm a"));
     }
