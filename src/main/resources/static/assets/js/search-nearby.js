@@ -42,8 +42,7 @@ function initialize() {
 	// var oldcenter = new google.maps.LatLng(0,0);
 	google.maps.event.addListener(searchMap, 'idle', function() { 
 		var newcenter = searchMap.getCenter();
-		// console.log(searchMap.getZoom());
-		if (google.maps.geometry.spherical.computeDistanceBetween(newcenter, center)>100) {
+		if (searchMap.getZoom() >= 12 && google.maps.geometry.spherical.computeDistanceBetween(newcenter, center)>100) {
 			var bounds =  searchMap.getBounds();
 			var ne = bounds.getNorthEast();
 			var sw = bounds.getSouthWest();
@@ -70,7 +69,6 @@ function initialize() {
 					loadMarkers(searchMap, newMarkers);
 					loadResultsGrid(results);
 				})
-			console.log(url);
 			center = searchMap.getCenter();     
 		}
 	});
