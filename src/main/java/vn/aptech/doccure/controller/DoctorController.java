@@ -18,7 +18,6 @@ import vn.aptech.doccure.service.*;
 import vn.aptech.doccure.utils.DateUtils;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -65,11 +64,10 @@ public class DoctorController {
                 review.setPatientId(currentUser.getId());
                 modelAndView.addObject("review", review);
                 modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
-                modelAndView.addObject("clinicOpeningTimes", timeSlotService.getAllOpeningTimes(user.get()));
             } else {
                 modelAndView.addObject("isDoctorFavorite", false);
             }
-
+            modelAndView.addObject("clinicOpeningTimes", timeSlotService.getAllOpeningTimes(user.get()));
         } else {
             modelAndView = new ModelAndView("pages/404");
         }

@@ -270,7 +270,7 @@
 
 											</div>
 
-											<div class="widget business-widget" th:if="${clinicOpeningTimes.size() > 0}">
+											<div class="widget business-widget" th:unless="${clinicOpeningTimes.isEmpty()}">
 												<div class="widget-content">
 													<div class="listing-hours">
 														<div class="listing-day current">
