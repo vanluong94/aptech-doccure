@@ -10,7 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.Speciality;
-import vn.aptech.doccure.service.RoleService;
 import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.SpecialityService;
 import vn.aptech.doccure.service.UserService;
@@ -45,6 +44,11 @@ public class SearchController {
         roles.add(Constants.Roles.ROLE_DOCTOR);
         modelAndView.addObject("doctors", userService.findAllWithAdvanceSearch(location, query, gender, specialities, services, roles));
         return modelAndView;
+    }
+
+    @GetMapping("/search-nearby")
+    public String searchNearby() {
+        return "/pages/nearby";
     }
 
     @GetMapping("/speciality/{slug}")
