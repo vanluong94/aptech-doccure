@@ -2870,10 +2870,6 @@ html.menu-opened body {
     -ms-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
-.profile-widget .fav-btn:hover {
-	background-color: #fb1612;
-	color: #fff;
-}
 .pro-content {
     padding: 15px 0 0;
 }
@@ -3677,25 +3673,6 @@ html.menu-opened body {
 	border-color: #09e5ab;
 	color: #fff;
 }*/
-.fav-btn.btn-info:hover {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    color: #272b41;
-}
-
-.fav-btn.btn-white:hover {
-    background-color: #009efb;
-    border: 1px solid #009efb;
-    color: #ffff;
-}
-
-.fav-btn.btn-info > i.fa-bookmark {
-    display: none !important;
-}
-
-.fav-btn.btn-white > i.fa-check {
-    display: none !important;
-}
 
 .user-tabs .nav-tabs > li > a {
 	border: 0;
@@ -8553,4 +8530,22 @@ ul.benifits-col li i{
     width: 100% !important;
     height: 100% !important;
     min-height: 350px !important;
+}
+
+/* FAV BUTTON */
+.fav-btn:hover, .fav-btn.fav-active {
+    background-color: var(--info);
+	color: #fff;
+}
+
+.profile-widget .fav-btn {
+    box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+}
+
+.fav-btn.fav-active > i {
+    font-weight: 900;
+}
+
+.page-doctor-profile .fav-btn.fav-active, .page-doctor-profile .fav-btn:hover {
+	border-color: var(--info);
 }

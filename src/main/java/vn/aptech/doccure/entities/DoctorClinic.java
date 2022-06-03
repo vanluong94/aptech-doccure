@@ -1,5 +1,6 @@
 package vn.aptech.doccure.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ public class DoctorClinic implements Serializable {
     @MapsId
     @OneToOne
     @JoinColumn(name = "doctor_id", nullable = false, foreignKey = @ForeignKey(name = "doctor_clinic_user_fk"))
+    @JsonIgnore
     private User doctor;
 
     @Column(name = "name", nullable = false)

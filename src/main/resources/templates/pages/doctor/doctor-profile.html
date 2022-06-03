@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="/assets/plugins/fancybox/jquery.fancybox.min.css">
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
 </head>
-<body>
+<body class="page-doctor-profile">
 
 	<div class="page-content" layout:fragment="layoutContent">
 		<!-- Main Wrapper -->
@@ -92,9 +92,8 @@
 									<div class="doctor-action d-block">
 										<div class="row form-row">
 											<div class="col-6">
-												<a href="javascript:void(0)" class="btn fav-btn w-100" th:classappend="${isDoctorFavorite ? 'btn-info' : 'btn-white'}" th:attr="data-doctor=${doctor.id}">
+												<a href="javascript:void(0)" class="btn fav-btn w-100 btn-white" th:classappend="${isDoctorFavorite ? 'fav-active' : ''}" th:attr="data-doctor=${doctor.id}">
 													<i class="d-block far fa-bookmark"></i>
-													<i class="d-block fas fa-check"></i>
 													<small>Bookmark</small>
 												</a>
 											</div>
@@ -482,13 +481,7 @@
 				$('.fav-btn').on('click', function(e){
 					let $btn = $(this);
 					e.preventDefault();
-					favoriteDoctorToggle($btn, (resp) => {
-						if (resp.data.isFavorite) {
-							$btn.addClass('btn-info').removeClass('btn-white');
-						} else {
-							$btn.removeClass('btn-info').addClass('btn-white');
-						}
-					})
+					favoriteDoctorToggle($btn)
 				})
 			})
 		</script>

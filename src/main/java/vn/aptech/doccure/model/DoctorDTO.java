@@ -10,6 +10,7 @@ import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.TimeSlotService;
+import vn.aptech.doccure.utils.DoctorUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -56,6 +57,18 @@ public class DoctorDTO {
         return "MDS - " + getSpecialtiesText(); // dummy data
     }
 
+    public double getAvgRating() {
+        return this.user.getAvgReview();
+    }
+
+    public Integer getTotalReviews() {
+        return this.user.getDoctorReviews().size();
+    }
+
+    public String getAvatar() {
+        return this.user.getTheAvatar();
+    }
+
     public String getSpecialtiesText() {
         List<Service> services = SpringContext.getBean(ServiceService.class).findByDoctor(this.user);
         return StringUtils.join(
@@ -64,14 +77,25 @@ public class DoctorDTO {
         );
     }
 
+    public String getUrl() {
+        return DoctorUtils.getDoctorProfileUrl(this.user);
+    }
+
+    public String getBookingUrl() {
+        return DoctorUtils.getDoctorBookingUrl(this.user);
+    }
+
+    @JsonIgnore
     public Long getTotalAppointments() {
         return SpringContext.getBean(AppointmentService.class).countByDoctor(this.user);
     }
 
+    @JsonIgnore
     public Long getTodayTotalAppointments() {
         return SpringContext.getBean(AppointmentService.class).countTodayByDoctor(this.user);
     }
 
+    @JsonIgnore
     public Long getTotalPatients() {
         return SpringContext.getBean(AppointmentService.class).countPatientByDoctor(this.user);
     }
