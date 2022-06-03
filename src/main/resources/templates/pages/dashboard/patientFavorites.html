@@ -65,12 +65,12 @@
                                         </h3>
                                         <p class="speciality" th:text="${doctorDto.eduSpecialtiesText}"></p>
                                         <div class="rating">
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <span class="d-inline-block average-rating">(17)</span>
+                                            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                                <i class="fas fa-star filled" th:if="${i - doctorDto.avgRating < 0.5}"></i>
+                                                <i class="fas fa-star-half-alt filled" th:if="${i - doctorDto.avgRating == 0.5}"></i>
+                                                <i class="far fa-star" th:if="${i - doctorDto.avgRating > 0.5}"></i>
+                                            </th:block>
+                                            <span class="d-inline-block average-rating">(<th:block th:text="${doctorDto.totalReviews}"></th:block>)</span>
                                         </div>
                                         <ul class="available-info">
                                             <li>

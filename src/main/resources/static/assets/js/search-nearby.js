@@ -138,6 +138,17 @@ function loadResultsGrid(items) {
 	resultsCount.innerText = items.length;
 	let output = '';
 	for (let item of items) {
+
+		let rating = '';
+		for(let i=1;i<6;i++) {
+			if (i - item.avgRating < 0.5) {
+				rating += '<i class="fas fa-star filled"></i>';
+			} else if (i - item.avgRating == 0.5) {
+				rating += '<i class="fas fa-star-half-alt filled"></i>';
+			} else {
+				rating += '<i class="far fa-star"></i>';
+			}
+		} 
 		output += `
 		<div class="col-sm-6 col-md-4 col-xl-6">
 			<div class="profile-widget">
@@ -157,11 +168,7 @@ function loadResultsGrid(items) {
 					</h3>
 					<p class="speciality">${item.eduSpecialtiesText}</p>
 					<div class="rating">
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
+						${rating}
 						<span class="d-inline-block average-rating">(${item.totalReviews})</span>
 					</div>
 					<ul class="available-info">
