@@ -373,9 +373,9 @@
 									</div>
 									<!-- Review Listing -->
 									<div class="widget review-listing" th:unless="${#lists.isEmpty(reviews)}">
-										<ul class="comments-list" th:each="review : ${reviews}">
+										<ul class="comments-list">
 											<!-- Comment List -->
-											<li>
+											<li th:each="review : ${reviews}">
 												<div class="comment">
 													<img class="avatar avatar-sm rounded-circle" alt="User Image" th:src="${review.patient.theAvatar}">
 													<div class="comment-body">
