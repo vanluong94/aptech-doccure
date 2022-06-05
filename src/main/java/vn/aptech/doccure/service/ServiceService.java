@@ -9,6 +9,9 @@ public interface ServiceService {
 
     Service save(Service service);
 
+    Optional<Service> findById(Long Id);
+
     Optional<Service> findBySlug(String slug);
 
+    void deleteById(Long Id);
 }

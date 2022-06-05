@@ -76,7 +76,7 @@ public class SearchController {
             modelAndView.addObject("serviceId", service.get().getId());
             List<String> roles = new ArrayList<>();
             roles.add(Constants.Roles.ROLE_DOCTOR);
-            modelAndView.addObject("doctors", userService.findAllBySpecialitySlug(slug, roles));
+            modelAndView.addObject("doctors", userService.findAllByServiceSlug(slug, roles));
         } else {
             modelAndView = new ModelAndView("pages/404");
         }

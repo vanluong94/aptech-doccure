@@ -58,8 +58,10 @@
 														</h2>
 													</td>
 													<td th:text="${doctor.username}"></td>
-													<td th:each="role : ${doctor.roles}">
-														<span th:text="${role.roleText}"></span>
+													<td>
+														<th:block th:each="role : ${doctor.roles}">
+															<span th:classappend="${role.roleText == 'Admin' ? 'badge badge-danger' : 'badge badge-info'}" th:utext="${role.roleText}"></span><br/>
+														</th:block>
 													</td>
 													<td th:text="${doctor.genderText}"></td>
 													<td th:text="${doctor.email}"></td>

@@ -8,6 +8,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -28,8 +30,8 @@ public class Service implements Serializable  {
     @Column(name = "slug", nullable = false, unique = true, length = 100)
     private String slug;
 
-//    @ManyToMany(targetEntity = vn.aptech.doccure.entities.User.class, mappedBy = "services")
-//    private Set<User> users;
+    @ManyToMany(mappedBy = "services")
+    private Set<User> users;
 
     public Service(String name) {
         this.name = name;

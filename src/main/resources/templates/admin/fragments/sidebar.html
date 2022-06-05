@@ -15,7 +15,7 @@
                         <a th:href="@{/}"><i class="fa fa-home"></i> <span>Site</span></a>
                     </li>
                     <li th:classappend="${#request.getRequestURI() == '/admin' ? 'active' : ''}">
-                        <a th:href="@{/admin/pages/dashboard}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
+                        <a th:href="@{/admin}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
                     </li>
                     <li th:classappend="${#request.getRequestURI() == '/admin/appointments' ? 'active' : ''}">
                         <a th:href="@{/admin/appointments}"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
@@ -30,8 +30,8 @@
                     <li class="submenu">
                         <a href="#"><i class="fa fa-medkit"></i> <span>Services</span> <span class="menu-arrow"></span></a>
                         <ul style="display: none;">
-                            <li><a href="/admin/service-list.html">All Services</a></li>
-                            <li><a href="/admin/service-edit.html">Add new Service</a></li>
+                            <li><a th:href="@{/admin/services}">All Services</a></li>
+                            <li><a th:href="@{/admin/edit}">Add new Service</a></li>
                         </ul>
                     </li>
                     <li>

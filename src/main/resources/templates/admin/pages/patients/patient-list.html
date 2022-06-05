@@ -58,8 +58,10 @@
 														</h2>
 													</td>
 													<td th:text="${patient.username}"></td>
-													<td th:each="role : ${patient.roles}">
-														<span th:text="${role.roleText}"></span>
+													<td>
+														<th:block th:each="role : ${patient.roles}">
+															<span th:utext="${role.roleText}"></span><br/>
+														</th:block>
 													</td>
 													<td th:text="${patient.genderText}"></td>
 													<td th:text="${patient.email}"></td>
