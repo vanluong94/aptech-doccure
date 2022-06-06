@@ -7,15 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Service;
-import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.UserService;
-import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.utils.StringUtils;
 
 import javax.annotation.security.RolesAllowed;
@@ -30,12 +27,14 @@ public class AdminServiceController {
     private ServiceService serviceService;
     @Autowired
     private UserService userService;
+
     @GetMapping
-    public ModelAndView getServiceList(){
+    public ModelAndView getServiceList() {
         ModelAndView modelAndView = new ModelAndView("/admin/pages/services/service-list");
         modelAndView.addObject("services", serviceService.findAll());
         return modelAndView;
     }
+
     @GetMapping("/create")
     public ModelAndView showCreateForm() {
         Service service = new Service();
@@ -43,6 +42,7 @@ public class AdminServiceController {
         modelAndView.addObject(Constants.OBJECT.SERVICE, service);
         return modelAndView;
     }
+
     @PostMapping("/create")
     public String addNewService(@Validated @ModelAttribute("service") Service service, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
@@ -62,20 +62,22 @@ public class AdminServiceController {
         }
         return "redirect:/admin/services";
     }
+
     @GetMapping("/edit/{id}")
-    public ModelAndView editUser(@PathVariable("id") Long id, RedirectAttributes redirect){
+    public ModelAndView editUser(@PathVariable("id") Long id, RedirectAttributes redirect) {
         Optional<Service> service = serviceService.findById(id);
         ModelAndView modelAndView = new ModelAndView("admin/pages/services/service-edit");
-        if(service.isPresent()){
+        if (service.isPresent()) {
             modelAndView.addObject("editService", service.get());
-        }else{
+        } else {
             modelAndView.addObject("editService", new Service());
             modelAndView.addObject("errorMessage", "Service not found");
         }
         return modelAndView;
     }
+
     @PostMapping("/edit")
-    public String update(@Validated @ModelAttribute("editService") Service service, BindingResult result, RedirectAttributes redirect){
+    public String update(@Validated @ModelAttribute("editService") Service service, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             return "admin/pages/services/service-edit";
         }
@@ -92,6 +94,7 @@ public class AdminServiceController {
         }
         return "redirect:/admin/services/edit/" + service.getId();
     }
+
     @PostMapping("/delete")
     public String update(@RequestParam("id") Long id, RedirectAttributes redirect) {
         serviceService.deleteById(id);

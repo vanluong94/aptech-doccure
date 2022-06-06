@@ -32,28 +32,30 @@ public class AdminUserController {
     private RoleService roleService;
     @Autowired
     private StorageService storageService;
+
     @GetMapping
-    public ModelAndView getUserList(){
+    public ModelAndView getUserList() {
         ModelAndView modelAndView = new ModelAndView("/admin/pages/users/user-list");
         modelAndView.addObject("users", userService.findAll());
         return modelAndView;
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView editUser(@PathVariable("id") Long id, RedirectAttributes redirect){
+    public ModelAndView editUser(@PathVariable("id") Long id, RedirectAttributes redirect) {
         Optional<User> user = userService.findById(id);
         ModelAndView modelAndView = new ModelAndView("admin/pages/users/user-edit");
-        if(user.isPresent()){
+        if (user.isPresent()) {
             modelAndView.addObject("editUser", user.get());
             modelAndView.addObject("UserRoles", roleService.findAll());
-        }else{
+        } else {
             modelAndView.addObject("editUser", new User());
             modelAndView.addObject("errorMessage", "User not found");
         }
         return modelAndView;
     }
+
     @PostMapping("/edit")
-    public String update(@Validated @ModelAttribute("editUser") User user, BindingResult result, RedirectAttributes redirect){
+    public String update(@Validated @ModelAttribute("editUser") User user, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             return "admin/pages/users/user-edit";
         }
@@ -86,6 +88,7 @@ public class AdminUserController {
         }
         return "redirect:/admin/users/edit/" + user.getId();
     }
+
     @PostMapping("/delete")
     public String update(@RequestParam("id") Long id, RedirectAttributes redirect) {
         userService.deleteById(id);
