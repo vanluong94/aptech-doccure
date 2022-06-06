@@ -6,13 +6,14 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,9 +27,9 @@ import vn.aptech.doccure.service.SpecialityService;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
+import vn.aptech.doccure.utils.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -37,34 +38,28 @@ import java.util.Set;
 @Controller
 public class UserController {
     private static final long MAX_FILE_SIZE = 1048576; // 2097152 = 2mb
-
     @Autowired
     private UserService userService;
-
     @Autowired
     SpecialityService specialityService;
-
     @Autowired
     ServiceService serviceService;
-
     @Autowired
     private StorageService storageService;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @ModelAttribute("specialities")
     public Iterable<Speciality> specialities() {
         Iterable<Speciality> specialities = specialityService.findAll();
         specialities.forEach(speciality -> System.out.println(speciality.getName()));
         return specialities;
     }
-
-
     @ModelAttribute("services")
     public Iterable<Service> services() {
         Iterable<Service> services = serviceService.findAll();
         services.forEach(service -> System.out.println(service.getName()));
         return services;
     }
-
     @GetMapping("dashboard/profile-settings")
     @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
     public ModelAndView profile(HttpServletRequest request, @ModelAttribute("user") User user, Principal principal) {
@@ -95,7 +90,6 @@ public class UserController {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
-
     @PostMapping("dashboard/profile-settings")
     public String saveProfileSettings(@Validated @ModelAttribute("user") User user, BindingResult result, RedirectAttributes redirect) {
         if(user.hasRole(Constants.Roles.ROLE_DOCTOR)){
@@ -186,6 +180,53 @@ public class UserController {
         else{
             return "redirect:/dashboard/profile-settings";
         }
+    }
+    @GetMapping("/dashboard/change-password")
+    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
+    public ModelAndView userChangePassword(Authentication authentication, Principal principal) {
+        ModelAndView modelAndView = new ModelAndView("pages/404");;
+        if(authentication != null){
+            User currentUser = (User) authentication.getPrincipal();
+            if(!currentUser.isAdmin() && (currentUser.isDoctor() || currentUser.isPatient())){
+                Optional<User> user = userService.findById(currentUser.getId());
+                if (user.isPresent()) {
+                    modelAndView = new ModelAndView("/pages/change-password");
+                    modelAndView.addObject("user", user.get());
+                }
+            }
+        }
+        return modelAndView;
+    }
+    @PostMapping("dashboard/change-password")
+    public String changePassword(Authentication authentication,
+                                 @RequestParam("password") String password,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword,
+                                 RedirectAttributes redirect) {
+        if (StringUtils.isNullOrBlank(password)) {
+            redirect.addFlashAttribute("errorMessage", "Old Password must not be null or empty!");
+        } else if (StringUtils.isNullOrBlank(newPassword)) {
+            redirect.addFlashAttribute("errorMessage", "New password must not be null or empty!");
+        } else if (StringUtils.isNullOrBlank(confirmPassword)) {
+            redirect.addFlashAttribute("errorMessage", "Confirm password must not be null or empty!");
+        } else if (!newPassword.equals(confirmPassword)) {
+            redirect.addFlashAttribute("errorMessage", "The Confirm Password confirmation does not match.");
+        } else {
+            User currentUser = (User) authentication.getPrincipal();
+            if (passwordEncoder.matches(password, currentUser.getPassword())) {
+                currentUser.setPassword(passwordEncoder.encode(newPassword));
+                currentUser.setModifiedDate(LocalDateTime.now());
+                if (userService.save(currentUser) != null) {
+                    redirect.addFlashAttribute("successMessage", "Awesome, you've successfully updated your password.");
+                    return "redirect:/dashboard/change-password";
+                } else {
+                    redirect.addFlashAttribute("errorMessage", "A system error has occurred. Please try again later...");
+                }
+            } else {
+                redirect.addFlashAttribute("errorMessage", "Old Password does not match.");
+            }
+        }
+        return "redirect:/dashboard/change-password";
     }
 
     @GetMapping("dashboard")
