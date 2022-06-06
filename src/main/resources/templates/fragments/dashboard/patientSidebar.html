@@ -42,8 +42,8 @@
                             <span>Favourites</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="patient-profile-settings.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/profile-settings' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/profile-settings}">
                             <i class="fas fa-user-cog"></i>
                             <span>Profile Settings</span>
                         </a>
@@ -55,7 +55,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="index.html">
+                        <a th:href="@{/logout}">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
                         </a>

@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Entity
@@ -28,8 +30,10 @@ public class PatientBio implements Serializable  {
     private String bloodType;
 
     @Column(name = "weight")
+    @Min(value = 0)
     private Short weight;
 
     @Column(name = "height")
+    @Min(value = 0)
     private Short height;
 }

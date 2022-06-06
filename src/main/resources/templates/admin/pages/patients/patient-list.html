@@ -60,13 +60,15 @@
 													<td th:text="${patient.username}"></td>
 													<td>
 														<th:block th:each="role : ${patient.roles}">
-															<span th:utext="${role.roleText}"></span><br/>
+															<span th:classappend="${role.roleText == 'Admin' ? 'badge badge-danger' : 'badge badge-info'}" th:utext="${role.roleText}"></span><br/>
 														</th:block>
 													</td>
 													<td th:text="${patient.genderText}"></td>
 													<td th:text="${patient.email}"></td>
 													<td th:text="${patient.phone}"></td>
-													<td th:text="${patient.statusText}"></td>
+													<td>
+														<span th:classappend="${user.status == 0 ? 'badge badge-danger' : 'badge badge-success'}" th:utext="${user.statusText}"></span><br/>
+													</td>
 													<td class="text-right">
 														<div class="actions">
 															<a class="btn btn-sm bg-success-light"

@@ -18,10 +18,12 @@ import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.utils.StringUtils;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/services")
+@RolesAllowed("ROLE_ADMIN")
 public class AdminServiceController {
     private final Logger logger = LoggerFactory.getLogger(AdminUserController.class);
     @Autowired
