@@ -71,7 +71,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private Set<Review> patientReviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = TimeSlotDefault.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Set<TimeSlot> timeSlots = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("weekday ASC, time_start ASC")
     private Set<TimeSlotDefault> timeSlotsDefault = new LinkedHashSet<>();
 

@@ -41,7 +41,7 @@ public class TimeSlotController {
 
         User doctor = (User) auth.getPrincipal();
 
-        Set<TimeSlotDefault> updateTimeSlots = new TreeSet<>(new Comparator<TimeSlotDefault>() {
+        Set<TimeSlotDefault> updateOnes = new TreeSet<>(new Comparator<TimeSlotDefault>() {
             @Override
             public int compare(TimeSlotDefault o1, TimeSlotDefault o2) {
                 if (o1.getWeekday() < o2.getWeekday()) {
@@ -62,12 +62,20 @@ public class TimeSlotController {
             if (apmtDefault.isTimeRangeValid()) {
                 apmtDefault.setDoctor(doctor);
                 apmtDefault.setDoctorId(doctor.getId());
-                updateTimeSlots.add(apmtDefault);
+                updateOnes.add(apmtDefault);
+            }
+        }
+        
+        List<TimeSlotDefault> deleteOnes = new ArrayList<>();
+        for (TimeSlotDefault apmtDefault : timeSlotDefaultRepository.findAllByDoctor(doctor)) {
+            if (updateOnes.stream().noneMatch(ad -> ad.equals(apmtDefault))) {
+                deleteOnes.add(apmtDefault);
             }
         }
 
-        doctor.setTimeSlotsDefault(updateTimeSlots);
-        userRepository.saveAndFlush(doctor);
+        doctor.setTimeSlotsDefault(updateOnes);
+        timeSlotDefaultRepository.deleteAll(deleteOnes);
+        timeSlotDefaultRepository.saveAll(updateOnes);
 
         results.put("timeSlots", doctor.getTimeSlotsDefault());
 

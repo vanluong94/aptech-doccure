@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -47,7 +48,7 @@ public class TimeSlotDefault {
     @JsonIgnore
     @CreatedDate
     @Column(name = "created_at", columnDefinition = "datetime default current_timestamp")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Override
     public String toString() {
@@ -75,6 +76,11 @@ public class TimeSlotDefault {
             }
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.doctorId, this.weekday, this.getTimeStart(), this.getTimeEnd());
     }
 
     @JsonIgnore
