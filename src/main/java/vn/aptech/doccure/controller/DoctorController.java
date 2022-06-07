@@ -64,6 +64,7 @@ public class DoctorController {
                 review.setPatientId(currentUser.getId());
                 modelAndView.addObject("review", review);
                 modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
+                modelAndView.addObject("clinicOpeningTimes", timeSlotService.getAllOpeningTimes(user.get()));
             } else {
                 modelAndView.addObject("isDoctorFavorite", false);
             }
