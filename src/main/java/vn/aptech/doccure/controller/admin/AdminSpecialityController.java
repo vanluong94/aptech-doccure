@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.doccure.DatabaseLoader;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.service.SpecialityService;
@@ -19,7 +18,6 @@ import vn.aptech.doccure.storage.StorageService;
 import vn.aptech.doccure.utils.StringUtils;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -58,7 +56,7 @@ public class AdminSpecialityController {
             modelAndView.addObject(Constants.OBJECT.SPECIALITY, speciality.get());
         } else {
             modelAndView.addObject(Constants.OBJECT.SPECIALITY, new Speciality());
-            modelAndView.addObject(Constants.MESSSAGE.ERROR, "Could not find this item.");
+            modelAndView.addObject(Constants.MESSAGE.ERROR, "Could not find this item.");
         }
         return modelAndView;
     }
@@ -74,7 +72,7 @@ public class AdminSpecialityController {
         try {
             if (file.getSize() > 0) {
                 if (file.getSize() > Constants.MAX_FILE_SIZE) {
-                    redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Max size of 2MB");
+                    redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Max size of 2MB");
                     return "redirect:/admin/specialities/edit/" + speciality.getId();
                 }
                 storageService.store(file);
@@ -86,13 +84,13 @@ public class AdminSpecialityController {
         try {
             Speciality specialitySave = specialityService.save(speciality);
             if (specialitySave != null) {
-                redirect.addFlashAttribute(Constants.MESSSAGE.SUCCESS, "The item has been updated successfully.");
+                redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "The item has been updated successfully.");
             } else {
-                redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Cannot update item " + speciality.getName() + ".");
+                redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Cannot update item " + speciality.getName() + ".");
             }
         } catch (Exception e) {
             logger.error("Exception when /admin/specialities/edit", e);
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Cannot update item " + speciality.getName() + ". Details: " + e.getMessage());
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Cannot update item " + speciality.getName() + ". Details: " + e.getMessage());
         }
         return "redirect:/admin/specialities/edit/" + speciality.getId();
     }
@@ -114,13 +112,13 @@ public class AdminSpecialityController {
         try {
             Speciality specialitySave = specialityService.save(speciality);
             if (specialitySave != null) {
-                redirect.addFlashAttribute(Constants.MESSSAGE.SUCCESS, "The item has been created successfully.");
+                redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "The item has been created successfully.");
             } else {
-                redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Cannot create item " + speciality.getName() + ".");
+                redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Cannot create item " + speciality.getName() + ".");
             }
         } catch (Exception e) {
             logger.error("Exception when /admin/specialities/create", e);
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Cannot create item " + speciality.getName() + ". Details: " + e.getMessage());
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Cannot create item " + speciality.getName() + ". Details: " + e.getMessage());
         }
         return "redirect:/admin/specialities";
     }
@@ -129,10 +127,10 @@ public class AdminSpecialityController {
     public String delete(@RequestParam("id") Long id, RedirectAttributes redirect) {
         try {
             specialityService.deleteById(id);
-            redirect.addFlashAttribute(Constants.MESSSAGE.SUCCESS, "The item has been successfully deleted.");
+            redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "The item has been successfully deleted.");
         } catch (Exception e) {
             logger.error("Exception when /admin/specialities/delete", e);
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "The selected item cannot be deleted. Details: " + e.getMessage());
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "The selected item cannot be deleted. Details: " + e.getMessage());
         }
         return "redirect:/admin/specialities";
     }

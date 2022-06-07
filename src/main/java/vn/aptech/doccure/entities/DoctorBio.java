@@ -59,15 +59,15 @@ public class DoctorBio implements Serializable {
     @PreUpdate
     public void sanitizeFields () {
         if (this.educations != null) {
-            this.educations = this.educations.stream().filter(a -> a.isValid()).collect(Collectors.toList());
+            this.educations = this.educations.stream().filter(DoctorEducation::isValid).collect(Collectors.toList());
         }
 
         if (this.experiences != null) {
-            this.experiences = this.experiences.stream().filter(a -> a.isValid()).collect(Collectors.toList());
+            this.experiences = this.experiences.stream().filter(DoctorExperience::isValid).collect(Collectors.toList());
         }
 
         if (this.awards != null) {
-            this.awards = this.awards.stream().filter(a -> a.isValid()).collect(Collectors.toList());
+            this.awards = this.awards.stream().filter(DoctorAward::isValid).collect(Collectors.toList());
         }
     }
 
