@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.entities.DoctorClinic;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.model.PatientDTO;
 import vn.aptech.doccure.service.AppointmentService;
+import vn.aptech.doccure.service.ClinicService;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
 
@@ -30,6 +32,9 @@ import java.util.Optional;
 @RequestMapping("/dashboard")
 @Secured("ROLE_DOCTOR")
 public class DoctorDashboardController {
+
+    @Autowired
+    ClinicService clinicService;
 
     @Autowired
     UserService userService;
@@ -70,7 +75,7 @@ public class DoctorDashboardController {
     }
 
     @PostMapping("/clinic-settings/save")
-    public String clinicPageSave(@Validated @ModelAttribute DoctorClinic clinic, BindingResult result, Authentication auth) {
+    public String clinicPageSave(@Validated @ModelAttribute DoctorClinic clinic, BindingResult result, Authentication auth, RedirectAttributes redirect) {
         if (!result.hasErrors()) {
 
             User doctor = (User) auth.getPrincipal();
@@ -97,7 +102,8 @@ public class DoctorDashboardController {
             clinic.setDoctorId(doctor.getId());
             clinic.setDoctor(doctor);
             doctor.setClinic(clinic);
-            userService.save(doctor);
+            clinicService.save(clinic);
+
             redirect.addFlashAttribute("successMessage", "Successfully updated Clinic profile.");
         }
 

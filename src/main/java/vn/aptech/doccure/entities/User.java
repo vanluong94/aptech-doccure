@@ -105,7 +105,7 @@ public class User implements UserDetails {
     )
     private Set<Service> services;
 
-    @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "doctor", cascade = CascadeType.REMOVE,orphanRemoval = true, fetch = FetchType.LAZY)
     private DoctorClinic clinic;
 
     @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

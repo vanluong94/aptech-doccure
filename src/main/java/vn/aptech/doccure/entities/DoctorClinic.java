@@ -29,7 +29,7 @@ public class DoctorClinic implements Serializable {
     private Long doctorId;
 
     @MapsId
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "doctor_id", nullable = false, foreignKey = @ForeignKey(name = "doctor_clinic_user_fk"))
     @JsonIgnore
     private User doctor;

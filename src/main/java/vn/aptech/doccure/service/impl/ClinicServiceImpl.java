@@ -13,10 +13,21 @@ import java.util.List;
 public class ClinicServiceImpl implements ClinicService {
 
     @Autowired
-    DoctorClinicRepository clinicRepository;
+    DoctorClinicRepository repository;
 
     @Override
     public List<DoctorClinic> findAllByMapBound(BigDecimal fromLat, BigDecimal toLat, BigDecimal fromLng, BigDecimal toLng) {
-        return clinicRepository.findAllByLatBetweenAndLngBetween(fromLat, toLat, fromLng, toLng);
+        return repository.findAllByLatBetweenAndLngBetween(fromLat, toLat, fromLng, toLng);
     }
+
+    @Override
+    public void save(DoctorClinic clinic) {
+        repository.save(clinic);
+    }
+
+    @Override
+    public void saveAndFlush(DoctorClinic clinic) {
+        repository.saveAndFlush(clinic);
+    }
+
 }
