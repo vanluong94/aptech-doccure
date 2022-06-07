@@ -19,10 +19,10 @@
                 <div class="col-lg-6">
 
                     <div class="error-box py-5 my-5 text-center">
-                        <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|" class="display-3 font-weight-bold">
-                            404</h1>
-                        <p th:utext="${errorMessage}" class="h2 mb-3">Error java.lang.NullPointerException</p>
-                        <a href="#" class="btn btn-primary my-4" th:href="@{/index.html}">Back to Home Page</a>
+                        <h1 th:text="${httpStatus.value}" class="display-3 font-weight-bold">404</h1>
+                        <h3 th:text="${httpStatus.reasonPhrase}" class="h2 mb-3">Oops! Page not found!</h3>
+                        <p th:text="${errorMessage}" class="h4 font-weight-normal">An error has been occurred.</p>
+                        <a href="#" class="btn btn-primary my-4" th:href="@{/}">Back to Home Page</a>
                     </div>
 
                 </div>

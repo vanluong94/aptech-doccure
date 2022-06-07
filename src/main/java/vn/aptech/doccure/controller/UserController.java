@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
+import vn.aptech.doccure.entities.DoctorBio;
 import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.User;
@@ -51,7 +50,7 @@ public class UserController {
     @ModelAttribute("specialities")
     public Iterable<Speciality> specialities() {
         Iterable<Speciality> specialities = specialityService.findAll();
-        specialities.forEach(speciality -> System.out.println(speciality.getName()));
+//        specialities.forEach(speciality -> System.out.println(speciality.getName()));
         return specialities;
     }
 
@@ -59,7 +58,7 @@ public class UserController {
     @ModelAttribute("services")
     public Iterable<Service> services() {
         Iterable<Service> services = serviceService.findAll();
-        services.forEach(service -> System.out.println(service.getName()));
+//        services.forEach(service -> System.out.println(service.getName()));
         return services;
     }
 
@@ -169,17 +168,5 @@ public class UserController {
             return "pages/patientDashboard";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
-
-    private String getPrincipal() {
-        String username = null;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = auth.getPrincipal();
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        return username;
     }
 }

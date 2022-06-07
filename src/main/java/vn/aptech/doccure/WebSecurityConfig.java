@@ -58,12 +58,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/favicon.ico").permitAll()
                 // .anyRequest().authenticated() // tạm thời comment cái này vì nó đang bắt authenticate cho mọi request ngoại trừ các matchers đã exclude bên trên
                 .and().formLogin().loginPage("/login").permitAll()
-                .and().logout(l -> l
+                .and()
+                    .logout(l -> l
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/").permitAll()
                         .deleteCookies("my-remember-me-cookie").permitAll())
-                .rememberMe().rememberMeCookieName("my-remember-me-cookie")
-                .tokenRepository(persistentTokenRepository()).tokenValiditySeconds(24 * 60 * 60).and().exceptionHandling(e -> e.accessDeniedPage("/403"));
+                    .rememberMe().rememberMeCookieName("my-remember-me-cookie")
+                    .tokenRepository(persistentTokenRepository()).tokenValiditySeconds(24 * 60 * 60)
+                .and().exceptionHandling(e -> e.accessDeniedPage("/403"));
     }
 
     private PersistentTokenRepository persistentTokenRepository() {
