@@ -62,9 +62,9 @@
 												</th:block>
 											</p>
 											<ul class="clinic-gallery">
-												<li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
-													<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
-														<img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
+												<li th:each="img : ${doctor?.clinic?.images}">
+													<a th:href="@{${'/images/' + img}}" data-fancybox="gallery">
+														<img th:src="@{${'/images/' + img}}" th:attr="data-image=${img}" alt="Feature">
 													</a>
 												</li>
 											</ul>
@@ -324,9 +324,9 @@
 												<div class="clinic-details mb-0">
 													<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic.address}"></span></h5>
 													<ul>
-														<li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
-															<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
-																<img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
+														<li th:each="img : ${doctor?.clinic?.images}">
+															<a th:href="@{${'/images/' + img}}" data-fancybox="gallery">
+																<img th:src="@{${'/images/' + img}}" th:attr="data-image=${clinicImg}" alt="Feature">
 															</a>
 														</li>
 													</ul>

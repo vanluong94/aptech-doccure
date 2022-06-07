@@ -65,7 +65,6 @@ public class DoctorDashboardController {
             clinic = user.getClinic();
         }
 
-        clinic.parseImages();
         modelAndView.addObject("clinic", clinic);
         return modelAndView;
     }
@@ -79,8 +78,7 @@ public class DoctorDashboardController {
             List<String> images;
 
             if (doctor.getClinic() != null) {
-                doctor.getClinic().parseImages();
-                images = doctor.getClinic().getParsedImages();
+                images = doctor.getClinic().getImages();
 
                 for (String img : clinic.getDeletedImages()) {
                     images.remove(img);
@@ -94,13 +92,13 @@ public class DoctorDashboardController {
                 images.add(filename);
             }
 
-            clinic.setParsedImages(images);
-            clinic.syncParsedImages();
+            clinic.setImages(images);
 
             clinic.setDoctorId(doctor.getId());
             clinic.setDoctor(doctor);
             doctor.setClinic(clinic);
             userService.save(doctor);
+            redirect.addFlashAttribute("successMessage", "Successfully updated Clinic profile.");
         }
 
         return "redirect:/dashboard/clinic-settings";
