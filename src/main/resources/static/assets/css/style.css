@@ -8557,3 +8557,52 @@ body.search-nearby footer {
 #resultsPanel {
 	min-height: 80vh !important;
 }
+
+/* SELECT2 CUSTOM */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #20c0f3;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 2px;
+    padding: 11px 25px 11px 15px;
+    border-radius: 0;
+    border: none;
+    margin: 0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    padding: 0 10px;
+    border: 0;
+    color: #fff;
+    top: 50%;
+    transform: translate(0,-50%);
+    right: 0;
+    left: unset;
+    font-size: 1.3em;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    background-color: unset;
+    color: #ebebeb;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #dcdcdc;
+}
+
+.select2-container .select2-search--inline .select2-search__field {
+    font-size: inherit;
+    margin-top: 0;
+}
+
+.select2-container--default .select2-selection--multiple {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.select2-container .select2-selection--multiple .select2-selection__rendered {
+    margin: 0;
+}
