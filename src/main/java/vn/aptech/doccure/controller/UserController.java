@@ -72,7 +72,12 @@ public class UserController {
         Optional<User> newUser = userService.findByUsername(doctor.getUsername());
         if (newUser.isPresent()) {
             modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
-            modelAndView.addObject("doctor", newUser.get());
+            User theDoctor = newUser.get();
+
+            if (theDoctor.getBio() == null) {
+                theDoctor.setBio(new DoctorBio());
+            }
+            modelAndView.addObject("doctor", theDoctor);
         } else {
             modelAndView = new ModelAndView("pages/404");
         }
@@ -85,8 +90,13 @@ public class UserController {
     }
 
     @PostMapping("dashboard/profile-settings")
-    public String saveProfileSettings(@Validated @ModelAttribute("doctor") User doctor, BindingResult result, RedirectAttributes redirect) {
+    public String saveProfileSettings(@Validated @ModelAttribute("doctor") User doctor, BindingResult result, RedirectAttributes redirect, Authentication authentication) {
         try {
+            User currentUser = (User) authentication.getPrincipal();
+            if (!currentUser.equals(doctor)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             if (result.hasErrors()) {
                 return "pages/doctor/doctor-profile-settings";
             }
@@ -119,8 +129,11 @@ public class UserController {
 
             doctor.getBio().setDoctor(doctor);
             doctor.getBio().setDoctorId(doctor.getId());
+
             doctor.setModifiedDate(LocalDateTime.now());
+
             User saveUser = userService.save(doctor);
+
             if (saveUser != null) {
                 // Luu thanh cong
                 redirect.addFlashAttribute("successMessage", "Successfully updated profile.");

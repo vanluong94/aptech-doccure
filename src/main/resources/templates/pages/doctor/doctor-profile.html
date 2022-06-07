@@ -99,7 +99,7 @@
 											</div>
 											<div class="col-6">
 
-												<a th:if="${doctor.phone}" th:href="tel:${doctor.phone}" class="btn btn-white call-btn w-100">
+												<a th:if="${doctor.phone}" th:href="${'tel:' + doctor.phone}" class="btn btn-white call-btn w-100">
 													<i class="fas fa-phone d-block"></i>
 													<small>Call</small>
 												</a>
@@ -150,14 +150,78 @@
 										<div class="col-md-12 col-lg-9">
 
 											<!-- About Details -->
-											<div class="widget about-widget">
+											<div class="widget about-widget" th:unless="${doctor?.bio.biography.isEmpty}">
 												<h4 class="widget-title">About Me</h4>
 												<p th:text="${doctor?.bio?.biography}"></p>
 											</div>
 											<!-- /About Details -->
 
+											<!-- Education Details -->
+											<div class="widget education-widget" th:unless="${doctor?.bio?.educations.isEmpty}">
+												<h4 class="widget-title">Education</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="education : ${doctor.bio.educations}" th:object="${education}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name" th:text="*{college}"></a>
+																	<div th:text="${degree}"></div>
+																	<span class="time"><th:block th:text="*{from}"></th:block> - <th:block th:text="*{to}"></th:block></span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Education Details -->
+									
+											<!-- Experience Details -->
+											<div class="widget experience-widget" th:unless="${doctor?.bio?.experiences.isEmpty}">
+												<h4 class="widget-title">Work & Experience</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="experience : ${doctor.bio.experiences}" th:object="${experience}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name" th:text="*{hospital}"></a>
+																	<span class="time"><th:block th:text="*{from}"></th:block> - <th:block th:text="*{to.isEmpty} ? 'Present' : *{to}"></th:block></span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Experience Details -->
+								
+											<!-- Awards Details -->
+											<div class="widget awards-widget" th:unless="${doctor?.bio?.awards.isEmpty}">
+												<h4 class="widget-title">Awards</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="award : ${doctor.bio.awards}" th:object="${award}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<p class="exp-year" th:text="*{year}"></p>
+																	<h4 class="exp-title" th:text="*{award}"></h4>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Awards Details -->
+
 											<!-- Services List -->
-											<div class="service-list">
+											<div class="service-list" th:unless="${doctor?.services.isEmpty}">
 												<h4>Services</h4>
 												<ul class="clearfix" th:each="service : ${doctor?.services}">
 													<li th:text="${service.name}">Tooth cleaning</li>
@@ -166,7 +230,7 @@
 											<!-- /Services List -->
 
 											<!-- Specializations List -->
-											<div class="service-list">
+											<div class="service-list" th:unless="${doctor?.specialities.isEmpty}">
 												<h4>Specializations</h4>
 												<ul class="clearfix" th:each="speciality : ${doctor?.specialities}">
 													<li th:text="${speciality.name}">Children Care</li>
