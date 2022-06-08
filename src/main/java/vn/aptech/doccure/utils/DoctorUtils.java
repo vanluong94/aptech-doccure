@@ -10,4 +10,8 @@ public class DoctorUtils {
                 .buildAndExpand(doctor.getId())
                 .toUriString();
     }
+
+    public static String getDoctorBookingUrl(User doctor) {
+        return getDoctorProfileUrl(doctor).concat("/booking");
+    }
 }

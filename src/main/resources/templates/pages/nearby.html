@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Search nearby</title>
+</head>
+<body>
+<div class="page-content" layout:fragment="layoutContent">
+
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid">
+
+            <div id="resultsPanel">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-12 order-md-last order-sm-last order-last map-left">
+    
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-6 col">
+                                <h4><span id="resultsCount">0</span> Doctors found</h4>
+                            </div>
+                        </div>
+    
+                        <div id="resultsGrid" class="row"></div>
+                    </div>
+    
+                    <div class="col-xl-6 col-lg-12 map-right">
+                        <div id="map" class="map-listing"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+
+</div>
+
+<th:block layout:fragment="customScripts">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6adZVdzTvBpE2yBRK8cDfsss8QXChK0I&libraries=geometry"></script>
+    <script src="/assets/js/search-nearby.js"></script>
+</th:block>
+
+</body>
+</html>

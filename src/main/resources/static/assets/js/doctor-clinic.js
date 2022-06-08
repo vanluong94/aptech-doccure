@@ -82,7 +82,7 @@ function locateCurrentPosition() {
 	}
 }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+function handleLocationError(browserHasGeolocation) {
 	alert(
 		browserHasGeolocation
 		? "Error: The Geolocation service failed."

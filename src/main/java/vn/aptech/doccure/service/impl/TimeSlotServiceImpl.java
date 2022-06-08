@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
+import vn.aptech.doccure.model.ClinicOpeningTimes;
 import vn.aptech.doccure.repositories.TimeSlotRepository;
 import vn.aptech.doccure.service.TimeSlotService;
 
@@ -12,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,5 +94,30 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     @Override
     public TimeSlot findUpcomingAvailable(User doctor) {
         return timeSlotRepository.findFirstByDoctorAndTimeStartAfterAndAppointmentIsNullOrderByTimeStartAsc(doctor, LocalDateTime.now());
+    }
+
+    @Override
+    public ClinicOpeningTimes getOpeningTimesOnDate(User doctor, LocalDateTime date) {
+        String sql = "SELECT min(time_start) as opening, max(time_end) as closing FROM time_slots WHERE doctor_id = :doctorId AND CAST(time_start AS DATE) = CAST(:theDate AS DATE)";
+        Query query = entityManager.createNativeQuery(sql,"ClinicOpeningTimesMapping")
+                .setParameter("doctorId", doctor.getId())
+                .setParameter("theDate", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        return (ClinicOpeningTimes) query.getSingleResult();
+    }
+
+    @Override
+    public List<ClinicOpeningTimes> getAllOpeningTimes(User doctor) {
+
+        List<ClinicOpeningTimes> results = new LinkedList<>();
+
+        LocalDateTime today = LocalDateTime.now();
+        int todayDayOfWeek = today.getDayOfWeek().getValue();
+
+        for (int i=1; i<8; i++) {
+            LocalDateTime thatDay = today.plusDays(i - todayDayOfWeek);
+            results.add(this.getOpeningTimesOnDate(doctor, thatDay));
+        }
+
+        return results;
     }
 }

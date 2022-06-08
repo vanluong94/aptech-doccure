@@ -1,5 +1,6 @@
 package vn.aptech.doccure.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,8 +31,9 @@ public class Service implements Serializable  {
     @Column(name = "slug", nullable = false, unique = true, length = 100)
     private String slug;
 
-    @ManyToMany(mappedBy = "services")
-    private Set<User> users;
+    @ManyToMany(targetEntity = vn.aptech.doccure.entities.User.class, mappedBy = "services", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<User> doctors;
 
     public Service(String name) {
         this.name = name;
