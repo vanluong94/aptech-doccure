@@ -3491,10 +3491,13 @@ html.menu-opened body {
     font-size: 14px;
     margin-bottom: 8px;
 }
+.doc-department > a {
+    color: #20c0f3;
+}
 .doc-department img {
     width: 19px;
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 .doc-location {
     color: #757575;
