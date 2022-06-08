@@ -12,8 +12,11 @@ public interface ServiceService {
 
     Service save(Service service);
 
+    Optional<Service> findById(Long Id);
+
     List<Service> findByDoctor(User doctor);
 
     Optional<Service> findBySlug(String slug);
 
+    void deleteById(Long Id);
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.doccure.DatabaseLoader;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.service.SpecialityService;
@@ -19,7 +18,6 @@ import vn.aptech.doccure.storage.StorageService;
 import vn.aptech.doccure.utils.StringUtils;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Locale;
 import java.util.Optional;
 
 @Controller

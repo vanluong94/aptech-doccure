@@ -24,22 +24,26 @@ import java.util.Set;
 public class AdminPatientController {
     @Autowired
     private UserService userService;
+
     @Autowired
     private SpecialityService specialityService;
+
     @Autowired
     private ServiceService serviceService;
     @Autowired
     private RoleService roleService;
+
     @GetMapping
-    public ModelAndView getPatientList(){
+    public ModelAndView getPatientList() {
         ModelAndView modelAndView = new ModelAndView("/admin/pages/patients/patient-list");
         Set<Role> patientRoles = new HashSet<>();
         patientRoles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
         modelAndView.addObject("patients", userService.findAllByRolesInOrderByIdAsc(patientRoles));
         return modelAndView;
     }
+
     @GetMapping("/edit/{id}")
-    public ModelAndView editPatient(@PathVariable("id") Long id, RedirectAttributes redirect){
+    public ModelAndView editPatient(@PathVariable("id") Long id, RedirectAttributes redirect) {
         ModelAndView modelAndView = new ModelAndView("/admin/pages/users/user-edit");
         return modelAndView;
     }
