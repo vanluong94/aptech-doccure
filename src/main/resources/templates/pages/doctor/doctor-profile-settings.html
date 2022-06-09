@@ -39,7 +39,7 @@
 				<div class="col-md-7 col-lg-8 col-xl-9">
 				<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 				<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
-				<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${doctor}" enctype="multipart/form-data">
+				<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${doctor}" enctype="multipart/form-data" th:method="PUT">
 					<div th:if="${#fields.hasAnyErrors()}">
 						<ul>
 							<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
