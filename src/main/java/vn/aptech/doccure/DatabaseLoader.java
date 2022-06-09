@@ -87,7 +87,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 admin.setUsername("admin");
                 admin.setPassword(PASSWORD_ENCODER.encode("admin"));
                 admin.setRoles(roles);
-                admin.setEnabled(1);
+                admin.setStatus(1);
                 userService.save(admin);
                 logger.info("Inserting user record for " + admin.getEmail());
             }
@@ -103,7 +103,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 user.setUsername("sample_patient");
                 user.setPassword(PASSWORD_ENCODER.encode("123456"));
                 user.setRoles(roles);
-                user.setEnabled(1);
+                user.setStatus(1);
                 userService.save(user);
                 logger.info("Inserting user record for " + user.getEmail());
             }
@@ -119,7 +119,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 user.setUsername("sample_doctor");
                 user.setPassword(PASSWORD_ENCODER.encode("123456"));
                 user.setRoles(roles);
-                user.setEnabled(1);
+                user.setStatus(1);
                 userService.save(user);
                 logger.info("Inserting user record for " + user.getEmail());
             }

@@ -17,7 +17,7 @@ const getAjaxCsrfTokenHeader = () => {
 
 const addLoadingOverlay = ($el) => {
 
-    let $loadingOverlay = jQuery(`<div class="loading-overlay align-items-center d-flex justify-content-center position-absolute" style="top: 0;right: 0;bottom: 0;left: 0;z-index: 99;background-color: #ffffffcc;">
+    let $loadingOverlay = jQuery(`<div class="loading-overlay align-items-center d-flex justify-content-center position-absolute" style="top: 0;right: 0;bottom: 0;left: 0;z-index: 99999;background-color: #ffffffcc;">
         <div class="spinner-border text-secondary" role="status">
         <span class="sr-only">Loading...</span>
         </div>
@@ -57,7 +57,10 @@ const favoriteDoctorToggle = ($btn, callback) => {
             $btn.addClass('disabled');
         },
         success(resp) {
-            callback(resp);
+            $btn.toggleClass('fav-active', resp.data.isFavorite);
+            if (callback instanceof Function) {
+                callback(resp);
+            }
         },
         complete(xhr) {
             $btn.removeClass('disabled');

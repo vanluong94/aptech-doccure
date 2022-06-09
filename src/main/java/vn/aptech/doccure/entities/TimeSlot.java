@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import vn.aptech.doccure.model.ClinicOpeningTimes;
 import vn.aptech.doccure.utils.DateUtils;
 
 import javax.persistence.*;
@@ -22,21 +23,35 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SqlResultSetMapping(
-        name = "TimeSlotDTOMapping",
-        classes = {
-                @ConstructorResult(
-                        targetClass = TimeSlot.class,
-                        columns = {
-                                @ColumnResult(name = "id", type = Long.class),
-                                @ColumnResult(name = "appointment_id", type = Long.class),
-                                @ColumnResult(name = "doctor_id", type = Long.class),
-                                @ColumnResult(name = "time_start", type = LocalDateTime.class),
-                                @ColumnResult(name = "time_end", type = LocalDateTime.class),
-                        }
-                )
-        }
-)
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "TimeSlotDTOMapping",
+                classes = {
+                        @ConstructorResult(
+                                targetClass = TimeSlot.class,
+                                columns = {
+                                        @ColumnResult(name = "id", type = Long.class),
+                                        @ColumnResult(name = "appointment_id", type = Long.class),
+                                        @ColumnResult(name = "doctor_id", type = Long.class),
+                                        @ColumnResult(name = "time_start", type = LocalDateTime.class),
+                                        @ColumnResult(name = "time_end", type = LocalDateTime.class),
+                                }
+                        )
+                }
+        ),
+        @SqlResultSetMapping(
+                name = "ClinicOpeningTimesMapping",
+                classes = {
+                        @ConstructorResult(
+                                targetClass = ClinicOpeningTimes.class,
+                                columns = {
+                                        @ColumnResult(name = "opening", type = LocalDateTime.class),
+                                        @ColumnResult(name = "closing", type = LocalDateTime.class)
+                                }
+                        )
+                }
+        )
+})
 public class TimeSlot {
 
     @Id

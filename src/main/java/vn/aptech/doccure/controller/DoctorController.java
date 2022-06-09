@@ -15,6 +15,7 @@ import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.*;
 import vn.aptech.doccure.model.ReviewRequestDTO;
 import vn.aptech.doccure.service.*;
+import vn.aptech.doccure.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +40,11 @@ public class DoctorController {
     @Autowired
     private ReviewService reviewService;
 
+    @ModelAttribute("now")
+    public LocalDateTime nowModelAttribute() {
+        return LocalDateTime.now();
+    }
+
     @GetMapping("/profile/{id}")
     public ModelAndView profile(@PathVariable("id") Long id, Authentication authentication) {
         ModelAndView modelAndView;
@@ -59,6 +65,7 @@ public class DoctorController {
                 review.setPatientId(currentUser.getId());
                 modelAndView.addObject("review", review);
                 modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
+                modelAndView.addObject("clinicOpeningTimes", timeSlotService.getAllOpeningTimes(user.get()));
             } else {
                 modelAndView.addObject("isDoctorFavorite", false);
             }
@@ -105,21 +112,20 @@ public class DoctorController {
 
         List<Object> weekdays = new LinkedList<>();
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter weekdayFormatter = DateTimeFormatter.ofPattern("eee");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
         for (int i=0; i<8; i++) {
             LocalDateTime theDate = now.plusDays(i);
             Map<String, Object> weekdayData = new HashMap<>();
 
-            weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
-            weekdayData.put("textDate", theDate.format(dateFormatter));
+            weekdayData.put("textWeekday", DateUtils.toShortenWeekday(theDate));
+            weekdayData.put("textDate", DateUtils.toStandardDate(theDate));
             weekdayData.put("slots", timeSlotService.findAllByDoctorOnDate(user.get().getId(), theDate));
 
             weekdays.add(weekdayData);
         }
 
-        modelAndView.addObject("now", now);
+        modelAndView.addObject("nowDateText", DateUtils.toStandardDate(now));
+        modelAndView.addObject("nowWeekdayText", DateUtils.toStandardWeekday(now));
         modelAndView.addObject("doctor", user.get());
         modelAndView.addObject("weekdays", weekdays);
 

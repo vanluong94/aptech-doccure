@@ -22,14 +22,17 @@ import java.util.Set;
 public class AdminDoctorController {
     @Autowired
     private UserService userService;
+
     @Autowired
     private SpecialityService specialityService;
+
     @Autowired
     private ServiceService serviceService;
     @Autowired
     private RoleService roleService;
+
     @GetMapping
-    public ModelAndView getDoctorList(){
+    public ModelAndView getDoctorList() {
         ModelAndView modelAndView = new ModelAndView("/admin/pages/doctors/doctor-list");
         Set<Role> doctorRoles = new HashSet<>();
         doctorRoles.add(roleService.findByName(Constants.Roles.ROLE_DOCTOR));
