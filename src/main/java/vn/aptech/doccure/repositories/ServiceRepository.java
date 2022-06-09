@@ -10,8 +10,12 @@ import java.util.Optional;
 
 public interface ServiceRepository extends CrudRepository<Service, Long> {
 
-    List<Service> findAllByDoctors(User doctor);
+    Optional<Service> findById(Long Id);
 
     Optional<Service> findBySlug(String slug);
 
+    List<Service> findAllByDoctors(User doctor);
+
+    void deleteById(Long Id);
+    
 }

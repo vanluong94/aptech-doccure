@@ -70,13 +70,15 @@
 													</td>
 													<td th:if="${user.hasAnyRole()}">
 														<th:block th:each="role : ${user.roles}">
-															<span th:utext="${role.roleText}"></span><br/>
+															<span th:classappend="${role.roleText == 'Admin' ? 'badge badge-danger' : 'badge badge-info'}" th:utext="${role.roleText}"></span><br/>
 														</th:block>
 													</td>
 													<td th:text="${user.genderText}"></td>
 													<td th:text="${user.email}"></td>
 													<td th:text="${user.phone}"></td>
-													<td th:text="${user.statusText}"></td>
+													<td>
+														<span th:classappend="${user.status == 0 ? 'badge badge-danger' : 'badge badge-success'}" th:utext="${user.statusText}"></span><br/>
+													</td>
 													<td class="text-right">
 														<div class="actions">
 															<a class="btn btn-sm bg-success-light"
@@ -102,7 +104,7 @@
 				</div>
 			</div>
 			<div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
-				<div class="modal-dialog modal-dialog-centered" role="document" >
+				<div class="modal-dialog modal-dialog-centered" role="document">
 					<div class="modal-content">
 						<form action="#" th:action="@{/admin/users/delete}" method="post">
 							<div class="modal-body">

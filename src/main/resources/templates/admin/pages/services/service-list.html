@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout}"
+>
+	<head>
+
+	</head>
+    <body>
+		<!-- Page Wrapper -->
+		<div class="page-wrapper" layout:fragment="layoutContent">
+			<div class="content container-fluid">
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row">
+						<div class="col-sm-7 col-auto">
+							<h3 class="page-title">List of Services</h3>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+								<li class="breadcrumb-item active">Services</li>
+							</ul>
+						</div>
+						<div class="col-sm-5 col">
+							<a th:href="@{/admin/services/create}" class="btn btn-primary float-right mt-2">Add new Service</a>
+						</div>
+					</div>
+				</div>
+				<!-- /Page Header -->
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+								<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+								<div class="table-responsive">
+									<table class="datatable table table-hover table-center mb-0">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Service</th>
+												<th>Doctor</th>
+												<th class="text-right">Actions</th>
+											</tr>
+										</thead>
+										<tbody th:if="${#lists.isEmpty(services)}">
+										<tr>
+											<td colspan="4">No Data.</td>
+										</tr>
+										</tbody>
+										<tbody th:unless="${#lists.isEmpty(services)}">
+											<tr th:each="service : ${services}">
+												<th scope="row" th:text="${service.id}"></th>
+												<td>
+													<h2 class="table-avatar">
+														<a th:href="@{/service/{slug}(slug=${service.slug})}" th:text="${service.name}">Dental Fillings</a>
+													</h2>
+												</td>
+												<td th:text="${service?.users?.size()}"></td>
+												<td class="text-right">
+													<div class="actions">
+														<a class="btn btn-sm bg-info-light"
+														   th:href="@{/service/{slug}(slug=${service.slug})}"
+															th:utext="'<i class=\'fa fa-eye\'></i>View'">
+														</a>
+														<a class="btn btn-sm bg-success-light"
+														   th:href="@{/admin/services/edit/{id}(id=${service.id})}"
+														   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">
+														</a>
+														<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
+																data-target="#confirmModal"
+																th:attr="data-whatever=${service.id}"
+																th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
+														</button>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Delete Modal -->
+			<div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<form action="#" th:action="@{/admin/services/delete}" method="post">
+							<div class="modal-body">
+								<div class="form-content p-2">
+									<h4 class="modal-title">Delete</h4>
+									<p class="mb-4">Are you sure want to delete?</p>
+									<input type="hidden" name="id" id="id">
+									<button type="submit" class="btn btn-primary">Confirm</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- /Delete Modal -->
+			</div>
+		</div>
+		<!-- /Page Wrapper -->
+		<!-- /Main Wrapper -->
+    </body>
+</html>

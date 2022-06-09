@@ -24,6 +24,8 @@ public interface Constants {
     interface OBJECT {
         String SPECIALITY = "speciality";
         String SPECIALITIES = "specialities";
+        String SERVICE = "service";
+        String SERVICES = "services";
     }
 
     interface PAGE_VIEW {
@@ -32,6 +34,11 @@ public interface Constants {
                 String LIST_PAGE = "admin/pages/specialities/specialities-list";
                 String NEW_PAGE = "admin/pages/specialities/specialities-new";
                 String EDIT_PAGE = "admin/pages/specialities/specialities-edit";
+            }
+            interface SERVICES {
+                String LIST_PAGE = "admin/pages/services/service-list";
+                String NEW_PAGE = "admin/pages/services/service-new";
+                String EDIT_PAGE = "admin/pages/services/service-edit";
             }
         }
     }

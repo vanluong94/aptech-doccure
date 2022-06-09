@@ -37,8 +37,8 @@ public class User implements UserDetails {
     @Column(name = "password", length = 100)
     private String password;
 
-    @Column(name = "enabled", nullable = false)
-    private Integer enabled = 1;
+    @Column(name = "status", nullable = false)
+    private Integer status = 1;
 
     @Email
     @NotEmpty(message = "Email must not be null or empty!")
@@ -131,8 +131,8 @@ public class User implements UserDetails {
     @Column(unique = true)
     private Long resetPasswordToken;
 
-    public User(Integer enabled, Set<Role> roles) {
-        this.enabled = enabled;
+    public User(Integer status, Set<Role> roles) {
+        this.status = status;
 //        this.roles = roles;
     }
 
@@ -161,7 +161,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.getEnabled() == 1;
+        return status == 1;
     }
 
     public boolean hasRole(String role) {
@@ -237,12 +237,12 @@ public class User implements UserDetails {
     }
 
     public String getStatusValueText(){
-        return enabled.toString();
+        return status.toString();
     }
 
     public String getStatusText(){
-        if(enabled != null){
-            if(this.isEnabled()) return "Activated";
+        if(status != null) {
+            if(status == 1) return "Activated";
             else return "Locked";
         }
         return "Unknown";
