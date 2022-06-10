@@ -48,7 +48,6 @@ public class TimeSlotServiceImpl implements TimeSlotService {
                 "  slots.id" +
                 "  ,slots.appointment_id " +
                 "  ,slot_default.doctor_id " +
-                "  ,slots.patient_id " +
                 "  ,slot_default.slot_datetime_start AS time_start " +
                 "  ,slot_default.slot_datetime_end AS time_end " +
                 "FROM" +

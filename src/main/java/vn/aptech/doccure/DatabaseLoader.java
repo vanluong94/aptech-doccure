@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -74,7 +75,9 @@ public class DatabaseLoader implements CommandLineRunner {
                 logger.info("INSERT ROLE DOCTOR");
             }
 
-            if (!userService.findByEmail("admin@gmail.com").isPresent()) {
+            try {
+                userService.findByUsername("admin");
+            } catch (UsernameNotFoundException e) {
                 User admin = new User();
                 Set<Role> roles = new HashSet<>();
                 Role roleAdmin = new Role();
@@ -93,7 +96,9 @@ public class DatabaseLoader implements CommandLineRunner {
             }
             logger.info("-------------------------------");
 
-            if (!userService.findByEmail("sample_patient@gmail.com").isPresent()) {
+            try {
+                userService.findByUsername("sample_patient");
+            } catch (UsernameNotFoundException e) {
                 User user = new User();
                 Set<Role> roles = new HashSet<>();
                 roles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
@@ -109,7 +114,9 @@ public class DatabaseLoader implements CommandLineRunner {
             }
             logger.info("-------------------------------");
 
-            if (!userService.findByEmail("sample_doctor@gmail.com").isPresent()) {
+            try {
+                userService.findByUsername("sample_doctor");
+            } catch (UsernameNotFoundException e) {
                 User user = new User();
                 Set<Role> roles = new HashSet<>();
                 roles.add(roleService.findByName(Constants.Roles.ROLE_DOCTOR));
