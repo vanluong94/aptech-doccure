@@ -89,7 +89,7 @@ function showMarkerInfo(marker) {
 					'<a href="' + marker.profile_link + '" tabindex="0">' + marker.title + '</a>' +
 					'<i class="fas fa-check-circle verified"></i>' +
 				'</h3>' +
-				'<p class="speciality">' + marker.eduSpecialtiesText + '</p>' +
+				'<p class="speciality">' + marker.specialtiesText + '</p>' +
 				'<div class="rating">' +
 					'<i class="fas fa-star filled"></i>' +
 					'<i class="fas fa-star filled"></i>' +
@@ -166,7 +166,7 @@ function loadResultsGrid(items) {
 						<a href="${item.url}">${item.title}</a>
 						<i class="fas fa-check-circle verified"></i>
 					</h3>
-					<p class="speciality">${item.eduSpecialtiesText}</p>
+					<p class="speciality">${item.specialtiesText}</p>
 					<div class="rating">
 						${rating}
 						<span class="d-inline-block average-rating">(${item.totalReviews})</span>
