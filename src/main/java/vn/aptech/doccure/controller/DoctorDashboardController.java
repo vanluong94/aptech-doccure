@@ -26,6 +26,7 @@ import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,13 +61,6 @@ public class DoctorDashboardController {
 
         if (user.getClinic() == null) {
             clinic = new DoctorClinic();
-//            clinic.setName("Smile Cute Dental Care Center");
-//            clinic.setSpecialities("MDS - Periodontology and Oral Implantology, BDS");
-//            clinic.setAddressLine1("2286 Sundown Lane");
-//            clinic.setCity("Austin");
-//            clinic.setState("Texas");
-//            clinic.setCountry("USA");
-//            clinic.setPostalCode(78749);
         } else {
             clinic = user.getClinic();
         }
@@ -147,58 +141,5 @@ public class DoctorDashboardController {
         model.addAttribute("patient", PatientDTO.from(userResult.get()));
 
         return "pages/dashboard/patientProfile";
-    }
-
-    @GetMapping("dashboard/profile-settings")
-    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
-    public ModelAndView profile(Authentication authentication) {
-        User userLogin = (User) authentication.getPrincipal();
-        User newUser = userService.findById(userLogin.getId()).orElseThrow(() -> new UsernameNotFoundException(userLogin.getUsername() + " not found"));
-        ModelAndView modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
-        modelAndView.addObject("doctor", newUser);
-        return modelAndView;
-    }
-
-    @PostMapping("dashboard/profile-settings")
-    @Secured({"ROLE_DOCTOR", "ROLE_PATIENT"})
-    public String saveProfileSettings(@Validated User doctor, BindingResult result, RedirectAttributes redirect, Authentication authentication) {
-        try {
-            User userLogin = (User) authentication.getPrincipal();
-            if (Objects.equals(doctor.getId(), userLogin.getId())) {
-                if (result.hasErrors()) {
-                    return "pages/doctor/doctor-profile-settings";
-                }
-                try {
-                    MultipartFile file = doctor.getAvatarMultipartFile();
-                    String fileName = file.getOriginalFilename();
-                    if (file.getSize() > 0) {
-                        if (file.getSize() > Constants.MAX_FILE_SIZE) {
-                            redirect.addFlashAttribute("errorMessage", "Max size of 2MB");
-                            return "redirect:/dashboard/profile-settings";
-                        }
-                        storageService.store(file);
-                        doctor.setAvatar(fileName);
-                    }
-                } catch (StorageException e) {
-                    doctor.setAvatar("avatar-admin.png");
-                }
-
-                doctor.getBio().setDoctor(doctor);
-                doctor.getBio().setDoctorId(doctor.getId());
-                doctor.setModifiedDate(LocalDateTime.now());
-                User saveUser = userService.save(doctor);
-                if (saveUser != null) {
-                    redirect.addFlashAttribute("successMessage", "Profile updated successfully");
-                } else {
-                    redirect.addFlashAttribute("errorMessage", "Profile update failure");
-                }
-            } else {
-                redirect.addFlashAttribute("errorMessage", "Not found");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirect.addFlashAttribute("errorMessage", "Error. Detail: " + e.getMessage());
-        }
-        return "redirect:/dashboard/profile-settings";
     }
 }

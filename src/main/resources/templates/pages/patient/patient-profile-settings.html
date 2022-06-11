@@ -37,7 +37,7 @@
 				<div class="col-md-7 col-lg-8 col-xl-9">
 				<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 				<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
-				<form id="patientProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${patient}" enctype="multipart/form-data">
+				<form id="patientProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${user}" enctype="multipart/form-data" th:method="PUT">
 					<div th:if="${#fields.hasAnyErrors()}">
 						<ul>
 							<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
@@ -45,7 +45,7 @@
 					</div>
 					<input type="hidden" th:field="*{id}">
 					<input type="hidden" th:field="*{avatar}">
-					<input type="hidden" th:each="role : ${patient.roles}" th:name="roles" th:value="${role.id}"/>
+					<input type="hidden" th:each="role : ${user.roles}" th:name="roles" th:value="${role.id}"/>
 					<!-- Basic Information -->
 					<div class="card">
 						<div class="card-body">
@@ -55,7 +55,7 @@
 									<div class="form-group">
 										<div class="change-avatar">
 											<div class="profile-img">
-												<img src="#" th:src="${patient.theAvatar}" alt="User Image">
+												<img src="#" th:src="${user.theAvatar}" alt="User Image">
 											</div>
 											<div class="upload-img">
 												<div class="change-photo-btn">
@@ -130,17 +130,17 @@
 							<div class="form-group mb-0">
 								<label>Blood Type</label>
 								<input type="text" class="form-control" th:field="*{patientBio.bloodType}">
-								<p th:if="${#fields.hasErrors('${patient.patientBio.bloodType}')}" th:field="*{patientBio.bloodType}" class="invalid-feedback"></p>
+								<p th:if="${#fields.hasErrors('${user.patientBio.bloodType}')}" th:field="*{patientBio.bloodType}" class="invalid-feedback"></p>
 							</div>
 							<div class="form-group mb-0">
 								<label>Height</label>
 								<input type="text" class="form-control" th:field="*{patientBio.height}">
-								<p th:if="${#fields.hasErrors('${patient.patientBio.height}')}" th:field="*{patientBio.height}" class="invalid-feedback"></p>
+								<p th:if="${#fields.hasErrors('${user.patientBio.height}')}" th:field="*{patientBio.height}" class="invalid-feedback"></p>
 							</div>
 							<div class="form-group mb-0">
 								<label>Weight</label>
 								<input type="text" class="form-control" th:field="*{patientBio.weight}">
-								<p th:if="${#fields.hasErrors('${patient.patientBio.weight}')}" th:field="*{patientBio.weight}" class="invalid-feedback"></p>
+								<p th:if="${#fields.hasErrors('${user.patientBio.weight}')}" th:field="*{patientBio.weight}" class="invalid-feedback"></p>
 							</div>
 						</div>
 					</div>

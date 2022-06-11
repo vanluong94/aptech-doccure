@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
@@ -58,24 +55,23 @@ public class UserController {
         return serviceService.findAll();
     }
 
-
-    @GetMapping("dashboard/profile-settings")
+    @GetMapping("/dashboard/profile-settings")
     @Secured({Constants.Roles.ROLE_DOCTOR, Constants.Roles.ROLE_PATIENT})
-    public ModelAndView profile(HttpServletRequest request) {
-        User userLogin = (User) request.getUserPrincipal();
+    public ModelAndView profile(Authentication auth) {
+        User userLogin = (User) auth.getPrincipal();
         User newUser = userService.findById(userLogin.getId()).orElseThrow(() -> new UsernameNotFoundException(userLogin.getUsername() + " not found"));
         ModelAndView modelAndView;
-        if (request.isUserInRole(Constants.Roles.ROLE_DOCTOR)) {
+        if (newUser.isDoctor()) {
             modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
-            modelAndView.addObject("doctor", newUser);
+            modelAndView.addObject("user", newUser);
         } else {
             modelAndView = new ModelAndView("pages/patient/patient-profile-settings");
-            modelAndView.addObject("patient", newUser);
+            modelAndView.addObject("user", newUser);
         }
         return modelAndView;
     }
 
-    @PostMapping("dashboard/profile-settings")
+    @PutMapping("/dashboard/profile-settings")
     @Secured({Constants.Roles.ROLE_DOCTOR, Constants.Roles.ROLE_PATIENT})
     public String saveProfileSettings(@Validated User user, BindingResult result, RedirectAttributes redirect, Authentication authentication) {
         try {
@@ -107,6 +103,7 @@ public class UserController {
                     user.getPatientBio().setPatientId(user.getId());
                     user.setModifiedDate(LocalDateTime.now());
                 }
+                user.setPassword(userLogin.getPassword());
                 User saveUser = userService.save(user);
                 if (saveUser != null) {
                     redirect.addFlashAttribute("successMessage", "Profile updated successfully");
@@ -136,6 +133,21 @@ public class UserController {
             modelAndView = new ModelAndView("pages/404");
         }
         return modelAndView;
+    }
+
+
+    @GetMapping("test/change-password")
+    @Secured({Constants.Roles.ROLE_DOCTOR, Constants.Roles.ROLE_PATIENT, Constants.Roles.ROLE_ADMIN})
+    public String changePassword() {
+        User currentUser = userService.findById(2L).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+        currentUser.setPassword(passwordEncoder.encode("123456"));
+        currentUser.setModifiedDate(LocalDateTime.now());
+        if (userService.save(currentUser) != null) {
+            System.out.println("Awesome, you've successfully updated your password.");
+        } else {
+            System.out.println("A system error has occurred. Please try again later...");
+        }
+        return "redirect:/dashboard";
     }
 
     @PostMapping("dashboard/change-password")
@@ -199,17 +211,5 @@ public class UserController {
             return "pages/patientDashboard";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
-
-    private String getPrincipal() {
-        String username = null;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = auth.getPrincipal();
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        return username;
     }
 }
