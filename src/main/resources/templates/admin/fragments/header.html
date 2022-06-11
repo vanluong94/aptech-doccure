@@ -33,15 +33,15 @@
             <!-- User Menu -->
             <li class="nav-item dropdown has-arrow">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                    <span class="user-img"><img class="rounded-circle" th:src="${loggedUser?.theAvatar}" width="31" alt="Ryan Taylor"></span>
+                    <span class="user-img"><img class="rounded-circle" th:src="${user?.theAvatar}" width="31" alt="Ryan Taylor"></span>
                 </a>
                 <div class="dropdown-menu">
                     <div class="user-header">
                         <div class="avatar avatar-sm">
-                            <img th:src="${loggedUser?.theAvatar}" alt="User Image" class="avatar-img rounded-circle">
+                            <img th:src="${user?.theAvatar}" alt="User Image" class="avatar-img rounded-circle">
                         </div>
                         <div class="user-text">
-                            <h6 th:text="${loggedUser.fullName"></h6>
+                            <h6 th:text="${user.fullName"></h6>
                         </div>
                     </div>
                     <a class="dropdown-item" th:href="@{/admin/profile}">My Profile</a>

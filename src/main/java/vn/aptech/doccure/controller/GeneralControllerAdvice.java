@@ -24,7 +24,7 @@ public class GeneralControllerAdvice {
             User user = (User) auth.getPrincipal();
             Optional<User> doctor = userService.findByUsername(user.getUsername());
             if (doctor.isPresent()) {
-                model.addAttribute("loggedUser", doctor.get());
+                model.addAttribute("user", doctor.get());
 
                 if (user.isDoctor()) {
                     model.addAttribute("doctorDto", DoctorDTO.from(doctor.get()));

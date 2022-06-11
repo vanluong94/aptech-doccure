@@ -39,7 +39,7 @@
 						<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 						<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 						
-						<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${user}" enctype="multipart/form-data">
+						<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${profileUser}" enctype="multipart/form-data">
 
 							<div th:if="${#fields.hasAnyErrors()}">
 								<ul>
@@ -49,7 +49,7 @@
 
 							<input type="hidden" th:field="*{id}">
 							<input type="hidden" th:field="*{avatar}">
-							<input type="hidden" th:each="role : ${user.roles}" th:name="roles" th:value="${role.id}"/>
+							<input type="hidden" th:each="role : ${profileUser.roles}" th:name="roles" th:value="${role.id}"/>
 
 							<!-- Basic Information -->
 							<div class="card">
@@ -60,7 +60,7 @@
 											<div class="form-group">
 												<div class="change-avatar">
 													<div class="profile-img">
-														<img src="#" th:src="${user.theAvatar}" alt="User Image">
+														<img src="#" th:src="${profileUser.theAvatar}" alt="User Image">
 													</div>
 													<div class="upload-img">
 														<div class="change-photo-btn">
@@ -169,7 +169,7 @@
 								<div class="card-body">
 									<h4 class="card-title">Education</h4>
 									<div class="education-info">
-										<div class="row form-row education-cont" th:each="education, stat : ${doctor.bio.educations}">
+										<div class="row form-row education-cont" th:each="education, stat : ${profileUser.bio.educations}">
 											<div class="col-12 col-md-10 col-lg-11">
 												<div class="row form-row">
 													<div class="col-12 col-md-3">
@@ -213,7 +213,7 @@
 								<div class="card-body">
 									<h4 class="card-title">Experience</h4>
 									<div class="experience-info">
-										<div class="row form-row experience-cont" th:each="experience, stat : ${doctor.bio.experiences}">
+										<div class="row form-row experience-cont" th:each="experience, stat : ${profileUser.bio.experiences}">
 											<div class="col-12 col-md-10 col-lg-11">
 												<div class="row form-row">
 													<div class="col-12 col-md-6">
@@ -251,7 +251,7 @@
 								<div class="card-body">
 									<h4 class="card-title">Awards</h4>
 									<div class="awards-info">
-										<div class="row form-row awards-cont" th:each="award, stat : ${doctor.bio.awards}">
+										<div class="row form-row awards-cont" th:each="award, stat : ${profileUser.bio.awards}">
 											<div class="col-12 col-md-5">
 												<div class="form-group">
 													<label>Awards</label>

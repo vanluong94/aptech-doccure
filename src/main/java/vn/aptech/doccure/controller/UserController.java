@@ -61,10 +61,10 @@ public class UserController {
         ModelAndView modelAndView;
         if (newUser.isDoctor()) {
             modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
-            modelAndView.addObject("user", newUser);
+            modelAndView.addObject("profileUser", newUser);
         } else {
             modelAndView = new ModelAndView("pages/patient/patient-profile-settings");
-            modelAndView.addObject("user", newUser);
+            modelAndView.addObject("profileUser", newUser);
         }
         return modelAndView;
     }
