@@ -39,7 +39,7 @@
 						<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 						<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 						
-						<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${doctor}" enctype="multipart/form-data">
+						<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${user}" enctype="multipart/form-data">
 
 							<div th:if="${#fields.hasAnyErrors()}">
 								<ul>
@@ -49,7 +49,7 @@
 
 							<input type="hidden" th:field="*{id}">
 							<input type="hidden" th:field="*{avatar}">
-							<input type="hidden" th:each="role : ${doctor.roles}" th:name="roles" th:value="${role.id}"/>
+							<input type="hidden" th:each="role : ${user.roles}" th:name="roles" th:value="${role.id}"/>
 
 							<!-- Basic Information -->
 							<div class="card">
@@ -60,7 +60,7 @@
 											<div class="form-group">
 												<div class="change-avatar">
 													<div class="profile-img">
-														<img src="#" th:src="${doctor.theAvatar}" alt="User Image">
+														<img src="#" th:src="${user.theAvatar}" alt="User Image">
 													</div>
 													<div class="upload-img">
 														<div class="change-photo-btn">

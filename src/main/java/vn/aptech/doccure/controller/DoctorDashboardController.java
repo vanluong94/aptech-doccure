@@ -59,13 +59,6 @@ public class DoctorDashboardController {
 
         if (user.getClinic() == null) {
             clinic = new DoctorClinic();
-//            clinic.setName("Smile Cute Dental Care Center");
-//            clinic.setSpecialities("MDS - Periodontology and Oral Implantology, BDS");
-//            clinic.setAddressLine1("2286 Sundown Lane");
-//            clinic.setCity("Austin");
-//            clinic.setState("Texas");
-//            clinic.setCountry("USA");
-//            clinic.setPostalCode(78749);
         } else {
             clinic = user.getClinic();
         }

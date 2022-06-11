@@ -77,9 +77,6 @@ public class DoctorClinic implements Serializable {
     private List<String> images;
 
     @Transient
-    private List<String> parsedImages = new LinkedList<>();
-
-    @Transient
     private List<MultipartFile> postedImages = new LinkedList<>();
 
     @Transient
