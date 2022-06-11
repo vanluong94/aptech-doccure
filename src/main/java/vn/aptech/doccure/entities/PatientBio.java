@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "patient_bio")
@@ -17,6 +18,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientBio implements Serializable  {
+
+    public final static List<String> BLOOD_TYPES = Arrays.asList("A-", "A+", "B-", "B+", "AB-", "AB+", "O-", "O+");
+
     @Id
     @Column(name = "patient_id", nullable = false)
     private Long patientId;
