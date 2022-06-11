@@ -21,15 +21,15 @@
                         <a th:href="@{/admin/appointments}"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
                     </li>
                     <li class="submenu" th:classappend="${#request.getRequestURI() == '/admin/specialities' ? 'active' : ''}">
-                        <a href="#"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>
-                        <ul style="display: none;">
+                        <a href="#" th:classappend="${#request.getRequestURI() == '/admin/specialities' ? 'subdrop' : ''}"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>
+                        <ul th:style="${#request.getRequestURI() == '/admin/specialities' ? 'display: block' : 'display: none'}">
                             <li><a th:href="@{/admin/specialities}">All Specialities</a></li>
                             <li><a th:href="@{/admin/specialities/create}">Add new Speciality</a></li>
                         </ul>
                     </li>
-                    <li class="submenu">
-                        <a href="#"><i class="fa fa-medkit"></i> <span>Services</span> <span class="menu-arrow"></span></a>
-                        <ul style="display: none;">
+                    <li class="submenu" th:classappend="${#request.getRequestURI() == '/admin/services' ? 'active' : ''}">
+                        <a href="#" th:classappend="${#request.getRequestURI() == '/admin/services' ? 'subdrop' : ''}"><i class="fa fa-medkit"></i> <span>Services</span> <span class="menu-arrow"></span></a>
+                        <ul th:style="${#request.getRequestURI() == '/admin/services' ? 'display: block' : 'display: none'}">
                             <li><a th:href="@{/admin/services}">All Services</a></li>
                             <li><a th:href="@{/admin/services/create}">Add new Service</a></li>
                         </ul>
