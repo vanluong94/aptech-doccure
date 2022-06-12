@@ -113,7 +113,8 @@
 										</div>
 									</div>
 									<div class="clinic-booking">
-										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}">Book Appointment</a>
+										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" th:if="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}">Book Appointment</a>
+										<a class="apt-btn" href="#" th:unless="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}" onclick="alert('Only Patients can be able to book appointment')">Book Appointment</a>
 									</div>
 								</div>
 							</div>
@@ -340,17 +341,17 @@
 														<div class="listing-day current">
 															<div class="day">Today <span th:text="${#temporals.format(now, 'dd MMM yyyy', 'en')}"></span></div>
 															<div class="time-items">
-																<th:block th:object="${clinicOpeningTimes[now.dayOfWeek.value]}">
+																<th:block th:object="${clinicOpeningTimes[now.dayOfWeek.value - 1]}">
 																	<span class="open-status">
 																		<span th:if="*{openNow}" class="badge bg-success-light">Open Now</span>
 																		<span th:unless="*{openNow}" class="badge bg-danger-light">Closed</span>
 																	</span>
-																	<span th:unless="*{closed}" class="time" th:text="${clinicOpeningTimes[now.dayOfWeek.value].openingTime}"></span>
+																	<span th:unless="*{closed}" class="time" th:text="${clinicOpeningTimes[now.dayOfWeek.value - 1].openingTime}"></span>
 																</th:block>
 
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[0]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[0]}" th:if="${clinicOpeningTimes[0]}">
 															<div class="day">Monday</div>
 															<div class="time-items">
 																<span class="time">
@@ -359,7 +360,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[1]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[1]}" th:if="${clinicOpeningTimes[1]}">
 															<div class="day">Tuesday</div>
 															<div class="time-items">
 																<span class="time">
@@ -368,7 +369,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[2]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[2]}" th:if="${clinicOpeningTimes[2]}">
 															<div class="day">Wednesday</div>
 															<div class="time-items">
 																<span class="time">
@@ -377,7 +378,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[3]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[3]}" th:if="${clinicOpeningTimes[3]}">
 															<div class="day">Thursday</div>
 															<div class="time-items">
 																<span class="time">
@@ -386,7 +387,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[4]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[4]}" th:if="${clinicOpeningTimes[4]}">
 															<div class="day">Friday</div>
 															<div class="time-items">
 																<span class="time">
@@ -395,7 +396,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[5]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[5]}" th:if="${clinicOpeningTimes[5]}">
 															<div class="day">Saturday</div>
 															<div class="time-items">
 																<span class="time">
@@ -404,7 +405,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day closed" th:object="${clinicOpeningTimes[6]}">
+														<div class="listing-day closed" th:object="${clinicOpeningTimes[6]}" th:if="${clinicOpeningTimes[6]}">
 															<div class="day">Sunday</div>
 															<div class="time-items">
 																<span class="time">

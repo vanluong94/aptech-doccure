@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.*;
+import vn.aptech.doccure.model.DoctorDTO;
 import vn.aptech.doccure.model.ReviewRequestDTO;
 import vn.aptech.doccure.service.*;
 import vn.aptech.doccure.utils.DateUtils;
@@ -123,6 +124,7 @@ public class DoctorController {
         modelAndView.addObject("nowDateText", DateUtils.toStandardDate(now));
         modelAndView.addObject("nowWeekdayText", DateUtils.toStandardWeekday(now));
         modelAndView.addObject("doctor", user.get());
+        modelAndView.addObject("doctorDto", DoctorDTO.from(user.get()));
         modelAndView.addObject("weekdays", weekdays);
 
         return modelAndView;

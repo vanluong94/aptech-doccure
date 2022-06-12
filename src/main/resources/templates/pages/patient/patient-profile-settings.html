@@ -129,8 +129,8 @@
 												<label>Gender</label>
 												<select class="form-control select" th:field="*{gender}">
 													<option value="">Select Gender</option>
-													<option value="0">Male</option>
-													<option value="1">Female</option>
+													<option value="1">Male</option>
+													<option value="0">Female</option>
 												</select>
 												<p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="invalid-feedback"></p>
 											</div>

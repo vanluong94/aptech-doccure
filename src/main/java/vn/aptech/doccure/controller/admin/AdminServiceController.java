@@ -22,7 +22,9 @@ import java.util.Optional;
 @RequestMapping("/admin/services")
 @RolesAllowed("ROLE_ADMIN")
 public class AdminServiceController {
+
     private final Logger logger = LoggerFactory.getLogger(AdminUserController.class);
+
     @Autowired
     private ServiceService serviceService;
     @Autowired

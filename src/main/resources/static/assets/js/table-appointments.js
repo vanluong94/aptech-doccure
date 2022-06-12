@@ -161,7 +161,7 @@ const appointmentUtils = {
             }
         });
     },
-    cancel(apmtId) {
+    cancel(apmtId, successCallback, errorCallback) {
         if (confirm(`Are you sure that you want to cancel this appointment?`)) {
             $.ajax({
                 url: `/ajax/appointments/${apmtId}/cancel`,
@@ -174,7 +174,11 @@ const appointmentUtils = {
                 },
                 success(resp) {
                     if (resp.isSuccess) {
-                        appointmentUtils.$getDataTable().ajax.reload();
+                        if (successCallback != null) {
+                            successCallback();
+                        } else {
+                            appointmentUtils.$getDataTable().ajax.reload();
+                        }
                     } else {
                         alert(resp.message);
                     }
@@ -185,7 +189,7 @@ const appointmentUtils = {
             });
         }
     },
-    confirm(apmtId) {
+    confirm(apmtId, successCallback) {
         if (confirm(`Are you sure that you want to confirm this appointment?`)) {
             $.ajax({
                 url: `/ajax/appointments/${apmtId}/confirm`,
@@ -198,7 +202,11 @@ const appointmentUtils = {
                 },
                 success(resp) {
                     if (resp.isSuccess) {
-                        appointmentUtils.$getDataTable().ajax.reload();
+                        if (successCallback != null) {
+                            successCallback();
+                        } else {
+                            appointmentUtils.$getDataTable().ajax.reload();
+                        }
                     } else {
                         alert(resp.message);
                     }
