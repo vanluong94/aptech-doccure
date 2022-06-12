@@ -15,7 +15,6 @@ import vn.aptech.doccure.utils.DateUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "time_slots")
@@ -71,12 +70,12 @@ public class TimeSlot {
 
     @Column(name = "time_start", nullable = false, columnDefinition = "datetime not null")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "h:m a")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:hm a")
     private LocalDateTime timeStart;
 
     @Column(name = "time_end", nullable = false, columnDefinition = "datetime not null")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "h:m a")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:hm a")
     private LocalDateTime timeEnd;
 
     @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
@@ -114,7 +113,7 @@ public class TimeSlot {
     }
 
     public String getTimeText() {
-        return timeStart.format(DateTimeFormatter.ofPattern("h:m a"));
+        return DateUtils.toStandardTime(timeStart);
     }
 
     @Override

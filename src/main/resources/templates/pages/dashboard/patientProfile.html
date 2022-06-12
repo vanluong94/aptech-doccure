@@ -61,7 +61,7 @@
                             </div>
                             <div class="patient-info">
                                 <ul>
-                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{user.phone}"></span></li>
+                                    <li th:if="${patient.user.phone != null}">Phone <span th:text="*{user.phone}"></span></li>
                                     <li th:if="${patient.age != null}">Age <span><th:block th:text="${patient.age + ' Years'}"></th:block></span></li>
                                     <li>Gender <span th:text="*{gender}"></span></li>
                                     <li>Blood Group <span><th:block th:text="*{bloodType}"></th:block></span></li>
@@ -166,7 +166,7 @@
     <script src="/assets/js/table-appointments.js"></script>
     <script th:inline="javascript">
 
-        const patientId = /*[[${patient.patient.id}]]*/ 0;
+        const patientId = /*[[${patient.user.id}]]*/ 0;
 
         $('#appointmentsTable').DataTable({
             searching: false,

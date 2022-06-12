@@ -264,12 +264,16 @@
                          * */
                         $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
                             e.preventDefault();
-                            appointmentUtils.view($(this).data('appointment-id'));
+                            appointmentUtils.view($(this).data('appointment-id'), () => {
+                                $table.ajax.reload();
+                            });
                         })
     
                         $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
                             e.preventDefault();
-                            appointmentUtils.cancel($(this).data('appointment-id'));
+                            appointmentUtils.cancel($(this).data('appointment-id'), () => {
+                                $table.ajax.reload();
+                            });
                         })
                     }
                 });

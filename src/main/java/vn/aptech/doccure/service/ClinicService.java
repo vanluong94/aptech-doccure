@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface ClinicService {
     List<DoctorClinic> findAllByMapBound(BigDecimal fromLat, BigDecimal toLat, BigDecimal fromLng, BigDecimal toLng);
+
+    void save(DoctorClinic clinic);
+
+    void saveAndFlush(DoctorClinic clinic);
 }

@@ -33,7 +33,7 @@ jQuery(function($){
                 renderFormTimeSlots($form, timeSlots[weekday]);
             }
 
-            $form.find('.add-hours').on('click', () => {
+            $form.find('.add-hours').get(0).onclick = () => {
                 renderFormTimeSlots($form, [
                     {
                         status: 1,
@@ -41,7 +41,7 @@ jQuery(function($){
                         timeEnd: '',
                     }
                 ], true);
-            })
+            }
         })
 
     }

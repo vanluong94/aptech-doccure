@@ -61,8 +61,8 @@
                                             </div>
                                             <div class="patient-info">
                                                 <ul>
-                                                    <li th:if="${patient.patient.phone != null}">Phone <span th:text="*{user.phone}"></span></li>
-                                                    <li th:if="${patient.age != null}">Age <span><th:block th:text="${patient.age + ' Years'}"></th:block><th:block th:if="${patient.patient.gender != null}" th:text="${', ' + patient.gender}"></th:block></span></li>
+                                                    <li th:if="${patient.user.phone != null}">Phone <span th:text="*{user.phone}"></span></li>
+                                                    <li th:if="${patient.age != null}">Age <span><th:block th:text="${patient.age + ' Years'}"></th:block><th:block th:if="${patient.user.gender != null}" th:text="${', ' + patient.gender}"></th:block></span></li>
                                                     <li>Blood Group <span th:text="*{bloodType}"></span></li>
                                                 </ul>
                                             </div>

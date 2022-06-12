@@ -1,5 +1,7 @@
 package vn.aptech.doccure.controller.ajax;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -11,12 +13,15 @@ import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repositories.TimeSlotDefaultRepository;
 import vn.aptech.doccure.repositories.UserRepository;
 
+import java.time.LocalTime;
 import java.util.*;
 
 @RestController
 @RequestMapping("ajax/timeSlots")
 @Secured("ROLE_DOCTOR")
 public class TimeSlotController {
+
+    private Logger logger = LoggerFactory.getLogger(TimeSlotController.class);
 
     @Autowired
     UserRepository userRepository;
@@ -41,7 +46,7 @@ public class TimeSlotController {
 
         User doctor = (User) auth.getPrincipal();
 
-        Set<TimeSlotDefault> updateTimeSlots = new TreeSet<>(new Comparator<TimeSlotDefault>() {
+        Set<TimeSlotDefault> updateOnes = new TreeSet<>(new Comparator<TimeSlotDefault>() {
             @Override
             public int compare(TimeSlotDefault o1, TimeSlotDefault o2) {
                 if (o1.getWeekday() < o2.getWeekday()) {
@@ -58,16 +63,66 @@ public class TimeSlotController {
             }
         });
 
+        List<List<TimeSlotDefault>> slotsGroupedByWeekday = Arrays.asList(
+                new ArrayList<>(), //mon
+                new ArrayList<>(), //tue
+                new ArrayList<>(), //wed
+                new ArrayList<>(), //thur
+                new ArrayList<>(), //fri
+                new ArrayList<>(), //sat
+                new ArrayList<>() //sun
+        );
+
         for (TimeSlotDefault apmtDefault : postedTimeSlots) {
             if (apmtDefault.isTimeRangeValid()) {
                 apmtDefault.setDoctor(doctor);
                 apmtDefault.setDoctorId(doctor.getId());
-                updateTimeSlots.add(apmtDefault);
+                slotsGroupedByWeekday.get(apmtDefault.getWeekday()).add(apmtDefault);
             }
         }
 
-        doctor.setTimeSlotsDefault(updateTimeSlots);
-        userRepository.saveAndFlush(doctor);
+        // check for overlap time range
+        for (List<TimeSlotDefault> slotsWeekday : slotsGroupedByWeekday) {
+            for (TimeSlotDefault aSlot : slotsWeekday) {
+                boolean isOverlapped = false;
+
+                comparingloop:
+                for (TimeSlotDefault bSlot : slotsWeekday) {
+
+                    if (aSlot.equals(bSlot)) {
+                        continue;
+                    }
+
+                    LocalTime s = aSlot.getTimeStart();
+                    LocalTime e = aSlot.getTimeEnd();
+                    LocalTime a = bSlot.getTimeStart();
+                    LocalTime b = bSlot.getTimeEnd();
+
+                    if (
+                            (s.compareTo(a) <= 0 && e.compareTo(a) >= 0)
+                            || (s.compareTo(a) >= 0 && e.compareTo(b) <= 0)
+                    ) {
+                        isOverlapped = true;
+                        break comparingloop;
+                    }
+                }
+
+                if (!isOverlapped) {
+                    updateOnes.add(aSlot);
+                }
+            }
+        }
+        
+        List<TimeSlotDefault> deleteOnes = new ArrayList<>();
+        for (TimeSlotDefault apmtDefault : timeSlotDefaultRepository.findAllByDoctor(doctor)) {
+            if (updateOnes.stream().noneMatch(ad -> ad.equals(apmtDefault))) {
+                deleteOnes.add(apmtDefault);
+            }
+        }
+
+        doctor.setTimeSlotsDefault(updateOnes);
+        timeSlotDefaultRepository.deleteAll(deleteOnes);
+        timeSlotDefaultRepository.saveAll(updateOnes);
 
         results.put("timeSlots", doctor.getTimeSlotsDefault());
 

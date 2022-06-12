@@ -29,25 +29,33 @@ Version      : 1.0
 
     $(".add-education").on('click', function () {
 		
+		let index = $('.education-info > .education-cont').length;
+
 		var educationcontent = '<div class="row form-row education-cont">' +
 			'<div class="col-12 col-md-10 col-lg-11">' +
 				'<div class="row form-row">' +
-					'<div class="col-12 col-md-4">' +
+					'<div class="col-12 col-md-3">' +
 						'<div class="form-group">' +
 							'<label>Degree</label>' +
-							'<input type="text" class="form-control">' +
+							`<input type="text" name="bio.educations[${index}].degree" class="form-control">` +
 						'</div>' +
 					'</div>' +
-					'<div class="col-12 col-md-4">' +
+					'<div class="col-12 col-md-5">' +
 						'<div class="form-group">' +
 							'<label>College/Institute</label>' +
-							'<input type="text" class="form-control">' +
+							`<input type="text" name="bio.educations[${index}].college" class="form-control">` +
 						'</div>' +
 					'</div>' +
-					'<div class="col-12 col-md-4">' +
+					'<div class="col-12 col-md-2">' +
 						'<div class="form-group">' +
-							'<label>Year of Completion</label>' +
-							'<input type="text" class="form-control">' +
+							'<label>From</label>' +
+							`<input type="text" name="bio.educations[${index}].from" class="form-control">` +
+						'</div>' +
+					'</div>' +
+					'<div class="col-12 col-md-2">' +
+						'<div class="form-group">' +
+							'<label>To</label>' +
+							`<input type="text" name="bio.educations[${index}].to" class="form-control">` +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -68,31 +76,27 @@ Version      : 1.0
 
     $(".add-experience").on('click', function () {
 		
+		let index = $('.experience-info > .experience-cont').length;
+
 		var experiencecontent = '<div class="row form-row experience-cont">' +
 			'<div class="col-12 col-md-10 col-lg-11">' +
 				'<div class="row form-row">' +
 					'<div class="col-12 col-md-6">' +
 						'<div class="form-group">' +
 							'<label>Hospital Name</label>' +
-							'<input type="text" class="form-control">' +
+							`<input type="text" name="bio.experiences[${index}].hospital" class="form-control">` +
 						'</div>' +
 					'</div>' +
-					'<div class="col-12 col-md-6">' +
-						'<div class="form-group">' +
-							'<label>Designation</label>' +
-							'<input type="text" class="form-control">' +
-						'</div>' +
-					'</div>' +
-					'<div class="col-12 col-md-6">' +
+					'<div class="col-12 col-md-3">' +
 						'<div class="form-group">' +
 							'<label>From</label>' +
-							'<input type="text" class="form-control">' +
+							`<input type="text" name="bio.experiences[${index}].from" class="form-control">` +
 						'</div>' +
 					'</div>' +
-					'<div class="col-12 col-md-6">' +
+					'<div class="col-12 col-md-3">' +
 						'<div class="form-group">' +
 							'<label>To</label>' +
-							'<input type="text" class="form-control">' +
+							`<input type="text" name="bio.experiences[${index}].to" class="form-control">` +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -113,17 +117,19 @@ Version      : 1.0
 
     $(".add-award").on('click', function () {
 
+		let index = $('.awards-info > .awards-cont').length;
+
         var regcontent = '<div class="row form-row awards-cont">' +
 			'<div class="col-12 col-md-5">' +
 				'<div class="form-group">' +
 					'<label>Awards</label>' +
-					'<input type="text" class="form-control">' +
+					`<input type="text" name="bio.awards[${index}].award" class="form-control">` +
 				'</div>' +
 			'</div>' +
 			'<div class="col-12 col-md-5">' +
 				'<div class="form-group">' +
 					'<label>Year</label>' +
-					'<input type="text" class="form-control">' +
+					`<input type="text" name="bio.awards[${index}].year" class="form-control">` +
 				'</div>' +
 			'</div>' +
 			'<div class="col-12 col-md-2">' +

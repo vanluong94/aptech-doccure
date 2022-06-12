@@ -50,13 +50,6 @@ public class DoctorDTO {
         return null;
     }
 
-    public String getEduSpecialtiesText() {
-//        StringBuilder builder = new StringBuilder();
-//        DoctorBio bio = doctor.getBio();
-//        return builder.toString();
-        return "MDS - " + getSpecialtiesText(); // dummy data
-    }
-
     public double getAvgRating() {
         return this.user.getAvgReview();
     }

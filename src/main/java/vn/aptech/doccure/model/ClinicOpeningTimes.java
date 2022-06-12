@@ -20,6 +20,9 @@ public class ClinicOpeningTimes {
     }
 
     public boolean isOpenNow() {
+        if( isClosed() ){
+            return false;
+        }
         LocalDateTime now = LocalDateTime.now();
         return now.isAfter(this.opening) && now.isBefore(this.closing);
     }

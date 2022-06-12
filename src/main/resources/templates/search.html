@@ -157,11 +157,11 @@
                                                     <span th:if="${doctor?.clinic?.city == null}">Unknown</span>
                                                 </p>
                                                 <ul class="clinic-gallery">
-                                                    <li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
-                                                        <a th:href="@{${'/images/' + clinicImg}}"
+                                                    <li th:each="img : ${doctor?.clinic?.images}">
+                                                        <a th:href="@{${'/images/' + img}}"
                                                            data-fancybox="gallery">
-                                                            <img th:src="@{${'/images/' + clinicImg}}"
-                                                                 th:attr="data-image=${clinicImg}" alt="Feature">
+                                                            <img th:src="@{${'/images/' + img}}"
+                                                                 th:attr="data-image=${img}" alt="Feature">
                                                         </a>
                                                     </li>
                                                 </ul>
