@@ -133,7 +133,7 @@ public class User implements UserDetails {
 
     public User(Integer status, Set<Role> roles) {
         this.status = status;
-//        this.roles = roles;
+        this.roles = roles;
     }
 
     /*

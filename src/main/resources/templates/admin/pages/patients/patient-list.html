@@ -67,7 +67,7 @@
 													<td th:text="${patient.email}"></td>
 													<td th:text="${patient.phone}"></td>
 													<td>
-														<span th:classappend="${user.status == 0 ? 'badge badge-danger' : 'badge badge-success'}" th:utext="${user.statusText}"></span><br/>
+														<span th:classappend="${patient.status == 0 ? 'badge badge-danger' : 'badge badge-success'}" th:utext="${patient.statusText}"></span><br/>
 													</td>
 													<td class="text-right">
 														<div class="actions">

@@ -84,8 +84,8 @@ public class DatabaseLoader implements CommandLineRunner {
                 roleAdmin.setId(1L);
                 roleAdmin.setName(Constants.Roles.ROLE_ADMIN);
                 roles.add(roleAdmin);
-                admin.setFirstName("Nguyen Ba Tuan");
-                admin.setLastName("Anh");
+                admin.setFirstName("Admin");
+                admin.setLastName("Super");
                 admin.setEmail("admin@gmail.com");
                 admin.setUsername("admin");
                 admin.setPassword(PASSWORD_ENCODER.encode("admin"));

@@ -53,8 +53,8 @@
                             <span>Schedule Timings</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-reviews.html">
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/doctor-reviews' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/doctor-reviews}">
                             <i class="fas fa-star"></i>
                             <span>Reviews</span>
                         </a>

@@ -7,5 +7,7 @@ public interface ReviewService {
 
     Iterable<Review> findAll();
 
+    Iterable<Review> findAllByDoctorId(Long id);
+
     void deleteById(Long id);
 }

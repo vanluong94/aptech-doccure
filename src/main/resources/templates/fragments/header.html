@@ -30,27 +30,25 @@
                 <li class="has-submenu">
                     <a th:href="@{/}">Home</a>
                 </li>
-                <li class="has-submenu">
+                <li class="has-submenu" sec:authorize="hasRole('ROLE_ADMIN')">
                     <a href="#">Doctors <i class="fas fa-chevron-down"></i></a>
                     <ul class="submenu">
-                        <li><a th:href="@{/doctor-dashboard}">Doctor Dashboard</a></li>
-                        <li><a th:href="@{/doctor-appointments}">Appointments</a></li>
-                        <li><a th:href="@{/doctor-time-slots}">Schedule Timing</a></li>
-                        <li><a th:href="@{/doctor-my-patients}">Patients List</a></li>
-                        <li><a th:href="@{/doctor-patient-profile}">Patients Profile</a></li>
-                        <li><a th:href="@{/doctor-profile-settings}">Profile Settings</a></li>
-                        <li><a th:href="@{/doctor-reviews}">Reviews</a></li>
-                        <li><a th:href="@{/doctor-register}">Doctor Register</a></li>
+                        <li><a th:href="@{/dashboard}">Doctor Dashboard</a></li>
+                        <li><a th:href="@{/dashboard/appointments}">Appointments</a></li>
+                        <li><a th:href="@{/dashboard/time-slot-settings}">Schedule Timing</a></li>
+                        <li><a th:href="@{/dashboard/my-patients}">Patients List</a></li>
+                        <li><a th:href="@{/dashboard/profile-settings}">Profile Settings</a></li>
+                        <li><a th:href="@{/dashboard/doctor-reviews}">Reviews</a></li>
+                        <li><a th:href="@{/dashboard/change-password}">Change Password</a></li>
                     </ul>
                 </li>
-                <li class="has-submenu">
+                <li class="has-submenu" sec:authorize="hasRole('ROLE_PATIENT')">
                     <a href="#">Patients <i class="fas fa-chevron-down"></i></a>
                     <ul class="submenu">
-                        <li><a th:href="@{/search}">Search Doctor</a></li>
-                        <li><a th:href="@{/patient-dashboard}">Patient Dashboard</a></li>
-                        <li><a th:href="@{/patient-favourites}">Favourites</a></li>
-                        <li><a th:href="@{/patient-profile-settings}">Profile Settings</a></li>
-                        <li><a th:href="@{/patient-change-password}">Change Password</a></li>
+                        <li><a th:href="@{/dashboard}">Patient Dashboard</a></li>
+                        <li><a th:href="@{/dashboard/favorites}">Favourites</a></li>
+                        <li><a th:href="@{/dashboard/profile-settings}">Profile Settings</a></li>
+                        <li><a th:href="@{/dashboard/change-password}">Change Password</a></li>
                     </ul>
                 </li>
                 <li class="has-submenu active">
@@ -114,6 +112,7 @@
                     </th:block>
                     <a class="dropdown-item" th:href="@{/dashboard}" sec:authorize="hasAnyRole('ROLE_PATIENT', 'ROLE_DOCTOR')">Dashboard</a>
                     <a class="dropdown-item" th:href="@{/dashboard/profile-settings}" sec:authorize="hasAnyRole('ROLE_PATIENT', 'ROLE_DOCTOR')">Profile Settings</a>
+                    <a class="dropdown-item" th:href="@{/dashboard/change-password}" sec:authorize="hasAnyRole('ROLE_PATIENT', 'ROLE_DOCTOR')">Change Password</a>
                     <a class="dropdown-item" th:href="@{/logout}">Logout</a>
                 </div>
             </li>

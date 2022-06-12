@@ -467,7 +467,7 @@
 									<!-- /Review Listing -->
 
 									<!-- Write Review -->
-									<div class="write-review" sec:authorize="isAuthenticated()">
+									<div class="write-review" sec:authorize="hasRole('ROLE_PATIENT')">
 										<h4>Write a review for <strong th:text="${doctor.fullName}"></strong></h4>
 
 										<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>

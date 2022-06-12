@@ -151,8 +151,10 @@
                                                 </th:block>
                                             </h5>
                                             <div class="clinic-details">
-                                                <p class="doc-location"><i class="fas fa-map-marker-alt"></i> <span
-                                                        th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
+                                                <p class="doc-location"><i class="fas fa-map-marker-alt"></i>
+                                                    <span th:if="${doctor?.clinic?.city != null}"
+                                                            th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
+                                                    <span th:if="${doctor?.clinic?.city == null}">Unknown</span>
                                                 </p>
                                                 <ul class="clinic-gallery">
                                                     <li th:each="img : ${doctor?.clinic?.images}">
@@ -174,8 +176,10 @@
                                     <div class="doc-info-right">
                                         <div class="clini-infos">
                                             <ul>
-                                                <li><i class="fas fa-map-marker-alt"></i> <span
+                                                <li><i class="fas fa-map-marker-alt"></i>
+                                                    <span th:if="${doctor?.clinic?.city != null}"
                                                         th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
+                                                    <span th:if="${doctor?.clinic?.city == null}">Unknown</span>
                                                 </li>
                                             </ul>
                                         </div>
