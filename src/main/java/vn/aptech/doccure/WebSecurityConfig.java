@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -61,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-//                .addFilterBefore(new AuthenticatedBlockFilter(), DefaultLoginPageGeneratingFilter.class)
+                .addFilterBefore(new AuthenticatedBlockFilter(), DefaultLoginPageGeneratingFilter.class)
                 .authorizeRequests()
                 .antMatchers("/",
                         "/assets/**",
@@ -85,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return tokenRepositoryImpl;
     }
 
-    class AuthenticatedBlockFilter extends GenericFilterBean {
+    static class AuthenticatedBlockFilter extends GenericFilterBean {
 
         @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

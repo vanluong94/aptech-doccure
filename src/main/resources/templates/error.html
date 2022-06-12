@@ -9,8 +9,6 @@
     <meta charset="utf-8"/>
 </head>
 <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
-<!-- Main Wrapper -->
-<div class="main-wrapper">
     <!-- Page Content -->
     <div class="content p-0" layout:fragment="layoutContent">
         <div class="container-fluid">
@@ -31,8 +29,6 @@
         </div>
     </div>
     <!-- /Page Content -->
-</div>
-<!-- /Main Wrapper -->
 </body>
 </html>
 </html>
