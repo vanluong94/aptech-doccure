@@ -15,6 +15,7 @@ import vn.aptech.doccure.common.Constants;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,10 +31,12 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false, length = 50, unique = true)
+    @Column(name = "username", nullable = false, length = 30, unique = true)
+    @Pattern(regexp = "^[a-zA-Z][\\w]{7,29}$", message = "Username starts with a lowercase letter, then a lowercase letter or number.")
     private String username;
 
-    //    @NotEmpty(message = "Mật khẩu là bắt buộc")
+    @NotEmpty(message = "Password must not be null or empty!")
+    @Size(min = 6, message = "Password must have at least 8 characters.")
     @Column(name = "password", length = 100)
     private String password;
 
