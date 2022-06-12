@@ -2,6 +2,7 @@ package vn.aptech.doccure.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import vn.aptech.doccure.entities.User;
 
 import java.text.DateFormat;
@@ -25,7 +26,10 @@ public class PatientDTO {
     }
 
     public String getUrl() {
-        return "#";
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/dashboard/my-patients/patient/profile/{id}")
+                .buildAndExpand(this.user.getId())
+                .toUriString();
     }
 
     public String getCity() {

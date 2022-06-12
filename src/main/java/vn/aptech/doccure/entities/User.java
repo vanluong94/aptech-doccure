@@ -18,7 +18,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 @Setter
@@ -72,10 +71,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private Set<Review> patientReviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = TimeSlot.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<TimeSlot> timeSlots = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, targetEntity = TimeSlotDefault.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("weekday ASC, time_start ASC")
     private Set<TimeSlotDefault> timeSlotsDefault = new LinkedHashSet<>();
 
@@ -109,10 +108,10 @@ public class User implements UserDetails {
     )
     private Set<Service> services;
 
-    @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "doctor", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private DoctorClinic clinic;
 
-    @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private DoctorBio bio;
 
     @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

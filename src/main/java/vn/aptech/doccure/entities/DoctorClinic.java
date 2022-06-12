@@ -1,9 +1,6 @@
 package vn.aptech.doccure.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +8,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
-import vn.aptech.doccure.utils.JSONUtils;
+import vn.aptech.doccure.utils.converter.ImagesJsonConverter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,7 +29,7 @@ public class DoctorClinic implements Serializable {
     private Long doctorId;
 
     @MapsId
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "doctor_id", nullable = false, foreignKey = @ForeignKey(name = "doctor_clinic_user_fk"))
     @JsonIgnore
     private User doctor;
@@ -76,10 +73,8 @@ public class DoctorClinic implements Serializable {
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
     @Column(name = "images", columnDefinition = "json")
-    private String images;
-
-    @Transient
-    private List<String> parsedImages = new LinkedList<>();
+    @Convert(converter = ImagesJsonConverter.class)
+    private List<String> images;
 
     @Transient
     private List<MultipartFile> postedImages = new LinkedList<>();
@@ -87,36 +82,19 @@ public class DoctorClinic implements Serializable {
     @Transient
     private List<String> deletedImages = new LinkedList<>();
 
-    public void parseImages() {
-        if (images != null && ! images.isEmpty()) {
-            ObjectMapper jsonMapper = new ObjectMapper();
-            try {
-                this.parsedImages = jsonMapper.readValue(images, new TypeReference<List<String>>() {
-                });
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("[DoctorClinic:");
-        builder.append(" doctorId=" + doctorId);
-        builder.append("; name=" + name);
-        builder.append("; specialties=" + specialities);
-        builder.append("; lat=" + lat);
-        builder.append("; lng=" + lng);
-        builder.append("; addressLine1=" + addressLine1);
-        builder.append("; addressLine2=" + addressLine2);
-        builder.append("; postCode=" + postalCode);
-        builder.append("; images=" + images);
-        builder.append("]");
-        return builder.toString();
-    }
-
-    public void syncParsedImages() {
-        this.setImages(JSONUtils.stringify(this.getParsedImages()));
+        return
+        "[DoctorClinic:" + " doctorId=" + doctorId +
+            "; name=" + name +
+            "; specialties=" + specialities +
+            "; lat=" + lat +
+            "; lng=" + lng +
+            "; addressLine1=" + addressLine1 +
+            "; addressLine2=" + addressLine2 +
+            "; postCode=" + postalCode +
+            "; images=" + images +
+        "]";
     }
 
     public boolean hasLocation() {

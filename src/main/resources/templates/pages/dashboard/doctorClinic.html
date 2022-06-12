@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Doctor Clinic Settings - Doccure</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAibNErkhEslaekaf-9B2D74NdGvj8Xm-g&callback=initMap&v=weekly" defer></script>
     <style>
         #clinic_location_map {
             width: 980px;
@@ -67,6 +67,8 @@
                     </div>
                     <div class="col-md-7 col-lg-8 col-xl-9">
                         <form id="clinicForm" th:action="@{/dashboard/clinic-settings/save}" th:object="${clinic}" method="post" enctype="multipart/form-data">
+
+						    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 
                             <div th:if="${#fields.hasAnyErrors()}">
                                 <div class="alert alert-danger" th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
@@ -144,8 +146,8 @@
                                                 </div>
                                             </div>
                                             <div class="upload-wrap" id="clinicUploadWrap">
-                                                <div class="upload-images uploaded-file" th:each="clinicImg : ${clinic.parsedImages}">
-                                                    <img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Clinic Image">
+                                                <div class="upload-images uploaded-file" th:each="img : ${clinic.images}">
+                                                    <img th:src="@{${'/images/' + img}}" th:attr="data-image=${img}" alt="Clinic Image">
                                                     <a href="javascript:void(0);" class="btn btn-icon btn-danger btn-sm btn-rm"><i class="far fa-trash-alt"></i></a>
                                                 </div>
                                             </div>

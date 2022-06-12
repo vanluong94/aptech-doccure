@@ -36,10 +36,10 @@ public class DoctorReviewController {
     public String delete(@RequestParam("id") Long id, RedirectAttributes redirect) {
         try {
             reviewService.deleteById(id);
-            redirect.addFlashAttribute(Constants.MESSSAGE.SUCCESS, "The item has been successfully deleted.");
+            redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "The item has been successfully deleted.");
         } catch (Exception e) {
             logger.error("Exception when /doctor/reviews/delete", e);
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "The selected item cannot be deleted. Details: " + e.getMessage());
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "The selected item cannot be deleted. Details: " + e.getMessage());
         }
         return "redirect:/dashboard/doctor-reviews";
     }

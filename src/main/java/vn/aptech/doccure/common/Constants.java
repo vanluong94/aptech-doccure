@@ -16,7 +16,7 @@ public interface Constants {
         short MALE = 1;
     }
 
-    interface MESSSAGE {
+    interface MESSAGE {
         String ERROR = "errorMessage";
         String SUCCESS = "successMessage";
     }

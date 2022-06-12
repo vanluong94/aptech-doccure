@@ -94,11 +94,11 @@
                                     </h3>
                                     <p class="speciality" th:if="${doctor?.clinic?.specialities != null}" th:text="${doctor?.clinic?.specialities}"></p>
                                     <div class="rating" th:unless="${#lists.isEmpty(doctor?.doctorReviews)}">
-                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 1 ? 'filled' : ''}"></i>
-                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 2 ? 'filled' : ''}"></i>
-                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 3 ? 'filled' : ''}"></i>
-                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 4 ? 'filled' : ''}"></i>
-                                        <i class="fas fa-star" th:classappend="${doctor.avgReview >= 5 ? 'filled' : ''}"></i>
+                                        <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                            <i class="fas fa-star filled" th:if="${i - doctor.avgReview < 0.5}"></i>
+                                            <i class="fas fa-star-half-alt filled" th:if="${i - doctor.avgReview == 0.5}"></i>
+                                            <i class="far fa-star" th:if="${i - doctor.avgReview > 0.5}"></i>
+                                        </th:block>
                                         <span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
                                     </div>
                                     <ul class="available-info">

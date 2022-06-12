@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,12 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.*;
+import vn.aptech.doccure.model.DoctorDTO;
 import vn.aptech.doccure.model.ReviewRequestDTO;
 import vn.aptech.doccure.service.*;
 import vn.aptech.doccure.utils.DateUtils;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -48,32 +47,33 @@ public class DoctorController {
 
     @GetMapping("/profile/{id}")
     public ModelAndView profile(@PathVariable("id") Long id, Authentication authentication) {
-        ModelAndView modelAndView;
-        User user = userService.findById(id).orElseThrow(() -> new UsernameNotFoundException("Doctor not found"));
-        if (user.hasRole(Constants.Roles.ROLE_DOCTOR)) {
-            modelAndView = new ModelAndView("pages/doctor/doctor-profile");
-            if (user.getClinic() != null) {
-                user.getClinic().parseImages();
-            }
-            modelAndView.addObject("doctor", user);
-            Iterable<Review> reviews = reviewService.findAllByDoctorId(user.getId());
-            modelAndView.addObject("reviews", reviews);
 
-            if (authentication != null) {
-                User currentUser = (User) authentication.getPrincipal();
-                ReviewRequestDTO review = new ReviewRequestDTO();
-                review.setDoctorId(id);
-                review.setPatientId(currentUser.getId());
-                modelAndView.addObject("review", review);
-                modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user, currentUser));
-                modelAndView.addObject("clinicOpeningTimes", timeSlotService.getAllOpeningTimes(user));
-            } else {
-                modelAndView.addObject("isDoctorFavorite", false);
-            }
-        } else {
-            modelAndView = new ModelAndView("pages/404");
+        ModelAndView modelAndView;
+
+        Optional<User> user = userService.findById(id);
+        if (!user.isPresent() || !user.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+
+        modelAndView = new ModelAndView("pages/doctor/doctor-profile");
+        modelAndView.addObject("doctor", user.get());
+        Iterable<Review> reviews = reviewService.findAllByDoctorId(user.get().getId());
+        modelAndView.addObject("reviews", reviews);
+
+        if (authentication != null) {
+            User currentUser = (User) authentication.getPrincipal();
+            ReviewRequestDTO review = new ReviewRequestDTO();
+            review.setDoctorId(id);
+            review.setPatientId(currentUser.getId());
+            modelAndView.addObject("review", review);
+            modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
+        } else {
+            modelAndView.addObject("isDoctorFavorite", false);
+        }
+        modelAndView.addObject("clinicOpeningTimes", timeSlotService.getAllOpeningTimes(user.get()));
+
         return modelAndView;
+
     }
 
     @PostMapping("/profile/{id}")
@@ -89,12 +89,12 @@ public class DoctorController {
         review.setPatient(new User(requestDTO.getPatientId()));
         try {
             if (reviewService.save(review) != null) {
-                redirect.addFlashAttribute(Constants.MESSSAGE.SUCCESS, "Your comment was posted successfully! Thank you!");
+                redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "Your comment was posted successfully! Thank you!");
             } else {
-                redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Can't publish your rating and review right now. Try again?");
+                redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Can't publish your rating and review right now. Try again?");
             }
         } catch (Exception e) {
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, e.getMessage());
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, e.getMessage());
         }
         return "redirect:/doctor/profile/" + id + "?tabActive=reviews#doc_reviews";
     }
@@ -127,6 +127,7 @@ public class DoctorController {
         modelAndView.addObject("nowDateText", DateUtils.toStandardDate(now));
         modelAndView.addObject("nowWeekdayText", DateUtils.toStandardWeekday(now));
         modelAndView.addObject("doctor", user.get());
+        modelAndView.addObject("doctorDto", DoctorDTO.from(user.get()));
         modelAndView.addObject("weekdays", weekdays);
 
         return modelAndView;
@@ -152,11 +153,11 @@ public class DoctorController {
         TimeSlot timeSlot = timeSlotResult.get();
 
         if (timeSlot.isBooked()) {
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "This time slot is already booked, please book another.");
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "This time slot is already booked, please book another.");
             model.addAttribute("id", timeSlot.getDoctor().getId());
             return "redirect:/doctor/profile/{id}/booking";
         } else if (timeSlot.isPast()) {
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "This time slot is not available to be booked anymore, please book another.");
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "This time slot is not available to be booked anymore, please book another.");
             model.addAttribute("id", timeSlot.getDoctor().getId());
             return "redirect:/doctor/profile/{id}/booking";
         }

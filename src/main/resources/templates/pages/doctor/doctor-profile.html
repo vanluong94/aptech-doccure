@@ -38,11 +38,11 @@
 											</th:block>
 										</div>
 										<div class="rating">
-											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 1 ? 'filled' : ''}"></i>
-											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 2 ? 'filled' : ''}"></i>
-											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 3 ? 'filled' : ''}"></i>
-											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 4 ? 'filled' : ''}"></i>
-											<i class="fas fa-star" th:classappend="${doctor.avgReview >= 5 ? 'filled' : ''}"></i>
+											<th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                                <i class="fas fa-star filled" th:if="${i - doctor.avgReview < 0.5}"></i>
+                                                <i class="fas fa-star-half-alt filled" th:if="${i - doctor.avgReview == 0.5}"></i>
+                                                <i class="far fa-star" th:if="${i - doctor.avgReview > 0.5}"></i>
+                                            </th:block>
 											<span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
 										</div>
 										<div class="clinic-details">
@@ -62,9 +62,9 @@
 												</th:block>
 											</p>
 											<ul class="clinic-gallery">
-												<li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
-													<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
-														<img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
+												<li th:each="img : ${doctor?.clinic?.images}">
+													<a th:href="@{${'/images/' + img}}" data-fancybox="gallery">
+														<img th:src="@{${'/images/' + img}}" th:attr="data-image=${img}" alt="Feature">
 													</a>
 												</li>
 											</ul>
@@ -99,7 +99,7 @@
 											</div>
 											<div class="col-6">
 
-												<a th:if="${doctor.phone}" th:href="tel:${doctor.phone}" class="btn btn-white call-btn w-100">
+												<a th:if="${doctor.phone}" th:href="${'tel:' + doctor.phone}" class="btn btn-white call-btn w-100">
 													<i class="fas fa-phone d-block"></i>
 													<small>Call</small>
 												</a>
@@ -113,7 +113,8 @@
 										</div>
 									</div>
 									<div class="clinic-booking">
-										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}">Book Appointment</a>
+										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" th:if="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}">Book Appointment</a>
+										<a class="apt-btn" href="#" th:unless="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}" onclick="alert('Only Patients can be able to book appointment')">Book Appointment</a>
 									</div>
 								</div>
 							</div>
@@ -131,8 +132,8 @@
 									<li class="nav-item">
 										<a class="nav-link" th:classappend="${#strings.equals('reviews', param.tabActive) ? '' : 'active'}" href="#doc_overview" data-toggle="tab">Overview</a>
 									</li>
-									<li class="nav-item">
-										<a class="nav-link" id="doc_locations_nav_btn" href="#doc_locations" data-toggle="tab" th:if="${doctor?.clinic}">Locations</a>
+									<li class="nav-item" th:if="${doctor?.clinic}">
+										<a class="nav-link" id="doc_locations_nav_btn" href="#doc_locations" data-toggle="tab">Locations</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" th:classappend="${#strings.equals('reviews', param.tabActive) ? 'active' : ''}" href="#doc_reviews" data-toggle="tab">Reviews</a>
@@ -150,14 +151,78 @@
 										<div class="col-md-12 col-lg-9">
 
 											<!-- About Details -->
-											<div class="widget about-widget">
+											<div class="widget about-widget" th:unless="${doctor?.bio.biography.isEmpty}">
 												<h4 class="widget-title">About Me</h4>
 												<p th:text="${doctor?.bio?.biography}"></p>
 											</div>
 											<!-- /About Details -->
 
+											<!-- Education Details -->
+											<div class="widget education-widget" th:unless="${doctor?.bio?.educations == null || doctor?.bio?.educations?.isEmpty}">
+												<h4 class="widget-title">Education</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="education : ${doctor.bio.educations}" th:object="${education}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name" th:text="*{college}"></a>
+																	<div th:text="${degree}"></div>
+																	<span class="time"><th:block th:text="*{from}"></th:block> - <th:block th:text="*{to}"></th:block></span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Education Details -->
+									
+											<!-- Experience Details -->
+											<div class="widget experience-widget" th:unless="${doctor?.bio?.experiences == null || doctor?.bio?.experiences?.isEmpty}">
+												<h4 class="widget-title">Work & Experience</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="experience : ${doctor.bio.experiences}" th:object="${experience}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name" th:text="*{hospital}"></a>
+																	<span class="time"><th:block th:text="*{from}"></th:block> - <th:block th:text="*{to.isEmpty} ? 'Present' : *{to}"></th:block></span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Experience Details -->
+								
+											<!-- Awards Details -->
+											<div class="widget awards-widget" th:unless="${doctor?.bio?.awards == null || doctor?.bio?.awards?.isEmpty}">
+												<h4 class="widget-title">Awards</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="award : ${doctor.bio.awards}" th:object="${award}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<p class="exp-year" th:text="*{year}"></p>
+																	<h4 class="exp-title" th:text="*{award}"></h4>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Awards Details -->
+
 											<!-- Services List -->
-											<div class="service-list">
+											<div class="service-list" th:unless="${doctor?.services?.isEmpty}">
 												<h4>Services</h4>
 												<ul class="clearfix" th:each="service : ${doctor?.services}">
 													<li th:text="${service.name}">Tooth cleaning</li>
@@ -166,7 +231,7 @@
 											<!-- /Services List -->
 
 											<!-- Specializations List -->
-											<div class="service-list">
+											<div class="service-list" th:unless="${doctor?.specialities?.isEmpty}">
 												<h4>Specializations</h4>
 												<ul class="clearfix" th:each="speciality : ${doctor?.specialities}">
 													<li th:text="${speciality.name}">Children Care</li>
@@ -260,9 +325,9 @@
 												<div class="clinic-details mb-0">
 													<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic.address}"></span></h5>
 													<ul>
-														<li th:each="clinicImg : ${doctor?.clinic?.parsedImages}">
-															<a th:href="@{${'/images/' + clinicImg}}" data-fancybox="gallery">
-																<img th:src="@{${'/images/' + clinicImg}}" th:attr="data-image=${clinicImg}" alt="Feature">
+														<li th:each="img : ${doctor?.clinic?.images}">
+															<a th:href="@{${'/images/' + img}}" data-fancybox="gallery">
+																<img th:src="@{${'/images/' + img}}" th:attr="data-image=${clinicImg}" alt="Feature">
 															</a>
 														</li>
 													</ul>
@@ -270,23 +335,23 @@
 
 											</div>
 
-											<div class="widget business-widget" th:if="${clinicOpeningTimes.size() > 0}">
+											<div class="widget business-widget" th:unless="${clinicOpeningTimes.isEmpty()}">
 												<div class="widget-content">
 													<div class="listing-hours">
 														<div class="listing-day current">
 															<div class="day">Today <span th:text="${#temporals.format(now, 'dd MMM yyyy', 'en')}"></span></div>
 															<div class="time-items">
-																<th:block th:object="${clinicOpeningTimes[now.dayOfWeek.value]}">
+																<th:block th:object="${clinicOpeningTimes[now.dayOfWeek.value - 1]}">
 																	<span class="open-status">
 																		<span th:if="*{openNow}" class="badge bg-success-light">Open Now</span>
 																		<span th:unless="*{openNow}" class="badge bg-danger-light">Closed</span>
 																	</span>
-																	<span th:unless="*{closed}" class="time" th:text="${clinicOpeningTimes[now.dayOfWeek.value].openingTime}"></span>
+																	<span th:unless="*{closed}" class="time" th:text="${clinicOpeningTimes[now.dayOfWeek.value - 1].openingTime}"></span>
 																</th:block>
 
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[0]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[0]}" th:if="${clinicOpeningTimes[0]}">
 															<div class="day">Monday</div>
 															<div class="time-items">
 																<span class="time">
@@ -295,7 +360,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[1]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[1]}" th:if="${clinicOpeningTimes[1]}">
 															<div class="day">Tuesday</div>
 															<div class="time-items">
 																<span class="time">
@@ -304,7 +369,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[2]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[2]}" th:if="${clinicOpeningTimes[2]}">
 															<div class="day">Wednesday</div>
 															<div class="time-items">
 																<span class="time">
@@ -313,7 +378,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[3]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[3]}" th:if="${clinicOpeningTimes[3]}">
 															<div class="day">Thursday</div>
 															<div class="time-items">
 																<span class="time">
@@ -322,7 +387,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[4]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[4]}" th:if="${clinicOpeningTimes[4]}">
 															<div class="day">Friday</div>
 															<div class="time-items">
 																<span class="time">
@@ -331,7 +396,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day" th:object="${clinicOpeningTimes[5]}">
+														<div class="listing-day" th:object="${clinicOpeningTimes[5]}" th:if="${clinicOpeningTimes[5]}">
 															<div class="day">Saturday</div>
 															<div class="time-items">
 																<span class="time">
@@ -340,7 +405,7 @@
 																</span>
 															</div>
 														</div>
-														<div class="listing-day closed" th:object="${clinicOpeningTimes[6]}">
+														<div class="listing-day closed" th:object="${clinicOpeningTimes[6]}" th:if="${clinicOpeningTimes[6]}">
 															<div class="day">Sunday</div>
 															<div class="time-items">
 																<span class="time">
@@ -368,14 +433,14 @@
 									<div class="card" th:if="${#lists.isEmpty(reviews)}">
 										<div class="card-body text-center">
 											<h3>No Comments Yet.</h3>
-											<p>Be the first to comment on <span th:text="${doctor.fullName}"></span></p>
+											<p sec:authorize="hasRole('ROLE_PATIENT')">Be the first to comment on <span th:text="${doctor.fullName}"></span></p>
 										</div>
 									</div>
 									<!-- Review Listing -->
 									<div class="widget review-listing" th:unless="${#lists.isEmpty(reviews)}">
-										<ul class="comments-list" th:each="review : ${reviews}">
+										<ul class="comments-list">
 											<!-- Comment List -->
-											<li>
+											<li th:each="review : ${reviews}">
 												<div class="comment">
 													<img class="avatar avatar-sm rounded-circle" alt="User Image" th:src="${review.patient.theAvatar}">
 													<div class="comment-body">

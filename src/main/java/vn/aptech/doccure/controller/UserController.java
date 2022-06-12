@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -63,10 +61,10 @@ public class UserController {
         ModelAndView modelAndView;
         if (newUser.isDoctor()) {
             modelAndView = new ModelAndView("pages/doctor/doctor-profile-settings");
-            modelAndView.addObject("user", newUser);
+            modelAndView.addObject("profileUser", newUser);
         } else {
             modelAndView = new ModelAndView("pages/patient/patient-profile-settings");
-            modelAndView.addObject("user", newUser);
+            modelAndView.addObject("profileUser", newUser);
         }
         return modelAndView;
     }
@@ -92,8 +90,9 @@ public class UserController {
                         user.setAvatar(fileName);
                     }
                 } catch (StorageException e) {
-                    user.setAvatar("avatar-admin.png");
+                    // do nothing, no need to set default avatar
                 }
+
                 if (user.hasRole(Constants.Roles.ROLE_DOCTOR)) {
                     user.getBio().setDoctor(user);
                     user.getBio().setDoctorId(user.getId());
@@ -134,7 +133,6 @@ public class UserController {
         }
         return modelAndView;
     }
-
 
     @GetMapping("test/change-password")
     @Secured({Constants.Roles.ROLE_DOCTOR, Constants.Roles.ROLE_PATIENT, Constants.Roles.ROLE_ADMIN})

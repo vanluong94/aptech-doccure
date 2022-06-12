@@ -42,8 +42,7 @@ function initialize() {
 	// var oldcenter = new google.maps.LatLng(0,0);
 	google.maps.event.addListener(searchMap, 'idle', function() { 
 		var newcenter = searchMap.getCenter();
-		// console.log(searchMap.getZoom());
-		if (google.maps.geometry.spherical.computeDistanceBetween(newcenter, center)>100) {
+		if (searchMap.getZoom() >= 12 && google.maps.geometry.spherical.computeDistanceBetween(newcenter, center)>100) {
 			var bounds =  searchMap.getBounds();
 			var ne = bounds.getNorthEast();
 			var sw = bounds.getSouthWest();
@@ -70,7 +69,6 @@ function initialize() {
 					loadMarkers(searchMap, newMarkers);
 					loadResultsGrid(results);
 				})
-			console.log(url);
 			center = searchMap.getCenter();     
 		}
 	});
@@ -91,7 +89,7 @@ function showMarkerInfo(marker) {
 					'<a href="' + marker.profile_link + '" tabindex="0">' + marker.title + '</a>' +
 					'<i class="fas fa-check-circle verified"></i>' +
 				'</h3>' +
-				'<p class="speciality">' + marker.eduSpecialtiesText + '</p>' +
+				'<p class="speciality">' + marker.specialtiesText + '</p>' +
 				'<div class="rating">' +
 					'<i class="fas fa-star filled"></i>' +
 					'<i class="fas fa-star filled"></i>' +
@@ -140,6 +138,17 @@ function loadResultsGrid(items) {
 	resultsCount.innerText = items.length;
 	let output = '';
 	for (let item of items) {
+
+		let rating = '';
+		for(let i=1;i<6;i++) {
+			if (i - item.avgRating < 0.5) {
+				rating += '<i class="fas fa-star filled"></i>';
+			} else if (i - item.avgRating == 0.5) {
+				rating += '<i class="fas fa-star-half-alt filled"></i>';
+			} else {
+				rating += '<i class="far fa-star"></i>';
+			}
+		} 
 		output += `
 		<div class="col-sm-6 col-md-4 col-xl-6">
 			<div class="profile-widget">
@@ -157,13 +166,9 @@ function loadResultsGrid(items) {
 						<a href="${item.url}">${item.title}</a>
 						<i class="fas fa-check-circle verified"></i>
 					</h3>
-					<p class="speciality">${item.eduSpecialtiesText}</p>
+					<p class="speciality">${item.specialtiesText}</p>
 					<div class="rating">
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
-						<i class="fas fa-star filled"></i>
+						${rating}
 						<span class="d-inline-block average-rating">(${item.totalReviews})</span>
 					</div>
 					<ul class="available-info">

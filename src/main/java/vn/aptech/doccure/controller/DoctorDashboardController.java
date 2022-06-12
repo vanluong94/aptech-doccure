@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,26 +16,25 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.DoctorClinic;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.model.PatientDTO;
 import vn.aptech.doccure.service.AppointmentService;
+import vn.aptech.doccure.service.ClinicService;
 import vn.aptech.doccure.service.UserService;
-import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/dashboard")
 @Secured("ROLE_DOCTOR")
 public class DoctorDashboardController {
+
+    @Autowired
+    ClinicService clinicService;
 
     @Autowired
     UserService userService;
@@ -65,13 +63,12 @@ public class DoctorDashboardController {
             clinic = user.getClinic();
         }
 
-        clinic.parseImages();
         modelAndView.addObject("clinic", clinic);
         return modelAndView;
     }
 
     @PostMapping("/clinic-settings/save")
-    public String clinicPageSave(@Validated @ModelAttribute DoctorClinic clinic, BindingResult result, Authentication auth) {
+    public String clinicPageSave(@Validated @ModelAttribute DoctorClinic clinic, BindingResult result, Authentication auth, RedirectAttributes redirect) {
         if (!result.hasErrors()) {
 
             User doctor = (User) auth.getPrincipal();
@@ -79,8 +76,7 @@ public class DoctorDashboardController {
             List<String> images;
 
             if (doctor.getClinic() != null) {
-                doctor.getClinic().parseImages();
-                images = doctor.getClinic().getParsedImages();
+                images = doctor.getClinic().getImages();
 
                 for (String img : clinic.getDeletedImages()) {
                     images.remove(img);
@@ -94,13 +90,14 @@ public class DoctorDashboardController {
                 images.add(filename);
             }
 
-            clinic.setParsedImages(images);
-            clinic.syncParsedImages();
+            clinic.setImages(images);
 
             clinic.setDoctorId(doctor.getId());
             clinic.setDoctor(doctor);
             doctor.setClinic(clinic);
-            userService.save(doctor);
+            clinicService.save(clinic);
+
+            redirect.addFlashAttribute("successMessage", "Successfully updated Clinic profile.");
         }
 
         return "redirect:/dashboard/clinic-settings";

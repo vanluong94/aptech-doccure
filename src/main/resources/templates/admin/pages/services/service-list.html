@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{admin/layout}"
 >
@@ -55,7 +56,7 @@
 														<a th:href="@{/service/{slug}(slug=${service.slug})}" th:text="${service.name}">Dental Fillings</a>
 													</h2>
 												</td>
-												<td th:text="${service?.users?.size()}"></td>
+												<td th:text="${service?.doctors?.size()}"></td>
 												<td class="text-right">
 													<div class="actions">
 														<a class="btn btn-sm bg-info-light"
@@ -71,7 +72,7 @@
 																th:attr="data-whatever=${service.id}"
 																th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
 														</button>
-													</div>
+											 		</div>
 												</td>
 											</tr>
 										</tbody>

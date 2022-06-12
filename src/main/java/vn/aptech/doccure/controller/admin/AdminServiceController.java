@@ -22,7 +22,9 @@ import java.util.Optional;
 @RequestMapping("/admin/services")
 @RolesAllowed("ROLE_ADMIN")
 public class AdminServiceController {
+
     private final Logger logger = LoggerFactory.getLogger(AdminUserController.class);
+
     @Autowired
     private ServiceService serviceService;
     @Autowired
@@ -52,13 +54,13 @@ public class AdminServiceController {
         try {
             Service serviceSave = serviceService.save(service);
             if (serviceSave != null) {
-                redirect.addFlashAttribute(Constants.MESSSAGE.SUCCESS, "The item has been created successfully.");
+                redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "The item has been created successfully.");
             } else {
-                redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Cannot create item " + service.getName() + ".");
+                redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Cannot create item " + service.getName() + ".");
             }
         } catch (Exception e) {
             logger.error("Exception when /admin/services/create", e);
-            redirect.addFlashAttribute(Constants.MESSSAGE.ERROR, "Cannot create item " + service.getName() + ". Details: " + e.getMessage());
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Cannot create item " + service.getName() + ". Details: " + e.getMessage());
         }
         return "redirect:/admin/services";
     }
