@@ -154,7 +154,7 @@
 									</div>
 									<div class="form-group mb-0">
 										<label>Specialization </label>
-										<select th:field="*{specialities}" class="form-control specialities-multiple" multiple="multiple">
+										<select th:field="*{specialities}" class="form-control specialities-multiple">
 											<option th:each="speciality : ${specialities}" th:value="${speciality.id}" th:text="${speciality.name}"></option>
 										</select>
 		<!--								<small class="form-text text-muted">Note : Type & Press  enter to add new specialization</small>-->

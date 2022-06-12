@@ -56,7 +56,7 @@ public class DoctorController {
         }
 
         modelAndView = new ModelAndView("pages/doctor/doctor-profile");
-        modelAndView.addObject("doctor", user);
+        modelAndView.addObject("doctor", user.get());
         Iterable<Review> reviews = reviewService.findAllByDoctorId(user.get().getId());
         modelAndView.addObject("reviews", reviews);
 

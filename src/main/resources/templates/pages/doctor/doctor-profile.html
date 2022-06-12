@@ -433,7 +433,7 @@
 									<div class="card" th:if="${#lists.isEmpty(reviews)}">
 										<div class="card-body text-center">
 											<h3>No Comments Yet.</h3>
-											<p>Be the first to comment on <span th:text="${doctor.fullName}"></span></p>
+											<p sec:authorize="hasRole('ROLE_PATIENT')">Be the first to comment on <span th:text="${doctor.fullName}"></span></p>
 										</div>
 									</div>
 									<!-- Review Listing -->
