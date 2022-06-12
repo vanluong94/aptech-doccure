@@ -151,7 +151,7 @@
 										<div class="col-md-12 col-lg-9">
 
 											<!-- About Details -->
-											<div class="widget about-widget" th:unless="${doctor?.bio.biography.isEmpty}">
+											<div class="widget about-widget" th:if="${doctor?.bio?.biography != null}">
 												<h4 class="widget-title">About Me</h4>
 												<p th:text="${doctor?.bio?.biography}"></p>
 											</div>
@@ -467,7 +467,7 @@
 									<!-- /Review Listing -->
 
 									<!-- Write Review -->
-									<div class="write-review" sec:authorize="hasRole('ROLE_PATIENT')">
+									<div class="write-review" sec:authorize="isAuthenticated()">
 										<h4>Write a review for <strong th:text="${doctor.fullName}"></strong></h4>
 
 										<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
@@ -519,7 +519,7 @@
 										<!-- /Write Review Form -->
 
 									</div>
-									<div sec:authorize="!isAuthenticated()">You must be <a th:href="@{/login}" class="text-success">logged in</a> to post a comment.</div>
+									<div sec:authorize="isAnonymous()">You must be <a th:href="@{/login}" class="text-success">logged in</a> to post a comment.</div>
 									<!-- /Write Review -->
 
 								</div>
