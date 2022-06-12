@@ -74,7 +74,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 logger.info("INSERT ROLE DOCTOR");
             }
 
-            if (!userService.findByEmail("admin@gmail.com").isPresent()) {
+            if (!userService.findByEmail("anhnbt.it@gmail.com").isPresent()) {
                 User admin = new User();
                 Set<Role> roles = new HashSet<>();
                 Role roleAdmin = new Role();
@@ -83,7 +83,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 roles.add(roleAdmin);
                 admin.setFirstName("Nguyen Ba Tuan");
                 admin.setLastName("Anh");
-                admin.setEmail("admin@gmail.com");
+                admin.setEmail("anhnbt.it@gmail.com");
                 admin.setUsername("admin");
                 admin.setPassword(PASSWORD_ENCODER.encode("admin"));
                 admin.setRoles(roles);

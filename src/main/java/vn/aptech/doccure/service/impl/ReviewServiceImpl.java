@@ -16,16 +16,16 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review save(Review review) throws Exception {
         if (StringUtils.isNullOrBlank(review.getTitle())) {
-            throw new Exception("Title must not be null or empty!");
+            throw new IllegalArgumentException("Title must not be null or empty!");
         }
         if (StringUtils.isNullOrBlank(review.getContent())) {
-            throw new Exception("Content must not be null or empty!");
+            throw new IllegalArgumentException("Content must not be null or empty!");
         }
         if (review.getTitle().length() < 2 || review.getTitle().length() > 100) {
-            throw new Exception("Title size must be between 2 and 100");
+            throw new IllegalArgumentException("Title size must be between 2 and 100");
         }
         if (review.getContent().length() < 2 || review.getContent().length() > 100) {
-            throw new Exception("Content size must be between 2 and 100");
+            throw new IllegalArgumentException("Content size must be between 2 and 100");
         }
         return repo.save(review);
     }
@@ -33,6 +33,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Iterable<Review> findAll() {
         return repo.findAll();
+    }
+
+    @Override
+    public Iterable<Review> findAllByDoctorId(Long id) {
+        return repo.findAllByDoctorId(id);
     }
 
     @Override
