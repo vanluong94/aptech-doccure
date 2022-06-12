@@ -9,11 +9,11 @@
         <div class="widget-profile pro-widget-content">
             <div class="profile-info-widget">
                 <a href="#" class="booking-doc-img">
-                    <img th:src="${user.theAvatar}" alt="User Image">
+                    <img th:src="${loggedUser?.theAvatar}" alt="User Image">
                 </a>
                 <div class="profile-det-info">
-                    <h3 th:text="${user.fullName}" class="mb-0"></h3>
-                    <p th:text="${'@' + user.username}" class="small text-secondary"></p>
+                    <h3 th:text="${loggedUser?.fullName}" class="mb-0"></h3>
+                    <p th:text="${'@' + loggedUser?.username}" class="small text-secondary"></p>
                     <div class="patient-details">
                         <h5 class="mb-0 text-wrap" th:text="${doctorDto.eduSpecialtiesText}"></h5>
                     </div>
