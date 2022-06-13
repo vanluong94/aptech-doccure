@@ -97,7 +97,7 @@ public class DatabaseLoader implements CommandLineRunner {
             logger.info("-------------------------------");
 
             try {
-                userService.findByUsername("sample_patient");
+                userService.findByUsername("patient");
             } catch (UsernameNotFoundException e) {
                 User user = new User();
                 Set<Role> roles = new HashSet<>();
@@ -105,7 +105,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 user.setFirstName("John");
                 user.setLastName("Doe");
                 user.setEmail("sample_patient@gmail.com");
-                user.setUsername("sample_patient");
+                user.setUsername("patient");
                 user.setPassword(PASSWORD_ENCODER.encode("123456"));
                 user.setRoles(roles);
                 user.setStatus(1);
@@ -115,7 +115,7 @@ public class DatabaseLoader implements CommandLineRunner {
             logger.info("-------------------------------");
 
             try {
-                userService.findByUsername("sample_doctor");
+                userService.findByUsername("doctor");
             } catch (UsernameNotFoundException e) {
                 User user = new User();
                 Set<Role> roles = new HashSet<>();
@@ -123,7 +123,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 user.setFirstName("Jane");
                 user.setLastName("Doe");
                 user.setEmail("sample_doctor@gmail.com");
-                user.setUsername("sample_doctor");
+                user.setUsername("doctor");
                 user.setPassword(PASSWORD_ENCODER.encode("123456"));
                 user.setRoles(roles);
                 user.setStatus(1);
