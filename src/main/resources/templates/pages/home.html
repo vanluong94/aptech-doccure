@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+ lang="en">
+<head>
+
+</head>
+<body>
+    <div class="home-content" layout:fragment="layoutContent">
+
+        <!-- Home Banner -->
+        <section class="section section-search">
+            <div class="container-fluid">
+                <div class="banner-wrapper">
+                    <div class="banner-header text-center">
+                        <h1>Search Doctor, Make an Appointment</h1>
+                        <p>Discover the best doctors, clinic the city nearest to you.</p>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="search-box">
+                        <form th:action="@{/search}" method="get">
+                            <div class="form-group search-location">
+                                <input name="location" type="text" class="form-control" placeholder="Search Location">
+                                <span class="form-text">Based on your Location</span>
+                            </div>
+                            <div class="form-group search-info">
+                                <input name="query" type="text" class="form-control" placeholder="Search Doctors, Clinics">
+                                <span class="form-text">Ex : Dental or Sugar Check up etc</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary search-btn mt-0"><i class="fas fa-search"></i> <span>Search</span></button>
+                        </form>
+                    </div>
+                    <!-- /Search -->
+
+                </div>
+            </div>
+        </section>
+        <!-- /Home Banner -->
+
+        <!-- Category Section -->
+        <section class="section section-category">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2>Browse by Specialities</h2>
+                </div>
+                <div class="row" th:if="${#lists.isEmpty(specialities)}">
+                    <div class="col-md-12">No data to display.</div>
+                </div>
+                <div class="row" th:unless="${#lists.isEmpty(specialities)}">
+                    <div class="col-lg-3" th:each="speciality : ${specialities}">
+                        <div class="category-box">
+                            <div class="category-image">
+                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
+                                    <img th:src="'/files/' + ${speciality.image}" th:alt="${speciality.name}">
+                                </a>
+                            </div>
+                            <div class="category-content">
+                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}"><h4 th:text="${speciality.name}"></h4></a>
+                                <span th:text="${speciality?.users?.size() + ' Doctors'}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Category Section -->
+
+        <!-- Popular Section -->
+        <section class="section section-doctor">
+            <div class="container-fluid">
+                <div class="section-header text-center">
+                    <h2>Book Our Best Doctor</h2>
+                </div>
+                <div class="row" th:if="${#lists.isEmpty(doctors)}">
+                    <div class="col-md-12">No data to display.</div>
+                </div>
+                <div class="row" th:unless="${#lists.isEmpty(doctors)}">
+                    <div class="col-lg-12">
+                        <div class="doctor-slider slider">
+                            <!-- Doctor Widget -->
+                            <div class="profile-widget" th:each="doctor : ${doctors}">
+                                <div class="doc-img">
+                                    <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}">
+                                        <img class="img-fluid" src="#" th:src="${doctor.theAvatar}" alt="User Image">
+                                    </a>
+                                </div>
+                                <div class="pro-content">
+                                    <h3 class="title">
+                                        <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
+                                        <i class="fas fa-check-circle verified"></i>
+                                    </h3>
+                                    <p class="speciality" th:if="${doctor?.clinic?.specialities != null}" th:text="${doctor?.clinic?.specialities}"></p>
+                                    <div class="rating" th:unless="${#lists.isEmpty(doctor?.doctorReviews)}">
+                                        <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                            <i class="fas fa-star filled" th:if="${i - doctor.avgReview < 0.5}"></i>
+                                            <i class="fas fa-star-half-alt filled" th:if="${i - doctor.avgReview == 0.5}"></i>
+                                            <i class="far fa-star" th:if="${i - doctor.avgReview > 0.5}"></i>
+                                        </th:block>
+                                        <span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
+                                    </div>
+                                    <ul class="available-info">
+                                        <li th:if="${doctor?.clinic?.city != null}"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span></li>
+                                        <li> <i class="far fa-clock"></i> Available on Fri, 22 Mar</li>
+                                    </ul>
+                                    <div class="row row-sm">
+                                        <div class="col-6"> <a class="btn view-btn" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">View Profile</a>
+                                        </div>
+                                        <div class="col-6"> <a th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" class="btn book-btn">Book Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Doctor Widget -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /Popular Section -->
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <style>
+        .time-slot li input.slot-option:checked + label.timing {
+            background-color: #42c0fb;
+            border: 1px solid #42c0fb;
+            color: #fff;
+        }
+
+        .time-slot li input.slot-option:checked + label.timing:after {
+            color: #fff;
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-size: 12px;
+            font-weight: 900;
+            position: absolute;
+            right: 6px;
+            top: 6px;
+        }
+
+        .time-slot li input.slot-option:disabled + label.timing {
+            opacity: .5;
+        }
+
+        #bookingForm .slot-option {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .slick-list {
+            width: 100%;
+        }
+        
+        .slick-arrow.slick-disabled {
+            opacity: .1;
+        }
+
+        .day-slot ul {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .day-slot li.left-arrow {
+            z-index: 1;
+        }
+
+        .day-slot li.right-arrow {
+            z-index: 1;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content" layout:fragment="layoutContent">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-12">
+                        <nav aria-label="breadcrumb" class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Booking</li>
+                            </ol>
+                        </nav>
+                        <h2 class="breadcrumb-title">Booking</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <!-- Page Content -->
+        <div class="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="booking-doc-info">
+                                    <a th:href="${doctorDto.url}" class="booking-doc-img">
+                                        <img th:src="${doctor.theAvatar}" alt="Doctor Image">
+                                    </a>
+                                    <div class="booking-info">
+                                        <h4><a th:href="@{'/doctor/profile/' + ${doctor.id}}" th:text="${doctor.fullName}"></a></h4>
+
+                                        <div class="rating">
+                                            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                                <i class="fas fa-star filled" th:if="${i - doctor.avgReview < 0.5}"></i>
+                                                <i class="fas fa-star-half-alt filled" th:if="${i - doctor.avgReview == 0.5}"></i>
+                                                <i class="far fa-star" th:if="${i - doctor.avgReview > 0.5}"></i>
+                                            </th:block>
+											<span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
+                                        </div>
+
+                                        <p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> <th:block th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></th:block></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-4 col-md-6">
+                                <h4 class="mb-1" th:text="${nowDateText}"></h4>
+                                <p class="text-muted" th:text="${nowWeekdayText}"></p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+                        <!-- Schedule Widget -->
+                        <div class="card booking-schedule schedule-widget">
+
+                            <!-- Schedule Header -->
+                            <div class="schedule-header">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <!-- Day Slot -->
+                                        <div class="day-slot">
+                                            <ul class="slick-slider" id="daySlotSlider">
+                                                <li th:each="weekday : ${weekdays}">
+                                                    <span th:text="${weekday.textWeekday}"></span>
+                                                    <span class="slot-date" th:text="${weekday.textDate}"></span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- /Day Slot -->
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Schedule Header -->
+
+                            <!-- Schedule Content -->
+                            <div class="schedule-cont">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <!-- Time Slot -->
+                                        <div class="time-slot">
+                                            <form id="bookingForm" method="post">
+                                                <ul class="clearfix" id="bookingSlotSlider">
+                                                    <li th:each="weekday,weekdayStat : ${weekdays}">
+                                                        <th:block th:each="slot,slotStat : ${weekday.slots}">
+                                                            <input th:if="${slot.past || slot.booked}" type="radio" class="slot-option" disabled>
+                                                            <input th:unless="${slot.past || slot.booked}" type="radio" th:value="${slot.id}" th:id="${'time_slot_' + slot.id}" name="timeSlotId" class="slot-option" required>
+                                                            <label class="timing" th:classappend="${!slot.past}? 'btn'" th:for="${'time_slot_' + slot.id}">
+                                                                <span th:text="${slot.timeText}"></span>
+                                                            </label>
+                                                        </th:block>
+                                                    </li>
+                                                </ul>   
+                                                <input type="hidden" id="doctorId" th:value="${doctor.id}">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                            </form>
+                                        </div>
+                                        <!-- /Time Slot -->
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Schedule Content -->
+
+                        </div>
+                        <!-- /Schedule Widget -->
+
+                        <!-- Submit Section -->
+                        <div class="submit-section proceed-btn text-right">
+                            <button class="btn btn-primary submit-btn" form="bookingForm">Confirm Booking</button>
+                        </div>
+                        <!-- /Submit Section -->
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /Page Content -->
+    </div>
+
+    <div layout:fragment="customScripts">
+        <script src="/assets/js/slick.js"></script>
+
+        <script>
+            const doctorId = document.getElementById('doctorId').value;
+
+            const $daySlotSlider = jQuery('#daySlotSlider').slick({
+                infinite: false,
+                slidesToShow: 7,
+                slidesToScroll: 1,
+                prevArrow: '<li class="left-arrow btn"><i class="fa fa-chevron-left"></i></li>',
+                nextArrow: '<li class="right-arrow btn"><i class="fa fa-chevron-right"></i></li>',
+            }).on('beforeChange', function(event, slick, currentSlide, nextSlide){
+                $bookingSlotSlider.slick('slickGoTo', nextSlide);
+                
+                if (nextSlide + 7 == $daySlotSlider.find('.slick-slide').length) {
+                    jQuery.ajax({
+                        url: '/ajax/appointments/getByDoctor',
+                        data: {
+                            doctorId,
+                            offset: $daySlotSlider.find('.slick-slide').length,
+                            length: 1
+                        },
+                        success(resp) {
+                            console.log('parse results');
+                            if (resp.isSuccess) {
+                                for (weekday of resp.data.results) {
+                                    $daySlotSlider.slick(
+                                        'slickAdd', 
+                                        `<div><li style="width: 100%;display: inline-block;">
+                                            <span>${weekday.textWeekday}</span>
+                                            <span class="slot-date">${weekday.textDate}</span>
+                                        </li></div>`
+                                    );
+
+                                    let bookingSlotsOutput = '<div><li style="width: 100%; display: inline-block;">';
+                                    for (slot of weekday.slots) {
+                                        if (slot.past || slot.booked) {
+                                            bookingSlotsOutput += `<input type="radio" class="slot-option" disabled>`;
+                                        } else {
+                                            bookingSlotsOutput += `<input type="radio" value="${slot.id}" id="time_slot_{slot.id}" name="timeSlotId" class="slot-option" required>`;
+                                        }
+                                        bookingSlotsOutput += `<label class="timing ${slot.past ? 'btn' : ''}" for="time_slot_{slot.id}"><span>${slot.timeText}</span></label>`;
+                                    }
+                                    bookingSlotsOutput += '</li></div>';
+
+                                    $bookingSlotSlider.slick('slickAdd', bookingSlotsOutput);
+                                }
+                            }
+                        },
+                    });
+                }
+            })
+
+            const $bookingSlotSlider = jQuery('#bookingSlotSlider').slick({
+                infinite: false,
+                slidesToShow: 7,
+                slidesToScroll: 1,
+                arrows: false,
+            });
+        </script>
+    </div>
+
+</body>
+</html>

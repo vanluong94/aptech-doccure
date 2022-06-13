@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+### File cau hinh Moi truong khong commit len vi ly do bao mat ###
+*.env
+
+### Exclude macos directory configuration file ###
+.DS_Store
+upload-dir
+.metadata/
+bin

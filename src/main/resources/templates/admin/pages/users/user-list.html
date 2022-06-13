@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{admin/layout}"
+>
+	<head>
+
+	</head>
+    <body>
+        <div class="page-wrapper" layout:fragment="layoutContent">
+			<div class="content container-fluid">
+				<!-- Page Header -->
+				<div class="page-header">
+					<div class="row">
+						<div class="col-sm-7 col-auto">
+							<h3 class="page-title">List of Users</h3>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+								<li class="breadcrumb-item active">Users</li>
+							</ul>
+						</div>
+<!--							<div class="col-sm-5 col">-->
+<!--								<a th:href="@{/admin/doctors/create}" class="btn btn-primary float-right mt-2">Add</a>-->
+<!--							</div>-->
+					</div>
+				</div>
+				<!-- /Page Header -->
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+								<div class="table-responsive">
+									<div class="table-responsive">
+										<table class="datatable table table-hover table-center mb-0">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>User Name</th>
+													<th>User Role</th>
+													<th>Gender</th>
+													<th>Email</th>
+													<th>Phone</th>
+													<th>Status</th>
+													<th class="text-right">Actions</th>
+												</tr>
+											</thead>
+											<tbody th:if="${#lists.isEmpty(users)}">
+												<tr>No Data</tr>
+											</tbody>
+											<tbody th:unless="${#lists.isEmpty(users)}">
+												<tr th:each="user : ${users}">
+													<td th:if="${user.isDoctor()}">
+														<h2 class="table-avatar">
+															<a th:href="@{/doctor/profile/{id}(id=${user.id})}" class="avatar avatar-sm mr-2">
+																<img class="avatar-img rounded-circle" alt="User Image" src="#" th:src="${user.theAvatar}"></a>
+															<a th:href="@{/doctor/profile/{id}(id=${user.id})}" th:text="${user.fullName}"></a>
+														</h2>
+													</td>
+													<td th:unless="${user.isDoctor()}">
+														<h2 class="table-avatar">
+															<a href="#" class="avatar avatar-sm mr-2">
+																<img class="avatar-img rounded-circle" alt="User Image" src="#" th:src="${user.theAvatar}"></a>
+															<a href="#" th:text="${user.fullName}"></a>
+														</h2>
+													</td>
+													<td th:text="${user.username}"></td>
+													<td th:unless="${user.hasAnyRole()}">
+														<span>Unknown</span>
+													</td>
+													<td th:if="${user.hasAnyRole()}">
+														<th:block th:each="role : ${user.roles}">
+															<span th:classappend="${role.roleText == 'Admin' ? 'badge badge-danger' : 'badge badge-info'}" th:utext="${role.roleText}"></span><br/>
+														</th:block>
+													</td>
+													<td th:text="${user.genderText}"></td>
+													<td th:text="${user.email}"></td>
+													<td th:text="${user.phone}"></td>
+													<td>
+														<span th:classappend="${user.status == 0 ? 'badge badge-danger' : 'badge badge-success'}" th:utext="${user.statusText}"></span><br/>
+													</td>
+													<td class="text-right">
+														<div class="actions">
+															<a class="btn btn-sm bg-success-light"
+															   th:unless="${user.isAdmin()}"
+															   th:href="@{/admin/users/edit/{id}(id=${user.id})}"
+															   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
+															<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
+																	data-target="#confirmModal"
+																	th:unless="${user.isAdmin()}"
+																	th:attr="data-whatever=${user.id}"
+																	th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
+															</button>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<form action="#" th:action="@{/admin/users/delete}" method="post">
+							<div class="modal-body">
+								<div class="form-content p-2">
+									<h4 class="modal-title">Delete</h4>
+									<p class="mb-4">Are you sure want to delete?</p>
+									<input type="hidden" name="id" id="id">
+									<button type="submit" class="btn btn-primary">Confirm</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+        </div>
+    </body>
+</html>

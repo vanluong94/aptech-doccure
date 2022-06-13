@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}"
+>
+<head>
+
+</head>
+<body>
+<div class="page-wrapper" layout:fragment="layoutContent">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="page-title">Welcome Admin!</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item active"><a th:href="@{/dashboard}">Dashboard</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-sm-4 col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="dash-widget-header">
+										<span class="dash-widget-icon text-primary border-primary">
+											<i class="fa fa-user-md" aria-hidden="true"></i>
+										</span>
+                            <div class="dash-count">
+                                <h3 th:text="${countDoctors}">0</h3>
+                            </div>
+                        </div>
+                        <div class="dash-widget-info">
+                            <h6 class="text-muted">Doctors</h6>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-primary w-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="dash-widget-header">
+										<span class="dash-widget-icon text-success">
+											<i class="fa fa-user-plus" aria-hidden="true"></i>
+										</span>
+                            <div class="dash-count">
+                                <h3 th:text="${countPatients}">0</h3>
+                            </div>
+                        </div>
+                        <div class="dash-widget-info">
+
+                            <h6 class="text-muted">Patients</h6>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-success w-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="dash-widget-header">
+										<span class="dash-widget-icon text-danger border-danger">
+											<i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+										</span>
+                            <div class="dash-count">
+                                <h3 th:text="${countAppointments}">0</h3>
+                            </div>
+                        </div>
+                        <div class="dash-widget-info">
+
+                            <h6 class="text-muted">Appointments</h6>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-danger w-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 d-flex">
+
+                <!-- Recent Orders -->
+                <div class="card card-table flex-fill">
+                    <div class="card-header">
+                        <h4 class="card-title">Doctors List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Doctor Name</th>
+                                    <th>Speciality</th>
+                                    <th>Reviews</th>
+                                </tr>
+                                </thead>
+                                <tbody th:if="${#lists.isEmpty(listDoctors)}">
+                                <tr>
+                                    <td colspan="4">No data.</td>
+                                </tr>
+                                </tbody>
+                                <tbody th:unless="${#lists.isEmpty(listDoctors)}">
+                                <tr th:each="doctor : ${listDoctors}">
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" class="avatar avatar-sm mr-2">
+                                                <img class="avatar-img rounded-circle" th:src="${doctor.theAvatar}" alt="User Image">
+                                            </a>
+                                            <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
+                                        </h2>
+                                    </td>
+                                    <td th:text="${doctor?.clinic?.specialities}"></td>
+                                    <td>
+                                        <div class="rating" th:unless="${#lists.isEmpty(doctor?.doctorReviews)}" style="line-height: 18px;">
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 1 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 2 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 3 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 4 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <i class="fa fa-star" th:classappend="${doctor.avgReview >= 5 ? 'text-warning' : 'text-secondary'}"></i>
+                                            <span class="ml-2 d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Recent Orders -->
+
+            </div>
+            <div class="col-md-6 d-flex">
+
+                <!-- Feed Activity -->
+                <div class="card  card-table flex-fill">
+                    <div class="card-header">
+                        <h4 class="card-title">Patients List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Phone</th>
+                                    <th>Last Appointment</th>
+                                </tr>
+                                </thead>
+                                <tbody th:if="${#lists.isEmpty(listPatients)}">
+                                <tr>
+                                    <td colspan="4">No data.</td>
+                                </tr>
+                                </tbody>
+                                <tbody th:unless="${#lists.isEmpty(listPatients)}">
+                                <tr th:each="patient : ${listPatients}">
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a th:href="@{/doctor/profile/{id}(id=${patient.id})}" class="avatar avatar-sm mr-2">
+                                                <img class="avatar-img rounded-circle" th:src="${patient.theAvatar}" alt="User Image">
+                                            </a>
+                                            <a th:href="@{/doctor/profile/{id}(id=${patient.id})}" th:text="${patient.fullName}"></a>
+                                        </h2>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Feed Activity -->
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <!-- Recent Orders -->
+                <div class="card card-table">
+                    <div class="card-header">
+                        <h4 class="card-title">Appointment List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Doctor Name</th>
+                                    <th>Speciality</th>
+                                    <th>Patient Name</th>
+                                    <th>Apointment Time</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="appointment : ${listAppointments}" th:object="${appointment}">
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a th:href="@{/doctor/profile/{id}(id=*{doctor.id})}" class="avatar avatar-sm mr-2">
+                                                    <img class="avatar-img rounded-circle" th:src="*{doctor.theAvatar}" alt="User Image"></a>
+                                                <a th:href="@{/doctor/profile/{id}(id=*{doctor.id})}" th:text="*{doctor.doctorTitle}"></a>
+                                            </h2>
+                                        </td>
+                                        <td><span th:text="*{doctorDTO.specialtiesText}"></span></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="#" class="avatar avatar-sm mr-2">
+                                                    <img class="avatar-img rounded-circle" th:src="*{patient.theAvatar}" alt="User Image">
+                                                </a>
+                                                <a href="#" th:text="*{patient.fullName}"></a>
+                                            </h2>
+                                        </td>
+                                        <td><th:block th:text="${#temporals.format(appointment.timeSlot.timeStart, 'dd MMM yyyy')}"></th:block> <span class="text-primary d-block"><th:block th:text="${#temporals.format(appointment.timeSlot.timeStart, 'h.m a')}"></th:block> - <th:block th:text="${#temporals.format(appointment.timeSlot.timeEnd, 'h.m a')}"></th:block></span></td>
+
+                                        <td>
+                                            <th:block th:switch="*{status}">
+                                                <th:block th:case="0"><div class="btn bg-warning-light btn-sm">Pending</div></th:block>
+                                                <th:block th:case="1"><div class="btn bg-info-light btn-sm">Confirm</div></th:block>
+                                                <th:block th:case="2"><div class="btn bg-success-light btn-sm">Completed</div></th:block>
+                                                <th:block th:case="3"><div class="btn bg-danger-light btn-sm">Cancelled</div></th:block>
+                                            </th:block>    
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Recent Orders -->
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

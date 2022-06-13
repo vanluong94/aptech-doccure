@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}"
+>
+<head>
+
+</head>
+<body>
+<div class="page-wrapper" layout:fragment="layoutContent">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col">
+                    <h3 class="page-title">Edit Speciality</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/admin/specialities}">Specialities</a></li>
+                        <li class="breadcrumb-item active">Edit Speciality</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Edit Speciality</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+                        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                        <form action="#" th:action="@{/admin/specialities/edit}" th:object="${speciality}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" th:field="*{id}">
+                            <input type="hidden" th:field="*{image}">
+                            <div th:if="${#fields.hasAnyErrors()}">
+                                <ul>
+                                    <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+                                </ul>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2">Name</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" th:field="*{name}"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2">Image</label>
+                                <div class="col-md-10">
+                                    <div class="d-flex">
+                                        <img src="#" th:src="'/files/' + ${speciality.image}" alt="" class="border p-2 mr-2" width="64">
+                                        <input type="file" th:field="*{imageData}" class="form-control">
+                                        <p th:if="${#fields.hasErrors('imageData')}" th:errors="*{imageData}" class="invalid-feedback">Image
+                                            Error</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <a th:href="@{/admin/specialities}" class="btn btn-link"><i class="fa fa-chevron-left"></i> Back</a>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

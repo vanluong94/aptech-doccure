@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <title>Error page</title>
+    <meta charset="utf-8"/>
+</head>
+<body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+    <!-- Page Content -->
+    <div class="content p-0" layout:fragment="layoutContent">
+        <div class="container-fluid">
+
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+
+                    <div class="error-box py-5 my-5 text-center">
+                        <h1 th:text="${httpStatus.value}" class="display-3 font-weight-bold">404</h1>
+                        <h3 th:text="${httpStatus.reasonPhrase}" class="h2 mb-3">Oops! Page not found!</h3>
+                        <p th:text="${errorMessage}" class="h4 font-weight-normal">An error has been occurred.</p>
+                        <a href="#" class="btn btn-primary my-4" th:href="@{/}">Back to Home Page</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /Page Content -->
+</body>
+</html>
+</html>

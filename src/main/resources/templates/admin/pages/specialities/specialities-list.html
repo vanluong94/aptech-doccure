@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}"
+>
+<head>
+
+</head>
+<body>
+<div class="page-wrapper" layout:fragment="layoutContent">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-7 col-auto">
+                    <h3 class="page-title">Specialities</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Specialities</li>
+                    </ul>
+                </div>
+                <div class="col-sm-5 col">
+                    <a th:href="@{/admin/specialities/create}" class="btn btn-primary float-right mt-2"><i class="fa fa-plus"></i> Add new Speciality</a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                        <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+                        <div class="table-responsive">
+                            <table class="datatable table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Specialities</th>
+                                    <th>Doctors</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody th:if="${#lists.isEmpty(specialities)}">
+                                    <tr>
+                                        <td colspan="4">No data.</td>
+                                    </tr>
+                                </tbody>
+                                <tbody th:unless="${#lists.isEmpty(specialities)}">
+                                <tr th:each="speciality : ${specialities}">
+                                    <th scope="row" th:text="${speciality.id}"></th>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}" class="avatar avatar-sm mr-2">
+                                                <img class="avatar-img" src="#" th:src="@{${'/files/' + speciality.image}}" width="85px" th:alt="${speciality.name}">
+                                            </a>
+                                            <a th:href="@{/admin/specialities/{id}(id=${speciality.id})}" th:text="${speciality.name}"></a>
+                                        </h2>
+                                    </td>
+                                    <td th:text="${speciality?.users?.size()}"></td>
+                                    <td class="text-right">
+                                        <div class="actions">
+                                            <a class="btn btn-sm bg-info-light"
+                                               th:href="@{/speciality/{slug}(slug=${speciality.slug})}"
+                                               th:utext="'<i class=\'fa fa-eye\'></i> View'">View</a>
+                                            <a class="btn btn-sm bg-success-light"
+                                               th:href="@{/admin/specialities/edit/{id}(id=${speciality.id})}"
+                                               th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
+                                            <button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
+                                                    data-target="#confirmModal"
+                                                    th:attr="data-whatever=${speciality.id}"
+                                                    th:utext="'<i class=\'fa fa-trash\'></i> Delete'">Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form action="#" th:action="@{/admin/specialities/delete}" method="post">
+                <div class="modal-body text-center">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">Delete</h4>
+                        <p class="mb-4">Are you sure want to delete?</p>
+                        <input type="hidden" name="id" id="id">
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+</div>
+<!-- /Page Wrapper -->
+</body>
+</html>

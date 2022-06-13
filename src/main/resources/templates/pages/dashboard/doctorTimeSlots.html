@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Time Slots</title>
+</head>
+<body>
+
+<div class="page-content" layout:fragment="layoutContent">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-12 col-12">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Schedule Timings</li>
+                        </ol>
+                    </nav>
+                    <h2 class="breadcrumb-title">Schedule Timings</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Breadcrumb -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+                    <div th:replace="fragments/dashboard/doctorSidebar :: sidebar"></div>
+
+                </div>
+
+                <div class="col-md-7 col-lg-8 col-xl-9">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Schedule Timings</h4>
+                                    <div class="profile-box">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card schedule-widget mb-0">
+
+                                                    <!-- Schedule Header -->
+                                                    <div class="schedule-header">
+
+                                                        <!-- Schedule Nav -->
+                                                        <div class="schedule-nav">
+                                                            <ul class="nav nav-tabs nav-justified">
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link active" data-toggle="tab" href="#slot_monday">Monday</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" data-toggle="tab" href="#slot_tuesday">Tuesday</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" data-toggle="tab" href="#slot_wednesday">Wednesday</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" data-toggle="tab" href="#slot_thursday">Thursday</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" data-toggle="tab" href="#slot_friday">Friday</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" data-toggle="tab" href="#slot_saturday">Saturday</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" data-toggle="tab" href="#slot_sunday">Sunday</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <!-- /Schedule Nav -->
+
+                                                    </div>
+                                                    <!-- /Schedule Header -->
+
+                                                    <!-- Schedule Content -->
+                                                    <div class="tab-content schedule-cont">
+
+                                                        <!-- Monday Slot -->
+                                                        <div id="slot_monday" class="tab-pane fade show active">
+                                                            <form class="time-slots-form" data-weekday="0">
+                                                                <div class="hours-info"></div>
+                                                                <div class="add-more my-3">
+                                                                    <a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <input type="hidden" name="weekday" value="0">
+                                                                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <!-- /Monday Slot -->
+
+                                                        <!-- Tuesday Slot -->
+                                                        <div id="slot_tuesday" class="tab-pane fade">
+                                                            <form class="time-slots-form" data-weekday="1">
+                                                                <div class="hours-info"></div>
+                                                                <div class="add-more my-3">
+                                                                    <a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <input type="hidden" name="weekday" value="1">
+                                                                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <!-- /Tuesday Slot -->
+
+                                                        <!-- Wednesday Slot -->
+                                                        <div id="slot_wednesday" class="tab-pane fade">
+                                                            <form class="time-slots-form" data-weekday="2">
+                                                                <div class="hours-info"></div>
+                                                                <div class="add-more my-3">
+                                                                    <a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <input type="hidden" name="we®ekday" value="2">
+                                                                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <!-- /Wednesday Slot -->
+
+                                                        <!-- Thursday Slot -->
+                                                        <div id="slot_thursday" class="tab-pane fade">
+                                                            <form class="time-slots-form" data-weekday="3">
+                                                                <div class="hours-info"></div>
+                                                                <div class="add-more my-3">
+                                                                    <a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <input type="hidden" name="weekday" value="3">
+                                                                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <!-- /Thursday Slot -->
+
+                                                        <!-- Friday Slot -->
+                                                        <div id="slot_friday" class="tab-pane fade">
+                                                            <form class="time-slots-form" data-weekday="4">
+                                                                <div class="hours-info"></div>
+                                                                <div class="add-more my-3">
+                                                                    <a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <input type="hidden" name="weekday" value="4">
+                                                                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <!-- /Friday Slot -->
+
+                                                        <!-- Saturday Slot -->
+                                                        <div id="slot_saturday" class="tab-pane fade">
+                                                            <form class="time-slots-form" data-weekday="5">
+                                                                <div class="hours-info"></div>
+                                                                <div class="add-more my-3">
+                                                                    <a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <input type="hidden" name="weekday" value="5">
+                                                                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <!-- /Saturday Slot -->
+
+                                                        <!-- Sunday Slot -->
+                                                        <div id="slot_sunday" class="tab-pane fade">
+                                                            <form class="time-slots-form" data-weekday="6">
+                                                                <div class="hours-info"></div>
+                                                                <div class="add-more my-3">
+                                                                    <a href="javascript:void(0);" class="add-hours"><i class="fa fa-plus-circle"></i> Add More</a>
+                                                                </div>
+                                                                <div class="submit-section text-center">
+                                                                    <input type="hidden" name="weekday" value="6">
+                                                                    <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <!-- /Sunday Slot -->
+
+                                                    </div>
+                                                    <!-- /Schedule Content -->
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+</div>
+
+<div layout:fragment="layoutExtra"></div>
+<div layout:fragment="customScripts">
+    <script src="/assets/js/doctor-time-slots.js"></script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="https://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout}"
+>
+<head>
+	<link rel="stylesheet" href="/assets/plugins/fancybox/jquery.fancybox.min.css">
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
+</head>
+<body class="page-doctor-profile">
+
+	<div class="page-content" layout:fragment="layoutContent">
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+
+					<!-- Doctor Widget -->
+					<div class="card">
+						<div class="card-body">
+							<div class="doctor-widget">
+								<div class="doc-info-left">
+									<div class="doctor-img">
+										<img src="#" th:src="${doctor.theAvatar}" class="img-fluid" alt="User Image">
+									</div>
+									<div class="doc-info-cont">
+										<h4 class="doc-name" th:text="${doctor.fullName}"></h4>
+										<p class="doc-speciality" th:text="${doctor?.clinic?.specialities}"></p>
+										<div class="doc-department">
+											<th:block th:each="speciality : ${doctor?.specialities}">
+												<a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
+													<img src="#" th:src="'/files/' + ${speciality.image}" class="img-fluid" th:alt="${speciality.name}"> <span th:text="${speciality.name}"></span>
+												</a>
+											</th:block>
+										</div>
+										<div class="rating">
+											<th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                                <i class="fas fa-star filled" th:if="${i - doctor.avgReview < 0.5}"></i>
+                                                <i class="fas fa-star-half-alt filled" th:if="${i - doctor.avgReview == 0.5}"></i>
+                                                <i class="far fa-star" th:if="${i - doctor.avgReview > 0.5}"></i>
+                                            </th:block>
+											<span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
+										</div>
+										<div class="clinic-details">
+											<p class="doc-location">
+												<i class="fas fa-map-marker-alt"></i>
+												<th:block th:if="${doctor?.clinic?.city != null}">
+													<span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
+													<span> - </span>
+													<a href="javascript:void(0);" onclick="(() => {
+														let locationBtn = document.getElementById('doc_locations_nav_btn');
+														locationBtn.scrollIntoView();
+														locationBtn.click();
+													})()">Get Directions</a>
+												</th:block>
+												<th:block th:if="${doctor?.clinic?.city == null}">
+													<span>Unknown</span>
+												</th:block>
+											</p>
+											<ul class="clinic-gallery">
+												<li th:each="img : ${doctor?.clinic?.images}">
+													<a th:href="@{${'/images/' + img}}" data-fancybox="gallery">
+														<img th:src="@{${'/images/' + img}}" th:attr="data-image=${img}" alt="Feature">
+													</a>
+												</li>
+											</ul>
+										</div>
+										<div class="clinic-services">
+										<span th:each="service : ${doctor?.services}">
+											<a href="/search.html" th:text="${service.name}"></a>
+										</span>
+										</div>
+									</div>
+								</div>
+								<div class="doc-info-right">
+									<div class="clini-infos">
+										<ul>
+											<li><i class="far fa-comment"></i> <span th:text="${doctor?.doctorReviews?.size()}"></span> Feedback</li>
+											<li><i class="fas fa-map-marker-alt"></i>
+												<th:block th:if="${doctor?.clinic?.city != null}">
+													<span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
+												</th:block>
+												<th:block th:if="${doctor?.clinic?.city == null}">
+													<span>Unknown</span>
+												</th:block></li>
+										</ul>
+									</div>
+									<div class="doctor-action d-block">
+										<div class="row form-row">
+											<div class="col-6">
+												<a href="javascript:void(0)" class="btn fav-btn w-100 btn-white" th:classappend="${isDoctorFavorite ? 'fav-active' : ''}" th:attr="data-doctor=${doctor.id}">
+													<i class="d-block far fa-bookmark"></i>
+													<small>Bookmark</small>
+												</a>
+											</div>
+											<div class="col-6">
+
+												<a th:if="${doctor.phone}" th:href="${'tel:' + doctor.phone}" class="btn btn-white call-btn w-100">
+													<i class="fas fa-phone d-block"></i>
+													<small>Call</small>
+												</a>
+
+												<a th:unless="${doctor.phone}" href="#" onclick="alert('Phone number is not available')" class="btn btn-white call-btn w-100">
+													<i class="fas fa-phone d-block"></i>
+													<small>Call</small>
+												</a>
+												
+											</div>
+										</div>
+									</div>
+									<div class="clinic-booking">
+										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" th:if="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}">Book Appointment</a>
+										<a class="apt-btn" href="#" th:unless="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}" onclick="alert('Only Patients can be able to book appointment')">Book Appointment</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Doctor Widget -->
+
+					<!-- Doctor Details Tab -->
+					<div class="card">
+						<div class="card-body pt-0">
+
+							<!-- Tab Menu -->
+							<nav class="user-tabs mb-4">
+								<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+									<li class="nav-item">
+										<a class="nav-link" th:classappend="${#strings.equals('reviews', param.tabActive) ? '' : 'active'}" href="#doc_overview" data-toggle="tab">Overview</a>
+									</li>
+									<li class="nav-item" th:if="${doctor?.clinic}">
+										<a class="nav-link" id="doc_locations_nav_btn" href="#doc_locations" data-toggle="tab">Locations</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" th:classappend="${#strings.equals('reviews', param.tabActive) ? 'active' : ''}" href="#doc_reviews" data-toggle="tab">Reviews</a>
+									</li>
+								</ul>
+							</nav>
+							<!-- /Tab Menu -->
+
+							<!-- Tab Content -->
+							<div class="tab-content pt-0">
+
+								<!-- Overview Content -->
+								<div role="tabpanel" id="doc_overview" class="tab-pane fade" th:classappend="${#strings.equals('reviews', param.tabActive) ? '' : 'show active'}">
+									<div class="row">
+										<div class="col-md-12 col-lg-9">
+
+											<!-- About Details -->
+											<div class="widget about-widget" th:if="${doctor?.bio?.biography != null}">
+												<h4 class="widget-title">About Me</h4>
+												<p th:text="${doctor?.bio?.biography}"></p>
+											</div>
+											<!-- /About Details -->
+
+											<!-- Education Details -->
+											<div class="widget education-widget" th:unless="${doctor?.bio?.educations == null || doctor?.bio?.educations?.isEmpty}">
+												<h4 class="widget-title">Education</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="education : ${doctor.bio.educations}" th:object="${education}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name" th:text="*{college}"></a>
+																	<div th:text="${degree}"></div>
+																	<span class="time"><th:block th:text="*{from}"></th:block> - <th:block th:text="*{to}"></th:block></span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Education Details -->
+									
+											<!-- Experience Details -->
+											<div class="widget experience-widget" th:unless="${doctor?.bio?.experiences == null || doctor?.bio?.experiences?.isEmpty}">
+												<h4 class="widget-title">Work & Experience</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="experience : ${doctor.bio.experiences}" th:object="${experience}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name" th:text="*{hospital}"></a>
+																	<span class="time"><th:block th:text="*{from}"></th:block> - <th:block th:text="*{to.isEmpty} ? 'Present' : *{to}"></th:block></span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Experience Details -->
+								
+											<!-- Awards Details -->
+											<div class="widget awards-widget" th:unless="${doctor?.bio?.awards == null || doctor?.bio?.awards?.isEmpty}">
+												<h4 class="widget-title">Awards</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li th:each="award : ${doctor.bio.awards}" th:object="${award}">
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<p class="exp-year" th:text="*{year}"></p>
+																	<h4 class="exp-title" th:text="*{award}"></h4>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Awards Details -->
+
+											<!-- Services List -->
+											<div class="service-list" th:unless="${doctor?.services?.isEmpty}">
+												<h4>Services</h4>
+												<ul class="clearfix" th:each="service : ${doctor?.services}">
+													<li th:text="${service.name}">Tooth cleaning</li>
+												</ul>
+											</div>
+											<!-- /Services List -->
+
+											<!-- Specializations List -->
+											<div class="service-list" th:unless="${doctor?.specialities?.isEmpty}">
+												<h4>Specializations</h4>
+												<ul class="clearfix" th:each="speciality : ${doctor?.specialities}">
+													<li th:text="${speciality.name}">Children Care</li>
+												</ul>
+											</div>
+											<!-- /Specializations List -->
+
+										</div>
+									</div>
+								</div>
+								<!-- /Overview Content -->
+
+								<!-- Locations Content -->
+								<div role="tabpanel" id="doc_locations" class="tab-pane fade" th:if="${doctor?.clinic}">
+
+									<!-- Location List -->
+									<div class="row align-items-stretch">
+
+										<!-- Location Map Widget -->
+										<div class="col-md-7 mb-4">
+											<th:block th:if="${doctor?.clinic.hasLocation}" th:inline="javascript">
+												<div id="map"></div>
+												<script>
+													function initMap() {
+														
+														const clinicInfo = {
+															lat: /*[[${doctor.clinic.lat}]]*/ -25.363,
+															lng: /*[[${doctor.clinic.lng}]]*/ 131.044,
+															name: /*[[${doctor.clinic.name}]]*/ 'Clinic',
+															specialities: /*[[${doctor.clinic.specialities}]]*/ '',
+															address: /*[[${doctor.clinic.address}]]*/ '',
+														}
+
+														const clinicPos = { lat: clinicInfo.lat, lng: clinicInfo.lng };
+														const map = new google.maps.Map(document.getElementById("map"), {
+															zoom: 16,
+															center: clinicPos,
+														});
+														
+														const marker = new google.maps.Marker({
+															position: clinicPos,
+															map,
+														});
+
+														const infowindow = new google.maps.InfoWindow({
+															content: `<div class="clinic-content">
+																<h4 class="clinic-name">${clinicInfo.name}</h4>
+																<p class="doc-speciality">${clinicInfo.specialities}</p>
+																<div class="clinic-details">
+																	<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> <span>${clinicInfo.address}</span></h5>
+																</div>
+																<a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&destination=${clinicInfo.lat},${clinicInfo.lng}">Get direction</a>
+															</div>`,
+															maxWidth: '200px',
+														});
+
+														const openInfoWindow = () => {
+															infowindow.open({
+																anchor: marker,
+																map,
+																shouldFocus: false,
+															});
+														}
+														
+														openInfoWindow();
+
+														marker.addListener("click", openInfoWindow);
+
+													}
+													window.initMap = initMap;
+												</script>
+											</th:block>
+
+											<iframe th:unless="${doctor?.clinic.hasLocation}"
+													width="600"
+													height="450"
+													style="border:0"
+													loading="lazy"
+													allowfullscreen
+													referrerpolicy="no-referrer-when-downgrade"
+													th:src="@{https://www.google.com/maps/embed/v1/place(key='AIzaSyCF6_tASSd0Q_9be0r5TOF9vztJIpleZes',q=${doctor.clinic.address})}">
+											</iframe>
+										</div>
+										<!-- /Location Map Widget -->
+
+										<!-- Clinic Content -->
+										<div class="col-md-5 mb-4">
+											<div class="clinic-content mb-4">
+												<h4 class="clinic-name" th:text="${doctor?.clinic?.name}"></h4>
+												<p class="doc-speciality" th:text="${doctor?.clinic?.specialities}"></p>
+												<div class="clinic-details mb-0">
+													<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic.address}"></span></h5>
+													<ul>
+														<li th:each="img : ${doctor?.clinic?.images}">
+															<a th:href="@{${'/images/' + img}}" data-fancybox="gallery">
+																<img th:src="@{${'/images/' + img}}" th:attr="data-image=${clinicImg}" alt="Feature">
+															</a>
+														</li>
+													</ul>
+												</div>
+
+											</div>
+
+											<div class="widget business-widget" th:unless="${clinicOpeningTimes.isEmpty()}">
+												<div class="widget-content">
+													<div class="listing-hours">
+														<div class="listing-day current">
+															<div class="day">Today <span th:text="${#temporals.format(now, 'dd MMM yyyy', 'en')}"></span></div>
+															<div class="time-items">
+																<th:block th:object="${clinicOpeningTimes[now.dayOfWeek.value - 1]}">
+																	<span class="open-status">
+																		<span th:if="*{openNow}" class="badge bg-success-light">Open Now</span>
+																		<span th:unless="*{openNow}" class="badge bg-danger-light">Closed</span>
+																	</span>
+																	<span th:unless="*{closed}" class="time" th:text="${clinicOpeningTimes[now.dayOfWeek.value - 1].openingTime}"></span>
+																</th:block>
+
+															</div>
+														</div>
+														<div class="listing-day" th:object="${clinicOpeningTimes[0]}" th:if="${clinicOpeningTimes[0]}">
+															<div class="day">Monday</div>
+															<div class="time-items">
+																<span class="time">
+																	<span th:unless="*{closed}" th:text="*{openingTime}"></span>
+																	<span th:if="*{closed}" class="badge bg-danger-light">Closed</span>
+																</span>
+															</div>
+														</div>
+														<div class="listing-day" th:object="${clinicOpeningTimes[1]}" th:if="${clinicOpeningTimes[1]}">
+															<div class="day">Tuesday</div>
+															<div class="time-items">
+																<span class="time">
+																	<span th:unless="*{closed}" th:text="*{openingTime}"></span>
+																	<span th:if="*{closed}" class="badge bg-danger-light">Closed</span>
+																</span>
+															</div>
+														</div>
+														<div class="listing-day" th:object="${clinicOpeningTimes[2]}" th:if="${clinicOpeningTimes[2]}">
+															<div class="day">Wednesday</div>
+															<div class="time-items">
+																<span class="time">
+																	<span th:unless="*{closed}" th:text="*{openingTime}"></span>
+																	<span th:if="*{closed}" class="badge bg-danger-light">Closed</span>
+																</span>
+															</div>
+														</div>
+														<div class="listing-day" th:object="${clinicOpeningTimes[3]}" th:if="${clinicOpeningTimes[3]}">
+															<div class="day">Thursday</div>
+															<div class="time-items">
+																<span class="time">
+																	<span th:unless="*{closed}" th:text="*{openingTime}"></span>
+																	<span th:if="*{closed}" class="badge bg-danger-light">Closed</span>
+																</span>
+															</div>
+														</div>
+														<div class="listing-day" th:object="${clinicOpeningTimes[4]}" th:if="${clinicOpeningTimes[4]}">
+															<div class="day">Friday</div>
+															<div class="time-items">
+																<span class="time">
+																	<span th:unless="*{closed}" th:text="*{openingTime}"></span>
+																	<span th:if="*{closed}" class="badge bg-danger-light">Closed</span>
+																</span>
+															</div>
+														</div>
+														<div class="listing-day" th:object="${clinicOpeningTimes[5]}" th:if="${clinicOpeningTimes[5]}">
+															<div class="day">Saturday</div>
+															<div class="time-items">
+																<span class="time">
+																	<span th:unless="*{closed}" th:text="*{openingTime}"></span>
+																	<span th:if="*{closed}" class="badge bg-danger-light">Closed</span>
+																</span>
+															</div>
+														</div>
+														<div class="listing-day closed" th:object="${clinicOpeningTimes[6]}" th:if="${clinicOpeningTimes[6]}">
+															<div class="day">Sunday</div>
+															<div class="time-items">
+																<span class="time">
+																	<span th:unless="*{closed}" th:text="*{openingTime}"></span>
+																	<span th:if="*{closed}" class="badge bg-danger-light">Closed</span>
+																</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- /Clinic Content -->
+
+
+
+									</div>
+									<!-- /Location List -->
+
+								</div>
+								<!-- /Locations Content -->
+								<!-- Reviews Content -->
+								<div role="tabpanel" id="doc_reviews" class="tab-pane fade" th:classappend="${#strings.equals('reviews', param.tabActive) ? 'show active' : ''}">
+
+									<div class="card" th:if="${#lists.isEmpty(reviews)}">
+										<div class="card-body text-center">
+											<h3>No Comments Yet.</h3>
+											<p sec:authorize="hasRole('ROLE_PATIENT')">Be the first to comment on <span th:text="${doctor.fullName}"></span></p>
+										</div>
+									</div>
+									<!-- Review Listing -->
+									<div class="widget review-listing" th:unless="${#lists.isEmpty(reviews)}">
+										<ul class="comments-list">
+											<!-- Comment List -->
+											<li th:each="review : ${reviews}">
+												<div class="comment">
+													<img class="avatar avatar-sm rounded-circle" alt="User Image" th:src="${review.patient.theAvatar}">
+													<div class="comment-body">
+														<div class="meta-data">
+															<span class="comment-author" th:text="${review.patient.fullName}"></span>
+															<span class="comment-date" th:text="${#temporals.format(review.patient.createdDate, 'dd-MM-yyyy HH:mm')}"></span>
+															<div class="review-count rating">
+																<i class="fas fa-star" th:classappend="${review.rating >= 1 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating >= 2 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating >= 3 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating >= 4 ? 'filled' : ''}"></i>
+																<i class="fas fa-star" th:classappend="${review.rating == 5 ? 'filled' : ''}"></i>
+															</div>
+														</div>
+														<div><strong th:text="${review.title}"></strong></div>
+														<p class="comment-content" th:text="${review.content}"></p>
+													</div>
+												</div>
+
+											</li>
+											<!-- /Comment List -->
+										</ul>
+									</div>
+									<!-- /Review Listing -->
+
+									<!-- Write Review -->
+									<div class="write-review" sec:authorize="isAuthenticated()">
+										<h4>Write a review for <strong th:text="${doctor.fullName}"></strong></h4>
+
+										<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+										<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+										<!-- Write Review Form -->
+										<form class="form-review" action="#" th:action="@{/doctor/profile/{id}(id=${doctor.id})}" th:object="${review}" method="post">
+											<input type="hidden" th:field="*{doctorId}">
+											<input type="hidden" th:field="*{patientId}">
+											<div class="form-group">
+												<label>Review</label>
+												<div class="star-rating">
+													<input id="star-5" type="radio" name="rating" value="5">
+													<label for="star-5" title="5 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-4" type="radio" name="rating" value="4">
+													<label for="star-4" title="4 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-3" type="radio" name="rating" value="3">
+													<label for="star-3" title="3 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-2" type="radio" name="rating" value="2">
+													<label for="star-2" title="2 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-1" type="radio" name="rating" value="1">
+													<label for="star-1" title="1 star">
+														<i class="active fa fa-star"></i>
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="review_title">Title of your review</label>
+												<input th:field="*{title}" id="review_title" class="form-control" maxlength="100" type="text" placeholder="If you could say it in one sentence, what would you say?">
+												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="titleChars">100</span> characters remaining</small></div>
+											</div>
+											<div class="form-group">
+												<label for="review_desc">Your review</label>
+												<textarea th:field="*{content}" id="review_desc" maxlength="100" class="form-control"></textarea>
+
+												<div class="d-flex justify-content-between mt-3"><small class="text-muted"><span id="chars">100</span> characters remaining</small></div>
+											</div>
+											<div class="submit-section">
+												<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
+											</div>
+										</form>
+										<!-- /Write Review Form -->
+
+									</div>
+									<div sec:authorize="isAnonymous()">You must be <a th:href="@{/login}" class="text-success">logged in</a> to post a comment.</div>
+									<!-- /Write Review -->
+
+								</div>
+								<!-- /Reviews Content -->
+							</div>
+						</div>
+					</div>
+					<!-- /Doctor Details Tab -->
+
+				</div>
+			</div>
+			<!-- /Page Content -->
+
+		</div>
+		<!-- /Main Wrapper -->
+	</div>
+
+	<th:block layout:fragment="customScripts">
+		<!-- Fancybox JS -->
+		<script src="/assets/plugins/fancybox/jquery.fancybox.min.js"></script>
+
+		<script>
+			jQuery(function($){
+				$('.fav-btn').on('click', function(e){
+					let $btn = $(this);
+					e.preventDefault();
+					favoriteDoctorToggle($btn)
+				})
+			})
+		</script>
+	</th:block>
+
+</body>
+
+</html>

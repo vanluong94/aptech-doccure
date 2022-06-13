@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Profile Sidebar -->
+    <div class="profile-sidebar" th:fragment="sidebar">
+        <div class="widget-profile pro-widget-content">
+            <div class="profile-info-widget">
+                <a href="#" class="booking-doc-img">
+                    <img th:src="${user?.theAvatar}" alt="User Image">
+                </a>
+                <div class="profile-det-info">
+                    <h3 th:text="${user?.fullName}" class="mb-0"></h3>
+                    <p class="small text-secondary">@<span th:text="${user?.username}"></span></p>
+                    <div class="patient-details">
+                        <h5 th:if="${patientDto.dob}"><i class="fas fa-birthday-cake"></i> <span th:text="${patientDto.dob}"></span>, <span th:text="${patientDto.age + ' years old'}"></span></h5>
+                        <h5 class="mb-0" th:if="${patientDto.city}"><i class="fas fa-map-marker-alt"></i> <span th:text="${patientDto.city}"></span></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-widget">
+            <nav class="dashboard-menu">
+                <ul>
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard' ? 'active' : ''}">
+                        <a th:href="@{/dashboard}">
+                            <i class="fas fa-columns"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/appointments' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/appointments}">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/favorites' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/favorites}">
+                            <i class="fas fa-bookmark"></i>
+                            <span>Favourites</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/profile-settings' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/profile-settings}">
+                            <i class="fas fa-user-cog"></i>
+                            <span>Profile Settings</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${#request.getRequestURI() == '/dashboard/change-password' ? 'active' : ''}">
+                        <a th:href="@{/dashboard/change-password}">
+                            <i class="fas fa-lock"></i>
+                            <span>Change Password</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+    <!-- / Profile Sidebar -->
+</body>
+</html>

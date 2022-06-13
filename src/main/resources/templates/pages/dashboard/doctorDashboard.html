@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <title>Doctor Dashboard - Doccure</title>
+</head>
+<body>
+
+    <div class="page-content" layout:fragment="layoutContent">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-12">
+                        <nav aria-label="breadcrumb" class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            </ol>
+                        </nav>
+                        <h2 class="breadcrumb-title">Dashboard</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <!-- Page Content -->
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+
+                        <div th:replace="fragments/dashboard/doctorSidebar :: sidebar"></div>
+
+                    </div>
+
+                    <div class="col-md-7 col-lg-8 col-xl-9">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card dash-card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-4">
+                                                <div class="dash-widget dct-border-rht">
+                                                    <div class="circle-bar circle-bar1">
+                                                        <div class="circle-graph1" data-percent="75">
+                                                            <img src="/assets/img/icon-01.png" class="img-fluid" alt="patient">
+                                                        </div>
+                                                    </div>
+                                                    <div class="dash-widget-info">
+                                                        <h6>Total Patients</h6>
+                                                        <h3 th:text="${doctorDto.totalPatients}"></h3>
+                                                        <p class="text-muted">Till Today</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 col-lg-4">
+                                                <div class="dash-widget dct-border-rht">
+                                                    <div class="circle-bar circle-bar2">
+                                                        <div class="circle-graph2" data-percent="65">
+                                                            <img src="/assets/img/icon-02.png" class="img-fluid" alt="Patient">
+                                                        </div>
+                                                    </div>
+                                                    <div class="dash-widget-info">
+                                                        <h6>Today Appointments</h6>
+                                                        <h3 th:text="${doctorDto.todayTotalAppointments}"></h3>
+                                                        <p class="text-muted" th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy')}"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 col-lg-4">
+                                                <div class="dash-widget">
+                                                    <div class="circle-bar circle-bar3">
+                                                        <div class="circle-graph3" data-percent="50">
+                                                            <img src="/assets/img/icon-03.png" class="img-fluid" alt="Patient">
+                                                        </div>
+                                                    </div>
+                                                    <div class="dash-widget-info">
+                                                        <h6>Total Appoinments</h6>
+                                                        <h3 th:text="${doctorDto.totalAppointments}"></h3>
+                                                        <p class="text-muted">Till Today</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="mb-4">Appoinments</h4>
+                                <div class="appointment-tab">
+
+                                    <!-- Appointment Tab -->
+                                    <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
+                                        <li class="nav-item mr-1">
+                                            <a class="nav-link active" href="#upcoming-appointments" data-toggle="tab">Upcoming</a>
+                                        </li>
+                                        <li class="nav-item mr-1">
+                                            <a class="nav-link" href="#today-appointments" data-toggle="tab">Today</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /Appointment Tab -->
+
+                                    <div class="tab-content">
+
+                                        <!-- Upcoming Appointment Tab -->
+                                        <div class="tab-pane show active" id="upcoming-appointments">
+                                            <div class="card card-table mb-0">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover table-center mb-0 w-100 appointments-table" data-url="/ajax/appointments/mine/upcoming">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Patient Name</th>
+                                                                <th>Appt Date</th>
+                                                                <th>Starting Time</th>
+                                                                <th>Ending Time</th>
+                                                                <th>Status</th>
+                                                                <th></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /Upcoming Appointment Tab -->
+
+                                        <!-- Today Appointment Tab -->
+                                        <div class="tab-pane" id="today-appointments">
+                                            <div class="card card-table mb-0">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover table-center mb-0 w-100 appointments-table" data-url="/ajax/appointments/mine/today">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Patient Name</th>
+                                                                <th>Appt Date</th>
+                                                                <th>Starting Time</th>
+                                                                <th>Ending Time</th>
+                                                                <th>Status</th>
+                                                                <th></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /Today Appointment Tab -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /Page Content -->
+    </div>
+
+    <div layout:fragment="layoutExtra">
+
+        <!-- Appointment Details Modal -->
+        <div class="modal fade custom-modal" id="appointmentDetail">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Appointment Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="info-details">
+                            <li>
+                                <div class="details-header">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <span class="title h3">#<span data-field="id"></span></span>
+                                            <span class="text" data-field="timeSlot.date"></span>
+                                            <span class="text">
+                                                <span class="text-info" data-field="timeSlot.timeStart"></span><span> - </span><span class="text-info" data-field="timeSlot.timeEnd"></span>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="text-right" data-field="statusBadge"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="title">Booking Date:</span>
+                                <span class="text" data-field="createdDate"></span>
+                            </li>
+                            <li>
+                                <span class="title">Status:</span>
+                                <span class="text" data-field="statusText"></span>
+                            </li>
+                            <li>
+                                <span class="title">Logs:</span>
+                                <table class="table table-bordered mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th>Datetime</th>
+                                            <th>Content</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-field="logs"></tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Appointment Details Modal --> 
+        
+    </div>
+
+    <div layout:fragment="customScripts">
+        <!-- Circle Progress JS -->
+        <script src="/assets/js/circle-progress.min.js"></script>
+        <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="/assets/js/table-appointments.js"></script>
+
+        <script>
+            
+            $('.appointments-table').each((i,e) => {
+
+                const $table = $(e);
+
+                $table.DataTable({
+                    searching: false,
+                    bInfo: false,
+                    bLengthChange: false,
+                    // dom: `<"appointment-tab"<"card card-table mb-0"<"card-body"<"table-responsive"t>>><"d-flex justify-content-end my-4"p>>`,
+                    ordering: false,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    ajax: {
+                        url: $table.data('url'),
+                        data: {
+                            page: 0,
+                            length: 5,
+                        },
+                        dataSrc: (resp) => appointmentUtils.parseDoctorTableData(resp)
+                    },
+                    drawCallback(settings, json) {
+                        /**
+                         * Handle button action
+                         * */
+                        $table.find('.btn[data-apmt-action="view"]').on('click', function(e){
+                            e.preventDefault();
+                            appointmentUtils.view($(this).data('appointment-id'));
+                        })
+    
+                        $table.find('.btn[data-apmt-action="cancel"]').on('click', function(e){
+                            e.preventDefault();
+                            appointmentUtils.cancel($(this).data('appointment-id'), () => {
+                                $table.ajax.reload();
+                            });
+                        })
+                        
+                        $table.find('.btn[data-apmt-action="confirm"]').on('click', function(e){
+                            e.preventDefault();
+                            appointmentUtils.confirm($(this).data('appointment-id'), () => {
+                                $table.DataTable().ajax.reload();
+                            });
+                        })
+                    }
+                });
+            })
+        </script>
+
+    </div>
+</body>

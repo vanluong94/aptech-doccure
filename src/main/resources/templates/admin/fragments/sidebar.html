@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+    <div class="sidebar" id="sidebar" th:fragment="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul>
+                    <li class="menu-title">
+                        <span>Main</span>
+                    </li>
+                    <li>
+                        <a th:href="@{/}"><i class="fa fa-home"></i> <span>Site</span></a>
+                    </li>
+                    <li th:classappend="${#request.getRequestURI() == '/admin' ? 'active' : ''}">
+                        <a th:href="@{/admin}"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/appointments' ? 'active' : ''}">
+                        <a th:href="@{/admin/appointments}"><i class="fa fa-calendar-check-o"></i> <span>Appointments</span></a>
+                    </li>
+                    <li class="submenu" th:classappend="${#request.getRequestURI() == '/admin/specialities' ? 'active' : ''}">
+                        <a href="#" th:classappend="${#request.getRequestURI() == '/admin/specialities' ? 'subdrop' : ''}"><i class="fa fa-stethoscope"></i> <span>Specialities</span> <span class="menu-arrow"></span></a>
+                        <ul th:style="${#request.getRequestURI() == '/admin/specialities' ? 'display: block' : 'display: none'}">
+                            <li><a th:href="@{/admin/specialities}">All Specialities</a></li>
+                            <li><a th:href="@{/admin/specialities/create}">Add new Speciality</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu" th:classappend="${#request.getRequestURI() == '/admin/services' ? 'active' : ''}">
+                        <a href="#" th:classappend="${#request.getRequestURI() == '/admin/services' ? 'subdrop' : ''}"><i class="fa fa-medkit"></i> <span>Services</span> <span class="menu-arrow"></span></a>
+                        <ul th:style="${#request.getRequestURI() == '/admin/services' ? 'display: block' : 'display: none'}">
+                            <li><a th:href="@{/admin/services}">All Services</a></li>
+                            <li><a th:href="@{/admin/services/create}">Add new Service</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/doctors}"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/patients}"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fa fa-users"></i> <span>Users</span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a th:href="@{/admin/users}">All Users</a></li>
+<!--                            <li><a href="/admin/user-edit.html">Add new User</a></li>-->
+                        </ul>
+                    </li>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/reviews' ? 'active' : ''}">
+                        <a href="/admin/reviews"><i class="fa fa-star"></i> <span>Reviews</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
