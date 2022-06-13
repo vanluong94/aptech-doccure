@@ -8613,3 +8613,10 @@ body.search-nearby footer {
 .select2-container--default .select2-search--dropdown .select2-search__field:focus {
     outline: none;
 }
+
+/* CUSTOM SPECIALTY LIST */
+.speicality-item {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}

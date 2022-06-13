@@ -45,22 +45,22 @@
             <div class="container">
                 <div class="section-header text-center">
                     <h2>Browse by Specialities</h2>
+                    <p class="sub-title">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                        incididunt ut labore et dolore magna aliqua.</p>
                 </div>
                 <div class="row" th:if="${#lists.isEmpty(specialities)}">
                     <div class="col-md-12">No data to display.</div>
                 </div>
                 <div class="row" th:unless="${#lists.isEmpty(specialities)}">
-                    <div class="col-lg-3" th:each="speciality : ${specialities}">
-                        <div class="category-box">
-                            <div class="category-image">
-                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
-                                    <img th:src="'/files/' + ${speciality.image}" th:alt="${speciality.name}">
-                                </a>
-                            </div>
-                            <div class="category-content">
-                                <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}"><h4 th:text="${speciality.name}"></h4></a>
-                                <span th:text="${speciality?.users?.size() + ' Doctors'}"></span>
-                            </div>
+                    <div class="col-lg-2" th:each="speciality : ${specialities}">
+                        <div class="speicality-item">
+                            <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
+                                <div class="speicality-img">
+                                    <img th:src="'/files/' + ${speciality.image}" th:alt="${speciality.name}" class="img-fluid">
+                                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                </div>
+                            </a>
+                            <p><a th:href="@{/speciality/{slug}(slug=${speciality.slug})}"><th:block th:text="${speciality.name}"></th:block></a></p>
                         </div>
                     </div>
                 </div>
@@ -73,6 +73,8 @@
             <div class="container-fluid">
                 <div class="section-header text-center">
                     <h2>Book Our Best Doctor</h2>
+                    <p class="sub-title">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                        incididunt ut labore et dolore magna aliqua.</p>
                 </div>
                 <div class="row" th:if="${#lists.isEmpty(doctors)}">
                     <div class="col-md-12">No data to display.</div>

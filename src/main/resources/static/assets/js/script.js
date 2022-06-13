@@ -150,16 +150,16 @@ Version      : 1.3
 	
 	// Slick Slider
 	
-	if($('.specialities-slider').length > 0) {
-		$('.specialities-slider').slick({
-			dots: true,
-			autoplay:false,
-			infinite: true,
-			variableWidth: true,
-			prevArrow: false,
-			nextArrow: false
-		});
-	}
+	// if($('.specialities-slider').length > 0) {
+	// 	$('.specialities-slider').slick({
+	// 		dots: true,
+	// 		autoplay:false,
+	// 		infinite: true,
+	// 		variableWidth: true,
+	// 		prevArrow: false,
+	// 		nextArrow: false
+	// 	});
+	// }
 	
 	if($('.doctor-slider').length > 0) {
 		$('.doctor-slider').slick({
