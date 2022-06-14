@@ -150,7 +150,7 @@ function loadResultsGrid(items) {
 			}
 		} 
 		output += `
-		<div class="col-sm-6 col-md-4 col-xl-6">
+		<div class="col-6 col-md-4 col-xl-6">
 			<div class="profile-widget">
 				<div class="doc-img">
 					<a href="${item.url}">
@@ -180,10 +180,10 @@ function loadResultsGrid(items) {
 						</li>
 					</ul>
 					<div class="row row-sm">
-						<div class="col-6">
+						<div class="col-sm-6 mb-1 mb-sm-0">
 							<a href="${item.url}" class="btn view-btn">View Profile</a>
 						</div>
-						<div class="col-6">
+						<div class="col-sm-6">
 							<a href="${item.bookingUrl}" class="btn book-btn">Book Now</a>
 						</div>
 					</div>

@@ -6886,7 +6886,7 @@ html.menu-opened body {
     position: fixed;
     right: 0;
     top: 115px;
-    z-index: 1029;
+    z-index: 100;
 }
 .map-listing {
     height: calc(100vh - 145px);
@@ -8621,4 +8621,12 @@ body.search-nearby footer {
     display: flex;
     flex-flow: column;
     align-items: center;
+}
+
+/* CUSTOM DOCTOR GRID */
+@media(max-width: 375px) {
+    .doctor-grid > .col-6 {
+        max-width: 100%;
+        flex-basis: 100%;
+    }   
 }
