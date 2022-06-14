@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Doctor Clinic Settings - Doccure</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAibNErkhEslaekaf-9B2D74NdGvj8Xm-g&callback=initMap&v=weekly" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=clinicInit&libraries=places" defer></script>
     <style>
         #clinic_location_map {
             width: 980px;
@@ -31,6 +31,34 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+        
+        .input-group-text .select2-container .select2-selection--single {
+            border: none;
+            height: unset;
+            border-radius: 0;
+        }
+
+        .select2-container--open .select2-dropdown--below {
+            width: 202px !important;
+            left: -1px;
+            right: -1px;
+        }
+
+        /* .input-group-text > .form-control {
+            min-height: unset;
+        }
+        
+        .input-group-text .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: unset;
+        }
+        
+        .input-group-text .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100%;
+        } */
+
+        #country {
+            width: 200px;
         }
     </style>
 </head>
@@ -66,7 +94,8 @@
 
                     </div>
                     <div class="col-md-7 col-lg-8 col-xl-9">
-                        <form id="clinicForm" th:action="@{/dashboard/clinic-settings/save}" th:object="${clinic}" method="post" enctype="multipart/form-data">
+
+                        <form id="clinicForm" th:action="@{/dashboard/clinic-settings}" th:object="${clinic}" method="post" enctype="multipart/form-data">
 
 						    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 
@@ -91,41 +120,62 @@
                                                 <input type="text" class="form-control" required th:field="*{specialities}">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <!-- <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label">Country <span class="text-danger">*</span></label>
+                                                <select th:field="*{country}" id="country" required class="form-control select2">
+                                                    <option value=""></option>
+                                                    <option th:each="locale : ${locales}" th:value="${locale.country}" th:text="${locale.displayCountry}"></option>
+                                                </select>
+                                            </div>
+                                        </div> -->
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="searchAddress">Search Address</label>
+                                                <small class="text-muted font-italic">(Select Country first then search your address)</small>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                                        <span class="input-group-text p-0">
+                                                            <select th:field="*{country}" id="country" required class="form-control select2">
+                                                                <option value=""></option>
+                                                                <option th:each="locale : ${locales}" th:value="${locale.country}" th:text="${locale.displayCountry}"></option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                    <input id="searchAddress" class="form-control" placeholder="Search address" autocomplete="off"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Address Line 1 <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" required th:field="*{addressLine1}">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="control-label">Address Line 2</label>
                                                 <input type="text" class="form-control" th:field="*{addressLine2}">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label">City <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" required th:field="*{city}">
+                                                <input type="text" id="city" class="form-control" required th:field="*{city}" readonly>
                                             </div>
                                         </div>
     
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label">State / Province <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" required th:field="*{state}">
+                                                <input type="text" id="state" class="form-control" required th:field="*{state}" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label">Country <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" required th:field="*{country}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label">Postal Code</label>
-                                                <input type="text" class="form-control" name="postal_code" th:field="*{postalCode}">
+                                                <input type="text" id="postalCode" class="form-control" name="postal_code" th:field="*{postalCode}" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -235,6 +285,10 @@
                         
                         this.value = ''; //reset files
                     }
+
+                    jQuery('.select2').select2({
+                        placeholder: "Select Country",
+                    });
                 </script>
             </div>
 

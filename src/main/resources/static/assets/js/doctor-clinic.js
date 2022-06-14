@@ -1,100 +1,231 @@
-const clinicMapCont = document.getElementById("clinic_location_map");
-let clinicMap, clinicInfoWindow, clinicMarker, clinicMapCenter = { lat: -34.401133113281986, lng: 150.87797718048094 };
-let clinicInputLat = document.getElementById('clinicInputLat'), 
-	clinicInputLong = document.getElementById('clinicInputLong')
+const clinicInit = () => {
 
-function initMap() {
+	const mapCont = document.getElementById('clinic_location_map');
+	const formCard = document.getElementById('clinicForm').querySelector('.card');
 
-    let clinicHasLocated = false;
+	let clinicInputLat = document.getElementById('clinicInputLat'), 
+		clinicInputLong = document.getElementById('clinicInputLong')
+	let clinicHasLocated = clinicInputLat.value && clinicInputLong.value;
 
-    if (clinicInputLat.value && clinicInputLong.value) {
-        clinicMapCenter = {
-            lat: parseFloat(clinicInputLat.value),
-            lng: parseFloat(clinicInputLong.value)
-        };
-        clinicHasLocated = true;
-    }
+	let map, infoWindow, marker, mapCenter = { lat: -34.401133113281986, lng: 150.87797718048094 };
 
-	clinicMap = new google.maps.Map(clinicMapCont, {
-		center: clinicMapCenter,
-		zoom: clinicHasLocated ? 16 : 14,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-	});
-    
-	clinicInfoWindow = new google.maps.InfoWindow();
+	let autocomplete;
+	let searchAddress = document.querySelector('#searchAddress');
 
-    if (!clinicHasLocated) {
-        locateCurrentPosition();
-    }
+	let addressLine1Field = document.getElementById('addressLine1'),
+	    addressLine2Field = document.getElementById('addressLine2'),
+	    cityField         = document.getElementById('city'),
+	    stateField        = document.getElementById('state'),
+	    postalCodeField   = document.getElementById('postalCode'),
+	    countryField      = document.getElementById('country');
 
-	initMarker();
-}
+	const clinicPage = {
 
-function initMarker() {
-	clinicMarker = new google.maps.Marker({
-		position: clinicMap.getCenter(),
-		draggable: true
-	});
+		isLoading: false,
+
+		/**
+		 * Initialization functions
+		 */
+		initMap() {
 	
-	google.maps.event.addListener(clinicMarker, 'dragend', function (evt) {
-		console.log('Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(3) + ' Current Lng: ' + evt.latLng.lng().toFixed(3));
-	});
-	
-	google.maps.event.addListener(clinicMarker, 'dragstart', function (evt) {
-		console.log('Currently dragging marker...')
-	});
-
-	google.maps.event.addListener(clinicMarker, 'position_changed', function(evt) {
-		clinicInputLat.value = clinicMarker.getPosition().lat();
-		clinicInputLong.value = clinicMarker.getPosition().lng();
-	});
-	
-	// clinicMap.setCenter(clinicMarker.position);
-	clinicMarker.setMap(clinicMap);
-}
-
-function locateCurrentPosition() {
-	if (navigator.geolocation) {
-		addLoadingOverlay(clinicMapCont);
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				const pos = {
-					lat: position.coords.latitude,
-					lng: position.coords.longitude,
-				};
-				
-				// clinicInfoWindow.setPosition(pos);
-				// clinicInfoWindow.setContent("Location found.");
-				// clinicInfoWindow.open(clinicMap);
-				clinicMap.setCenter(pos);
-				clinicMap.setZoom(16);
-				clinicMarker.setPosition(pos);
-				removeLoadingOverlay(clinicMapCont);
-			},
-			() => {
-				removeLoadingOverlay(clinicMapCont);
-				handleLocationError(true, clinicInfoWindow, clinicMap.getCenter());
+			// anyway, locate current position first
+			this.locateHere();
+			
+			if (clinicHasLocated) {
+				mapCenter = this.getCurrentPos();
+			} else {
+				this.showLoading(); // show loading till current position is located
 			}
-		);
-	} else {
-		// Browser doesn't support Geolocation
-		handleLocationError(false, clinicInfoWindow, clinicMap.getCenter());
+		
+			map = new google.maps.Map(mapCont, {
+				center: mapCenter,
+				zoom: clinicHasLocated ? 16 : 14,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+			
+			infoWindow = new google.maps.InfoWindow();
+		
+			this.initMarker();
+			this.initAutocomplete();
+
+		},
+
+		initMarker() {
+			marker = new google.maps.Marker({
+				position: map.getCenter(),
+				draggable: true
+			});
+			
+			google.maps.event.addListener(marker, 'dragend', (evt) => {
+				this.setCurrentPos({
+					lat: marker.getPosition().lat(),
+					lng: marker.getPosition().lng()
+				})
+				
+				countryField.disabled = true;
+				this.parseCurrentAddress(() => {
+					countryField.disabled = false;
+				});
+			});
+			
+			// map.setCenter(marker.position);
+			marker.setMap(map);
+		},
+
+		initAutocomplete() {
+	
+			// Create the autocomplete object, restricting the search predictions to
+			// addresses in the US and Canada.
+			autocomplete = new google.maps.places.Autocomplete(searchAddress, {
+				componentRestrictions: { country: countryField.value ? [countryField.value] : [] },
+				fields: ["address_components", "geometry"],
+				types: ["address"],
+			});
+			
+			autocomplete.addListener('place_changed', () => {
+				const place = autocomplete.getPlace();
+				
+				this.setCurrentPos({
+					lat: place.geometry.location.lat(),
+					lng: place.geometry.location.lng()
+				})
+				this.recenterMap();
+				this.recenterMarker();
+
+				if (place.address_components) {
+					this.fillAddress(place.address_components);
+				}
+			});
+		},
+
+		/**
+		 * Event
+		 */
+		onCountryChanged(e, keepAddrFields) {
+
+			if (!keepAddrFields) {
+				addressLine1Field.value = '';
+				addressLine2Field.value = '';
+				cityField.value         = '';
+				stateField.value        = '';
+				postalCodeField.value   = '';
+			}
+
+			autocomplete.setComponentRestrictions({ country: [countryField.value] });
+
+		},
+
+		/**
+		 * Helper functions
+		 */
+		locateHere() {
+			if (navigator.geolocation) {
+
+				navigator.geolocation.getCurrentPosition(
+					(position) => {
+
+						let pos = {
+							lat: position.coords.latitude,
+							lng: position.coords.longitude,
+						};
+
+						if (!clinicHasLocated) {
+							this.setCurrentPos(pos);
+							this.recenterMap();
+							this.recenterMarker();
+							this.parseCurrentAddress(() => {
+								this.maybeHideLoading();
+							});
+						} else {
+							this.maybeHideLoading()
+						}
+						
+					},
+					() => {
+						this.maybeHideLoading();
+						alert('Error: The Geolocation service failed.');
+					}
+				);
+
+			} else {
+				// Browser doesn't support Geolocation
+				alert('Error: Your browser doesn\'t support geolocation.');
+			}
+		},
+
+		fillAddress(addressComponents) {
+			components = addressComponents.reduce((components, component) => {
+				components[component.types[0]] = component;
+				return components;
+			}, {});
+
+			// console.log(components);
+
+			addressLine1Field.value = components.route ? ((components.street_number ? components.street_number.short_name + ' ' : '') + components.route.long_name) : '';
+			addressLine2Field.value = '';
+			cityField.value         = components.locality ? components.locality.short_name : (components.administrative_area_level_2 ? components.administrative_area_level_2.short_name : '');
+			stateField.value        = components.administrative_area_level_1.short_name;
+			postalCodeField.value   = components.postal_code ? (components.postal_code.long_name + (components.postal_code_suffix ? `-${components.postal_code_suffix}` : '')) : '';
+			
+			if (countryField.value != components.country.short_name) {
+				countryField.value = components.country.short_name;
+				jQuery(countryField).trigger('change', keepAddrFields = true)
+			}
+		},
+
+		parseCurrentAddress(completeCallback) {
+			geocoder = new google.maps.Geocoder();
+
+			geocoder.geocode({ latLng: this.getCurrentPos() }, (responses) => {
+				if (responses) {
+					this.fillAddress(responses[0].address_components)
+				}
+				if (completeCallback) {
+					completeCallback();
+				}
+			});
+		},
+
+		setCurrentPos(pos) {
+			clinicInputLat.value = pos.lat;
+			clinicInputLong.value = pos.lng;
+		},
+
+		getCurrentPos() {
+			return {
+				lat: parseFloat(clinicInputLat.value),
+				lng: parseFloat(clinicInputLong.value)
+			};
+		},
+
+		recenterMarker() {
+			marker.setPosition(this.getCurrentPos());
+		},
+
+		recenterMap() {
+			map.setCenter(this.getCurrentPos());
+			map.setZoom(16);
+		},
+
+		showLoading() {
+			this.isLoading = true;
+			addLoadingOverlay(formCard);
+		},
+
+		hideLoading() {
+			removeLoadingOverlay(formCard);
+		},
+
+		maybeHideLoading() {
+			if (this.isLoading) {
+				this.hideLoading()
+			}
+		}
+
 	}
+
+	clinicPage.initMap();
+	countryField.onchange = clinicPage.onCountryChanged;
 }
 
-function handleLocationError(browserHasGeolocation) {
-	alert(
-		browserHasGeolocation
-		? "Error: The Geolocation service failed."
-		: "Error: Your browser doesn't support geolocation."
-	)
-	// infoWindow.setPosition(pos);
-	// infoWindow.setContent(
-	// 	browserHasGeolocation
-	// 	? "Error: The Geolocation service failed."
-	// 	: "Error: Your browser doesn't support geolocation."
-	// );
-	// infoWindow.open(map);
-}
-
-window.initMap = initMap;
+window.clinicInit = clinicInit;

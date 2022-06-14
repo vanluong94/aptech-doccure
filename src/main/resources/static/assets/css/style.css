@@ -1135,6 +1135,7 @@ button.bg-danger:hover {
 .select2-container--default .select2-selection--single .select2-selection__arrow {
 	height: 44px;
 	right: 7px;
+	top: 0px;
 }
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
 	border-color: #dcdcdc transparent transparent;
@@ -5466,6 +5467,7 @@ html.menu-opened body {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	flex-wrap: wrap;
 }
 .upload-wrap .upload-images + .upload-images {
 	margin-left: 20px;
