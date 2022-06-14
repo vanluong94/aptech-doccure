@@ -88,7 +88,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 admin.setLastName("Super");
                 admin.setEmail("administrator@gmail.com");
                 admin.setUsername("administrator");
-                admin.setPassword(PASSWORD_ENCODER.encode("admin"));
+                admin.setPassword(PASSWORD_ENCODER.encode("administrator"));
                 admin.setRoles(roles);
                 admin.setStatus(1);
                 userService.save(admin);
