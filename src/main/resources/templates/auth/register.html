@@ -32,7 +32,7 @@
                                            th:each="role : ${user.roles}"
                                            th:value="${role.id}"
                                     />
-                                    <div th:if="${#fields.hasAnyErrors()}">
+                                    <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
                                         <ul>
                                             <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
                                         </ul>

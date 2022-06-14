@@ -91,9 +91,9 @@ class AuthController {
             } catch (MessagingException e) {
                 throw new RuntimeException(e);
             }
-            redirect.addFlashAttribute("successMessage", "Register successfully.");
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Register successfully.");
         } else {
-            redirect.addFlashAttribute("errorMessage", "Register fail.");
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Register fail.");
         }
         return "redirect:/login";
     }
