@@ -76,7 +76,7 @@ public class DatabaseLoader implements CommandLineRunner {
             }
 
             try {
-                userService.findByUsername("admin");
+                userService.findByUsername("administrator");
             } catch (UsernameNotFoundException e) {
                 User admin = new User();
                 Set<Role> roles = new HashSet<>();
