@@ -41,9 +41,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " AND ((:specialities) IS NULL OR speciality.id in (:specialities))" +
             " AND ((:services) IS NULL OR service.id in (:services))" +
             " AND (:query IS NULL OR (u.firstName LIKE CONCAT('%',:query ,'%') OR u.lastName LIKE CONCAT('%',:query ,'%') OR service.name LIKE CONCAT('%',:query ,'%')))" +
-            " AND (:location IS NULL OR (c.name like CONCAT('%',:location ,'%') OR c.city LIKE CONCAT('%',:location ,'%') OR c.country LIKE CONCAT('%',:location ,'%')))" +
+            " AND (:city IS NULL OR c.city LIKE :city)" +
+            " AND (:state IS NULL OR c.state LIKE :state)" +
+            " AND (:country IS NULL OR c.country LIKE :country)" +
             " ORDER BY u.id desc")
-    List<User> findAllWithAdvanceSearch(@Param("location") String location,
+    List<User> findAllWithAdvanceSearch(@Param("city") String city,
+                                        @Param("state") String state,
+                                        @Param("country") String country,
                                         @Param("query") String query,
                                         @Param("gender") Collection<Short> gender,
                                         @Param("specialities") Collection<Long> specialities,

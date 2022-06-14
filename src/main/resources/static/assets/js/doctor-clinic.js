@@ -1,4 +1,4 @@
-const clinicInit = () => {
+const clinicMapInit = () => {
 
 	const mapCont = document.getElementById('clinic_location_map');
 	const formCard = document.getElementById('clinicForm').querySelector('.card');
@@ -57,6 +57,9 @@ const clinicInit = () => {
 			});
 			
 			google.maps.event.addListener(marker, 'dragend', (evt) => {
+				// reset this
+				searchAddress.value = '';
+
 				this.setCurrentPos({
 					lat: marker.getPosition().lat(),
 					lng: marker.getPosition().lng()
@@ -78,22 +81,24 @@ const clinicInit = () => {
 			// addresses in the US and Canada.
 			autocomplete = new google.maps.places.Autocomplete(searchAddress, {
 				componentRestrictions: { country: countryField.value ? [countryField.value] : [] },
-				fields: ["address_components", "geometry"],
+				fields: ["address_components", "geometry", "adr_address", "formatted_address"],
 				types: ["address"],
+				language: "en"
 			});
 			
 			autocomplete.addListener('place_changed', () => {
 				const place = autocomplete.getPlace();
-				
+
 				this.setCurrentPos({
 					lat: place.geometry.location.lat(),
 					lng: place.geometry.location.lng()
 				})
+
 				this.recenterMap();
 				this.recenterMarker();
 
 				if (place.address_components) {
-					this.fillAddress(place.address_components);
+					this.fillAddress(place);
 				}
 			});
 		},
@@ -153,22 +158,49 @@ const clinicInit = () => {
 			}
 		},
 
-		fillAddress(addressComponents) {
-			components = addressComponents.reduce((components, component) => {
-				components[component.types[0]] = component;
-				return components;
-			}, {});
+		fillAddress(place) {
 
-			// console.log(components);
+			let components = gMapHelpers.parsePlaceComponents(place);
+			let address = gMapHelpers.parseAddressFromComponents(components);
 
-			addressLine1Field.value = components.route ? ((components.street_number ? components.street_number.short_name + ' ' : '') + components.route.long_name) : '';
-			addressLine2Field.value = '';
-			cityField.value         = components.locality ? components.locality.short_name : (components.administrative_area_level_2 ? components.administrative_area_level_2.short_name : '');
-			stateField.value        = components.administrative_area_level_1.short_name;
-			postalCodeField.value   = components.postal_code ? (components.postal_code.long_name + (components.postal_code_suffix ? `-${components.postal_code_suffix}` : '')) : '';
 			
-			if (countryField.value != components.country.short_name) {
-				countryField.value = components.country.short_name;
+			/**
+			 * Override some fields of address 
+			 */
+
+			// 1. Get international city name workaround
+			if (place.plus_code) {
+				address.state = place.plus_code.split(', ').at(-2);
+			} else if (searchAddress.value) {
+				address.state = searchAddress.value.split(', ').at(-2);
+			}
+
+			// 2. Get the rest of address
+			let parts = place.formatted_address
+				.split(', ')
+				.slice(0, -2); // remove country and state from parts
+			
+			// detect city 
+			if (components.locality) { 
+				// address.city = components.locality;
+				address.city = parts.pop();
+			} else {
+				address.city = address.state;
+			}
+			address.addressLine1 = parts.shift();
+			address.addressLine2 = [...parts].join(', ');
+
+			/**
+			 * Start setting value
+			 */
+			addressLine1Field.value = address.addressLine1;
+			addressLine2Field.value = address.addressLine2;
+			cityField.value         = address.city;
+			stateField.value        = address.state;
+			postalCodeField.value   = address.postalCode;
+			
+			if (countryField.value != address.country) {
+				countryField.value = address.country;
 				jQuery(countryField).trigger('change', keepAddrFields = true)
 			}
 		},
@@ -176,9 +208,9 @@ const clinicInit = () => {
 		parseCurrentAddress(completeCallback) {
 			geocoder = new google.maps.Geocoder();
 
-			geocoder.geocode({ latLng: this.getCurrentPos() }, (responses) => {
-				if (responses) {
-					this.fillAddress(responses[0].address_components)
+			geocoder.geocode({ latLng: this.getCurrentPos() }, (places) => {
+				if (places) {
+					this.fillAddress(places[0])
 				}
 				if (completeCallback) {
 					completeCallback();
@@ -228,4 +260,4 @@ const clinicInit = () => {
 	countryField.onchange = clinicPage.onCountryChanged;
 }
 
-window.clinicInit = clinicInit;
+window.googleMapInit = clinicMapInit;

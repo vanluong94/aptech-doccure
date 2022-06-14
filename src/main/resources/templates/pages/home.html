@@ -5,7 +5,7 @@
       layout:decorate="~{layout}"
  lang="en">
 <head>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj6hY-uY2Ecs4irQeUuvApAXSoOCNbHZg&callback=googleMapInit&libraries=places" defer></script>
 </head>
 <body>
     <div class="home-content" layout:fragment="layoutContent">
@@ -23,7 +23,10 @@
                     <div class="search-box">
                         <form th:action="@{/search}" method="get">
                             <div class="form-group search-location">
-                                <input name="location" type="text" class="form-control" placeholder="Search Location">
+                                <input id="searchLocation" class="form-control" placeholder="Search City" autocomplete="off">
+                                <input type="hidden" name="city" value="" id="searchCity">
+                                <input type="hidden" name="country" value="" id="searchCountry">
+                                <input type="hidden" name="state" value="" id="searchState">
                                 <span class="form-text">Based on your Location</span>
                             </div>
                             <div class="form-group search-info">
@@ -108,10 +111,8 @@
                                         <li> <i class="far fa-clock"></i> Available on Fri, 22 Mar</li>
                                     </ul>
                                     <div class="row row-sm">
-                                        <div class="col-6"> <a class="btn view-btn" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">View Profile</a>
-                                        </div>
-                                        <div class="col-6"> <a th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" class="btn book-btn">Book Now</a>
-                                        </div>
+                                        <div class="col-sm-6 mb-1 mb-sm-0"> <a class="btn view-btn" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">View Profile</a></div>
+                                        <div class="col-sm-6"> <a th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" class="btn book-btn">Book Now</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -124,5 +125,30 @@
         <!-- /Popular Section -->
 
     </div>
+
+    <th:block layout:fragment="customScripts">
+        <script>
+            const googleMapInit = () => {
+                const searchCity = document.getElementById('searchCity');
+                const searchState = document.getElementById('searchState');
+                const searchCountry = document.getElementById('searchCountry');
+
+                const searchLocation = document.getElementById('searchLocation');
+
+                const autocomplete = new google.maps.places.Autocomplete(searchLocation, {
+                    fields: ["address_components", "geometry"],
+                    types: ["(cities)"],
+                });
+
+                autocomplete.addListener('place_changed', () => {
+                    const address = gMapHelpers.parseAddress(autocomplete.getPlace());
+                    searchCity.value = address.city
+                    searchState.value = address.state
+                    searchCountry.value = address.country
+                });
+            }
+            window.googleMapInit = googleMapInit;
+        </script>
+    </th:block>
 </body>
 </html>

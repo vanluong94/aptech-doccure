@@ -71,3 +71,26 @@ const favoriteDoctorToggle = ($btn, callback) => {
         }
     });
 }
+
+const gMapHelpers = {
+    parsePlaceComponents(place) {
+        return place.address_components.reduce((components, component) => {
+            components[component.types[0]] = component;
+            return components;
+        }, {})
+    },
+    parseAddressFromComponents(components) {
+        return {
+            addressLine1: components.route ? ((components.street_number ? components.street_number.short_name + ' ' : '') + components.route.long_name) : '',
+            addressLine2: '',
+            city        : components.locality ? components.locality.short_name : (components.administrative_area_level_2 ? components.administrative_area_level_2.short_name : ''),
+            state       : components.administrative_area_level_1.short_name,
+            postalCode  : components.postal_code ? (components.postal_code.long_name + (components.postal_code_suffix ? `-${components.postal_code_suffix}` : '')): '',
+            country     : components.country.short_name,
+        }
+    },
+    parseAddress(place) {
+        const components = this.parsePlaceComponents(place);
+        return this.parseAddressFromComponents(components);
+    }
+}

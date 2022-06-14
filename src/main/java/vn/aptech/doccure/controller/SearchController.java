@@ -13,6 +13,7 @@ import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.SpecialityService;
 import vn.aptech.doccure.service.UserService;
+import vn.aptech.doccure.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,17 +33,34 @@ public class SearchController {
     private UserService userService;
 
     @GetMapping("/search")
-    public ModelAndView search(@RequestParam(value = "location", required = false) String location,
-                               @RequestParam(value = "query", required = false) String query,
-                               @RequestParam(value = "gender", required = false) Collection<Short> gender,
-                               @RequestParam(value = "specialities", required = false) Collection<Long> specialities,
-                               @RequestParam(value = "services", required = false) Collection<Long> services) {
+    public ModelAndView search(
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "state", required = false) String state,
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "query", required = false) String query,
+            @RequestParam(value = "gender", required = false) Collection<Short> gender,
+            @RequestParam(value = "specialities", required = false) Collection<Long> specialities,
+            @RequestParam(value = "services", required = false) Collection<Long> services
+    ) {
         ModelAndView modelAndView = new ModelAndView("search");
+
+        List<String> location = new ArrayList<>();
+        if (!StringUtils.isNullOrBlank(city)) {
+            location.add(city);
+        }
+        if (!StringUtils.isNullOrBlank(state)) {
+            location.add(state);
+        }
+        if (!StringUtils.isNullOrBlank(country)) {
+            location.add(country);
+        }
+
+        modelAndView.addObject("location", String.join(", ", location));
         modelAndView.addObject("specialities", specialityService.findAll());
         modelAndView.addObject("services", serviceService.findAll());
         List<String> roles = new ArrayList<>();
         roles.add(Constants.Roles.ROLE_DOCTOR);
-        modelAndView.addObject("doctors", userService.findAllWithAdvanceSearch(location, query, gender, specialities, services, roles));
+        modelAndView.addObject("doctors", userService.findAllWithAdvanceSearch(city, state, country, query, gender, specialities, services, roles));
         return modelAndView;
     }
 
