@@ -41,8 +41,8 @@
 						
 						<form id="doctorProfileForm" action="#" method="post" th:action="@{/dashboard/profile-settings}" th:object="${profileUser}" enctype="multipart/form-data" th:method="put">
 
-							<div th:if="${#fields.hasAnyErrors()}">
-								<ul>
+							<div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+								<ul class="m-0">
 									<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
 								</ul>
 							</div>

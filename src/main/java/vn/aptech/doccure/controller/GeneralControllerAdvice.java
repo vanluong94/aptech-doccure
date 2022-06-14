@@ -38,7 +38,7 @@ public class GeneralControllerAdvice {
     public String exception(final Throwable throwable, final Model model, Authentication authentication) {
         logger.error("Exception during execution of SpringSecurity application", throwable);
         this.addUserModelAttribute(model, authentication);
-        this.addErrorMessage(model, (throwable != null ? throwable.getMessage() : "Unknown error"));
+        this.addErrorMessage(model, "Something wrong happened, please try again later");
         return "error";
     }
 
@@ -47,7 +47,7 @@ public class GeneralControllerAdvice {
     public String notFoundException(final Throwable throwable, final Model model, Authentication authentication) {
         logger.error("Exception during execution of SpringSecurity application", throwable);
         this.addUserModelAttribute(model, authentication);
-        this.addErrorMessage(model, (throwable != null ? throwable.getMessage() : "Unknown error"));
+        this.addErrorMessage(model, "Something wrong happened, please try again later");
         return "error/404";
     }
 
