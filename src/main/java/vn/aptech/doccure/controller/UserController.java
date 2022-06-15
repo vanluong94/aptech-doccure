@@ -167,10 +167,11 @@ public class UserController {
             redirect.addFlashAttribute("errorMessage", "The Confirm Password confirmation does not match.");
         } else {
             User currentUser = (User) auth.getPrincipal();
-            if (passwordEncoder.matches(password, currentUser.getPassword())) {
-                currentUser.setPassword(passwordEncoder.encode(newPassword));
-                currentUser.setModifiedDate(LocalDateTime.now());
-                if (userService.save(currentUser) != null) {
+            User user = userService.findById(currentUser.getId()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                user.setModifiedDate(LocalDateTime.now());
+                if (userService.save(user) != null) {
                     redirect.addFlashAttribute("successMessage", "Awesome, you've successfully updated your password.");
                     return "redirect:/dashboard/change-password";
                 } else {
