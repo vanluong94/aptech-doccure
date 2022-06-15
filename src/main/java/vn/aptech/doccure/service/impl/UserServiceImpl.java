@@ -81,11 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        Optional<User> user = repo.findByUsername(username);
-        if (!user.isPresent()) {
-            throw new UsernameNotFoundException(username);
-        }
-        return user;
+        return repo.findByUsername(username);
     }
 
     @Override
