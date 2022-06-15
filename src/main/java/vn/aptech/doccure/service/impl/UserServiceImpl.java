@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (StringUtils.isNullOrBlank(state)) {
-            city = null;
+            state = null;
         }
 
         if (StringUtils.isNullOrBlank(country)) {
