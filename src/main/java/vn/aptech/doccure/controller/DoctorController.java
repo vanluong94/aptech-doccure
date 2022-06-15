@@ -18,6 +18,7 @@ import vn.aptech.doccure.model.ReviewRequestDTO;
 import vn.aptech.doccure.service.*;
 import vn.aptech.doccure.utils.DateUtils;
 
+import javax.xml.bind.ValidationException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -135,30 +136,44 @@ public class DoctorController {
 
     @Secured("ROLE_PATIENT")
     @PostMapping("profile/{id}/booking")
-    public String booking(Authentication authentication, @PathVariable("id") Long doctorId, @RequestParam Long timeSlotId, RedirectAttributes redirect, Model model) {
+    public String booking(Authentication authentication, @PathVariable("id") Long doctorId, @RequestParam(required = false) Long timeSlotId, RedirectAttributes redirect, Model model) {
 
-        Optional<User> doctorResult = userService.findById(doctorId);
+        User doctor;
+        User patient;
+        TimeSlot timeSlot;
 
-        if (!doctorResult.isPresent() || !doctorResult.get().isDoctor()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        try {
 
-        Optional<TimeSlot> timeSlotResult = timeSlotService.findById(timeSlotId);
-        if (!timeSlotResult.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+            Optional<User> doctorResult = userService.findById(doctorId);
 
-        User doctor = doctorResult.get();
-        User patient = (User) authentication.getPrincipal();
-        TimeSlot timeSlot = timeSlotResult.get();
+            if (!doctorResult.isPresent() || !doctorResult.get().isDoctor()) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
 
-        if (timeSlot.isBooked()) {
-            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "This time slot is already booked, please book another.");
-            model.addAttribute("id", timeSlot.getDoctor().getId());
-            return "redirect:/doctor/profile/{id}/booking";
-        } else if (timeSlot.isPast()) {
-            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "This time slot is not available to be booked anymore, please book another.");
-            model.addAttribute("id", timeSlot.getDoctor().getId());
+            if (timeSlotId == null) {
+                throw new ValidationException("Please select a time slot to continue.");
+            }
+
+            Optional<TimeSlot> timeSlotResult = timeSlotService.findById(timeSlotId);
+            if (!timeSlotResult.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+
+            doctor = doctorResult.get();
+            patient = (User) authentication.getPrincipal();
+            timeSlot = timeSlotResult.get();
+
+            if (!timeSlot.getDoctor().equals(doctor)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            } else if (timeSlot.isBooked()) {
+                throw new ValidationException("This time slot is already booked, please book another.");
+            } else if (timeSlot.isPast()) {
+                throw new ValidationException("This time slot is not available to be booked anymore, please book another.");
+            }
+
+        } catch (ValidationException e) {
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, e.getMessage());
+            model.addAttribute("id", doctorId);
             return "redirect:/doctor/profile/{id}/booking";
         }
 
