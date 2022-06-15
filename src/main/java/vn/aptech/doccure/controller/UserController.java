@@ -77,7 +77,11 @@ public class UserController {
             if (userLogin.equals(user)) {
 
                 if (result.hasErrors()) {
-                    return "pages/doctor/doctor-profile-settings";
+                    if (userLogin.isDoctor()) {
+                        return "pages/doctor/doctor-profile-settings";
+                    } else {
+                        return "pages/patient/patient-profile-settings";
+                    }
                 }
 
                 try {
