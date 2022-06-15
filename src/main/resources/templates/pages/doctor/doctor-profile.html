@@ -71,7 +71,7 @@
 										</div>
 										<div class="clinic-services">
 										<span th:each="service : ${doctor?.services}">
-											<a href="/search.html" th:text="${service.name}"></a>
+											<a th:href="@{/service/{slug}(slug=${service.slug})}" th:text="${service.name}"></a>
 										</span>
 										</div>
 									</div>
