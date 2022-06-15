@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Long countByRolesIn(Set<Role> roles);
 
-    @Query(value = "SELECT u FROM User u" +
+    @Query(value = "SELECT DISTINCT u FROM User u" +
             " LEFT JOIN u.services service" +
             " LEFT JOIN u.specialities speciality" +
             " LEFT JOIN u.clinic c" +
@@ -40,7 +40,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " AND ((:gender) IS NULL OR u.gender in (:gender))" +
             " AND ((:specialities) IS NULL OR speciality.id in (:specialities))" +
             " AND ((:services) IS NULL OR service.id in (:services))" +
-            " AND (:query IS NULL OR (u.firstName LIKE CONCAT('%',:query ,'%') OR u.lastName LIKE CONCAT('%',:query ,'%') OR service.name LIKE CONCAT('%',:query ,'%')))" +
+            " AND (:query IS NULL" +
+            " OR (u.firstName LIKE CONCAT('%',:query ,'%') OR u.lastName LIKE CONCAT('%',:query ,'%') OR (CONCAT(u.firstName, ' ', u.lastName) LIKE CONCAT('%',:query ,'%')) OR service.name LIKE CONCAT('%',:query ,'%')))" +
             " AND (:city IS NULL OR c.city LIKE :city)" +
             " AND (:state IS NULL OR c.state LIKE :state)" +
             " AND (:country IS NULL OR c.country LIKE :country)" +

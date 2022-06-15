@@ -75,9 +75,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 logger.info("INSERT ROLE DOCTOR");
             }
 
-            try {
-                userService.findByUsername("admin");
-            } catch (UsernameNotFoundException e) {
+            if (!userService.findByUsername("administrator").isPresent()) {
                 User admin = new User();
                 Set<Role> roles = new HashSet<>();
                 Role roleAdmin = new Role();
@@ -86,9 +84,9 @@ public class DatabaseLoader implements CommandLineRunner {
                 roles.add(roleAdmin);
                 admin.setFirstName("Admin");
                 admin.setLastName("Super");
-                admin.setEmail("admin@gmail.com");
-                admin.setUsername("admin");
-                admin.setPassword(PASSWORD_ENCODER.encode("admin"));
+                admin.setEmail("administrator@gmail.com");
+                admin.setUsername("administrator");
+                admin.setPassword(PASSWORD_ENCODER.encode("administrator"));
                 admin.setRoles(roles);
                 admin.setStatus(1);
                 userService.save(admin);
@@ -96,9 +94,7 @@ public class DatabaseLoader implements CommandLineRunner {
             }
             logger.info("-------------------------------");
 
-            try {
-                userService.findByUsername("sample_patient");
-            } catch (UsernameNotFoundException e) {
+            if (!userService.findByUsername("sample_patient").isPresent()) {
                 User user = new User();
                 Set<Role> roles = new HashSet<>();
                 roles.add(roleService.findByName(Constants.Roles.ROLE_PATIENT));
@@ -114,9 +110,7 @@ public class DatabaseLoader implements CommandLineRunner {
             }
             logger.info("-------------------------------");
 
-            try {
-                userService.findByUsername("sample_doctor");
-            } catch (UsernameNotFoundException e) {
+            if (!userService.findByUsername("sample_doctor").isPresent()) {
                 User user = new User();
                 Set<Role> roles = new HashSet<>();
                 roles.add(roleService.findByName(Constants.Roles.ROLE_DOCTOR));
@@ -130,12 +124,6 @@ public class DatabaseLoader implements CommandLineRunner {
                 userService.save(user);
                 logger.info("Inserting user record for " + user.getEmail());
             }
-//            logger.info("-------------------------------");
-//            logger.info("Services");
-//            Service service = serviceService.save(new Service("Tooth cleaning"));
-//            logger.info("Inserting service record for " + service.getName());
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
