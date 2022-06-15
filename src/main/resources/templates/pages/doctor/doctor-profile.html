@@ -113,8 +113,7 @@
 										</div>
 									</div>
 									<div class="clinic-booking">
-										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" th:if="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}">Book Appointment</a>
-										<a class="apt-btn" href="#" th:unless="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}" onclick="alert('Only Patients can be able to book appointment')">Book Appointment</a>
+										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}">Book Appointment</a>
 									</div>
 								</div>
 							</div>
