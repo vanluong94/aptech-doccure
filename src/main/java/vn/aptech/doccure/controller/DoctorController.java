@@ -51,7 +51,7 @@ public class DoctorController {
         ModelAndView modelAndView;
 
         Optional<User> user = userService.findById(id);
-        if (!user.isPresent() || !user.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
+        if (!user.isPresent() || !user.get().isDoctor()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
@@ -106,7 +106,7 @@ public class DoctorController {
 
         Optional<User> user = userService.findById(id);
 
-        if (!user.isPresent() || !user.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
+        if (!user.isPresent() || !user.get().isDoctor()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
@@ -139,7 +139,7 @@ public class DoctorController {
 
         Optional<User> doctorResult = userService.findById(doctorId);
 
-        if (!doctorResult.isPresent() || !doctorResult.get().hasRole(Constants.Roles.ROLE_DOCTOR)) {
+        if (!doctorResult.isPresent() || !doctorResult.get().isDoctor()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
