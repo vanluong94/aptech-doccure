@@ -109,6 +109,26 @@ public class DoctorClinic implements Serializable {
         return this.lat != null && this.lng != null;
     }
 
+    public String getStateCountry() {
+
+        List<String> parts = new LinkedList<>();
+
+        if (this.city != null && this.city.length() > 0) {
+            parts.add(this.city);
+        }
+
+        if (this.state != null && this.state.length() > 0) {
+            parts.add(this.state);
+        }
+
+        if (this.country != null && this.country.length() > 0) {
+            parts.add(this.country);
+        }
+
+        return String.join(", ", parts);
+
+    }
+
     public String getAddress() {
 
         List<String> parts = new LinkedList<>();
