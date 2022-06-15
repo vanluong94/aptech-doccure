@@ -3,6 +3,7 @@ package vn.aptech.doccure.controller.admin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -41,16 +42,11 @@ public class AdminUserController {
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView editUser(@PathVariable("id") Long id, RedirectAttributes redirect) {
-        Optional<User> user = userService.findById(id);
+    public ModelAndView editUser(@PathVariable("id") Long id) {
+        User user = userService.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         ModelAndView modelAndView = new ModelAndView("admin/pages/users/user-edit");
-        if (user.isPresent()) {
-            modelAndView.addObject("editUser", user.get());
-            modelAndView.addObject("UserRoles", roleService.findAll());
-        } else {
-            modelAndView.addObject("editUser", new User());
-            modelAndView.addObject("errorMessage", "User not found");
-        }
+        modelAndView.addObject("editUser", user);
+        modelAndView.addObject("UserRoles", roleService.findAll());
         return modelAndView;
     }
 
