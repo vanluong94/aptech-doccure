@@ -166,7 +166,7 @@ public class DoctorController {
         timeSlot.setAppointment(appointment);
         appointment.setTimeSlot(timeSlot);
 
-        AppointmentLog log = new AppointmentLog(appointment, "The appointment has been made", patient);
+        AppointmentLog log = new AppointmentLog(appointment, "An appointment has been made", patient);
         appointment.getLogs().add(log);
 
         timeSlotService.saveAndFlush(timeSlot);
