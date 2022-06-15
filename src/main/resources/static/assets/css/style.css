@@ -1135,6 +1135,7 @@ button.bg-danger:hover {
 .select2-container--default .select2-selection--single .select2-selection__arrow {
 	height: 44px;
 	right: 7px;
+	top: 0px;
 }
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
 	border-color: #dcdcdc transparent transparent;
@@ -5466,6 +5467,7 @@ html.menu-opened body {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	flex-wrap: wrap;
 }
 .upload-wrap .upload-images + .upload-images {
 	margin-left: 20px;
@@ -6884,7 +6886,7 @@ html.menu-opened body {
     position: fixed;
     right: 0;
     top: 115px;
-    z-index: 1029;
+    z-index: 100;
 }
 .map-listing {
     height: calc(100vh - 145px);
@@ -8612,4 +8614,19 @@ body.search-nearby footer {
 
 .select2-container--default .select2-search--dropdown .select2-search__field:focus {
     outline: none;
+}
+
+/* CUSTOM SPECIALTY LIST */
+.speicality-item {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+/* CUSTOM DOCTOR GRID */
+@media(max-width: 375px) {
+    .doctor-grid > .col-6 {
+        max-width: 100%;
+        flex-basis: 100%;
+    }   
 }

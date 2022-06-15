@@ -27,7 +27,6 @@ import vn.aptech.doccure.utils.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Controller
 public class UserController {
@@ -71,14 +70,18 @@ public class UserController {
 
     @PutMapping("/dashboard/profile-settings")
     @Secured({Constants.Roles.ROLE_DOCTOR, Constants.Roles.ROLE_PATIENT})
-    public String saveProfileSettings(@Validated User user, BindingResult result, RedirectAttributes redirect, Authentication authentication) {
+    public String saveProfileSettings(@Validated @ModelAttribute("profileUser") User user, BindingResult result, RedirectAttributes redirect, Authentication authentication) {
         try {
             User userLogin = (User) authentication.getPrincipal();
-            if (Objects.equals(user.getId(), userLogin.getId())) {
+
+            if (userLogin.equals(user)) {
+
                 if (result.hasErrors()) {
                     return "pages/doctor/doctor-profile-settings";
                 }
+
                 try {
+
                     MultipartFile file = user.getAvatarMultipartFile();
                     String fileName = file.getOriginalFilename();
                     if (file.getSize() > 0) {

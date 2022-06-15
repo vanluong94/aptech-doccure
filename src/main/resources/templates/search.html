@@ -5,7 +5,7 @@
       layout:decorate="~{layout}"
       lang="en">
 <head>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj6hY-uY2Ecs4irQeUuvApAXSoOCNbHZg&callback=googleMapInit&libraries=places" defer></script>
 </head>
 <body>
 <div class="home-content" layout:fragment="layoutContent">
@@ -47,7 +47,10 @@
                         <div class="card-body">
                             <form action="#" th:action="@{/search}" method="GET">
                                 <div class="filter-widget">
-                                    <input th:name="location" th:value="${param.location}" type="text" class="form-control" placeholder="Search Location">
+                                    <input th:value="${location}" type="text" class="form-control" placeholder="Search City" id="searchLocation">
+                                    <input type="hidden" name="city" id="searchCity" th:value="${param.city}">
+                                    <input type="hidden" name="state" id="searchState" th:value="${param.state}">
+                                    <input type="hidden" name="country" id="searchCountry" th:value="${param.country}">
                                 </div>
                                 <div class="filter-widget">
                                     <input th:name="query" th:value="${param.query}" type="text" class="form-control" placeholder="Search Doctors, Clinics">
@@ -69,7 +72,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="filter-widget">
+                                <div class="filter-widget" th:unless="${specialities.isEmpty}">
                                     <h4>Select Specialist</h4>
                                     <div th:each="speaciality : ${specialities}">
                                         <label class="custom_check">
@@ -90,7 +93,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="filter-widget">
+                                <div class="filter-widget" th:unless="${services.isEmpty}">
                                     <h4>Select Services</h4>
                                     <div th:each="service : ${services}">
                                         <label class="custom_check">
@@ -202,7 +205,33 @@
             </div>
 
         </div>
-
     </div>
+
+</div>
+
+<th:block layout:fragment="customScripts">
+    <script>
+        const googleMapInit = () => {
+            const searchCity = document.getElementById('searchCity');
+            const searchState = document.getElementById('searchState');
+            const searchCountry = document.getElementById('searchCountry');
+
+            const searchLocation = document.getElementById('searchLocation');
+
+            const autocomplete = new google.maps.places.Autocomplete(searchLocation, {
+                fields: ["address_components", "geometry"],
+                types: ["(cities)"],
+            });
+
+            autocomplete.addListener('place_changed', () => {
+                const address = gMapHelpers.parseAddress(autocomplete.getPlace());
+                searchCity.value = address.city
+                searchState.value = address.state
+                searchCountry.value = address.country
+            });
+        }
+        window.googleMapInit = googleMapInit;
+    </script>
+</th:block>
 </body>
 </html>

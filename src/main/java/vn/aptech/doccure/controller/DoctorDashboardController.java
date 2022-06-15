@@ -23,10 +23,9 @@ import vn.aptech.doccure.service.AppointmentService;
 import vn.aptech.doccure.service.ClinicService;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
+import vn.aptech.doccure.utils.LocaleUtils;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -63,13 +62,26 @@ public class DoctorDashboardController {
             clinic = user.getClinic();
         }
 
+        modelAndView.addObject("locales", LocaleUtils.getAvailableCountries());
         modelAndView.addObject("clinic", clinic);
+
         return modelAndView;
     }
 
-    @PostMapping("/clinic-settings/save")
-    public String clinicPageSave(@Validated @ModelAttribute DoctorClinic clinic, BindingResult result, Authentication auth, RedirectAttributes redirect) {
-        if (!result.hasErrors()) {
+    @PostMapping("/clinic-settings")
+    public ModelAndView clinicPageSave(
+            @Validated @ModelAttribute("clinic") DoctorClinic clinic,
+            BindingResult result,
+            Authentication auth,
+            RedirectAttributes redirect
+    ) {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (result.hasErrors()) {
+            modelAndView.setViewName("/pages/dashboard/doctorClinic");
+            modelAndView.addObject("locales", LocaleUtils.getAvailableCountries());
+        } else {
 
             User doctor = (User) auth.getPrincipal();
 
@@ -91,16 +103,19 @@ public class DoctorDashboardController {
             }
 
             clinic.setImages(images);
-
             clinic.setDoctorId(doctor.getId());
             clinic.setDoctor(doctor);
-            doctor.setClinic(clinic);
-            clinicService.save(clinic);
 
+            doctor.setClinic(clinic);
+
+            clinicService.saveAndFlush(clinic);
+
+            modelAndView.setViewName("redirect:/dashboard/clinic-settings");
             redirect.addFlashAttribute("successMessage", "Successfully updated Clinic profile.");
+
         }
 
-        return "redirect:/dashboard/clinic-settings";
+        return modelAndView;
     }
 
     @GetMapping("/calendar")

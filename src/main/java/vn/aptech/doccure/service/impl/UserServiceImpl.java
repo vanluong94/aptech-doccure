@@ -10,10 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.Role;
+import vn.aptech.doccure.entities.Speciality;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.entities.UserAddress;
 import vn.aptech.doccure.repositories.UserRepository;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.utils.StringUtils;
@@ -114,14 +113,25 @@ public class UserServiceImpl implements UserService {
         return repo.findAllByGenderInAndSpecialitiesIn(gender, specialities);
     }
 
-    public List<User> findAllWithAdvanceSearch(String location, String query, Collection<Short> gender, Collection<Long> specialities, Collection<Long> services, Collection<String> roles) {
-        if (StringUtils.isNullOrBlank(location)) {
-            location = null;
+    public List<User> findAllWithAdvanceSearch(String city, String state, String country, String query, Collection<Short> gender, Collection<Long> specialities, Collection<Long> services, Collection<String> roles) {
+
+        if (StringUtils.isNullOrBlank(city)) {
+            city = null;
         }
+
+        if (StringUtils.isNullOrBlank(state)) {
+            state = null;
+        }
+
+        if (StringUtils.isNullOrBlank(country)) {
+            country = null;
+        }
+
         if (StringUtils.isNullOrBlank(query)) {
             query = null;
         }
-        return repo.findAllWithAdvanceSearch(location, query, gender, specialities, services, roles);
+
+        return repo.findAllWithAdvanceSearch(city, state, country, query, gender, specialities, services, roles);
     }
 
     @Override

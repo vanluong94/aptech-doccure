@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.aptech.doccure.utils.converter.ImagesJsonConverter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -41,27 +43,33 @@ public class DoctorClinic implements Serializable {
     private String specialities;
 
     @Column(name = "lat", precision = 10, scale = 8)
+    @NotNull(message = "Position latitude must not be empty!")
     private BigDecimal lat;
 
     @Column(name = "lng", precision = 11, scale = 8)
+    @NotNull(message = "Position longitude must not be empty!")
     private BigDecimal lng;
 
     @Column(name = "address_line_1", nullable = false)
+    @NotEmpty(message = "Address Line 1 must not be empty!")
     private String addressLine1;
 
     @Column(name = "address_line_2")
     private String addressLine2;
 
     @Column(name = "city", nullable = false, length = 50)
+    @NotEmpty(message = "City must not be empty!")
     private String city;
 
     @Column(name = "state", nullable = false, length = 50)
+    @NotEmpty(message = "State must not be empty!")
     private String state;
 
     @Column(name = "country", nullable = false, length = 50)
+    @NotEmpty(message = "Country must not be empty!")
     private String country;
 
-    @Column(name = "postal_code", nullable = false, length = 10)
+    @Column(name = "postal_code", length = 10)
     private Integer postalCode;
 
     @Column(name = "created_date", columnDefinition = "datetime default current_timestamp")
