@@ -105,7 +105,6 @@ public class UserController {
                     user.getPatientBio().setPatientId(user.getId());
                     user.setModifiedDate(LocalDateTime.now());
                 }
-                user.setPassword(userLogin.getPassword());
                 User saveUser = userService.save(user);
                 if (saveUser != null) {
                     redirect.addFlashAttribute("successMessage", "Profile updated successfully");

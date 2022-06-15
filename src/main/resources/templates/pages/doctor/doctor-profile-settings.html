@@ -49,6 +49,7 @@
 
 							<input type="hidden" th:field="*{id}">
 							<input type="hidden" th:field="*{avatar}">
+							<input type="hidden" th:field="*{password}">
 							<input type="hidden" th:each="role : ${profileUser.roles}" th:name="roles" th:value="${role.id}"/>
 
 							<!-- Basic Information -->
