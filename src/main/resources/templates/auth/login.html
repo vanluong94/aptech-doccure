@@ -51,7 +51,14 @@
                                         <span class="or-line"></span>
                                         <span class="span-or">or</span>
                                     </div>
-                                    <div class="text-center dont-have">Don’t have an account? <a th:href="@{/register}">Register</a></div>
+                                    <div class="text-center">
+                                        <p>Don’t have an account?</p>
+                                        <p>
+                                            <a class="btn btn-outline-info btn-sm" th:href="@{/register}"><i class="fas fa-user"></i> Register Patient</a>
+                                            <a class="btn btn-outline-info btn-sm" th:href="@{/doctor-register}"><i class="fas fa-user-md"></i> Register Doctor</a>
+                                        </p>
+                                        <p></p>
+                                    </div>
                                 </form>
                             </div>
                         </div>
