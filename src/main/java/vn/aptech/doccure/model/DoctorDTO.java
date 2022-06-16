@@ -39,7 +39,10 @@ public class DoctorDTO {
     }
 
     public String getCity() {
-        return this.user.getClinic().getCity() + ", " + this.user.getClinic().getCountry();
+        if (this.user.getClinic() != null) {
+            return this.user.getClinic().getCity() + ", " + this.user.getClinic().getCountry();
+        }
+        return null;
     }
 
     public String getUpcomingAvailableDate() {
