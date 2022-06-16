@@ -34,10 +34,10 @@
                             <li><a th:href="@{/admin/services/create}">Add new Service</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/doctors' ? 'active' : ''}">
                         <a th:href="@{/admin/doctors}"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                     </li>
-                    <li>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/patients' ? 'active' : ''}">
                         <a th:href="@{/admin/patients}"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
                     </li>
                     <li th:classappend="${#request.getRequestURI() == '/admin/users' ? 'active' : ''}">

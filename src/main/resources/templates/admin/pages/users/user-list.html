@@ -36,10 +36,10 @@
 										<table class="datatable table table-hover table-center mb-0">
 											<thead>
 												<tr>
+													<th>ID</th>
 													<th>Name</th>
 													<th>User Name</th>
 													<th>User Role</th>
-													<th>Gender</th>
 													<th>Email</th>
 													<th>Phone</th>
 													<th>Status</th>
@@ -51,6 +51,7 @@
 											</tbody>
 											<tbody th:unless="${#lists.isEmpty(users)}">
 												<tr th:each="user : ${users}">
+													<td>#<th:block th:text="${user.id}"></th:block></td>
 													<td th:if="${user.isDoctor()}">
 														<h2 class="table-avatar">
 															<a th:href="@{/doctor/profile/{id}(id=${user.id})}" class="avatar avatar-sm mr-2">
@@ -74,7 +75,6 @@
 															<span th:classappend="${role.roleText.equals('Admin') ? 'badge badge-danger' : (role.roleText.equals('Doctor') ? 'badge badge-info' : 'badge badge-warning')}" th:utext="${role.roleText}"></span><br/>
 														</th:block>
 													</td>
-													<td th:text="${user.genderText}"></td>
 													<td th:text="${user.email}"></td>
 													<td th:text="${user.phone}"></td>
 													<td>

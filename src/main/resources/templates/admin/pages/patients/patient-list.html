@@ -35,6 +35,7 @@
 										<table class="datatable table table-hover table-center mb-0">
 											<thead>
 												<tr>
+													<th>ID</th>
 													<th>Name</th>
 													<th>User Name</th>
 													<th>User Role</th>
@@ -50,6 +51,7 @@
 											</tbody>
 											<tbody th:unless="${#lists.isEmpty(patients)}">
 												<tr th:each="patient : ${patients}">
+													<td>#<th:block th:text="${patient.id}"></th:block></td>
 													<td>
 														<h2 class="table-avatar">
 															<a href="#" class="avatar avatar-sm mr-2">
