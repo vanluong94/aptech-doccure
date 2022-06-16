@@ -55,7 +55,7 @@
                     <div class="col-md-12">No data to display.</div>
                 </div>
                 <div class="row" th:unless="${#lists.isEmpty(specialities)}">
-                    <div class="col-lg-2" th:each="speciality : ${specialities}">
+                    <div class="col w-20" th:each="speciality : ${specialities}">
                         <div class="speicality-item">
                             <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
                                 <div class="speicality-img">
