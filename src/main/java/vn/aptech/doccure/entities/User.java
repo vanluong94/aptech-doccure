@@ -32,7 +32,8 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "username", nullable = false, length = 30, unique = true)
-    @Pattern(regexp = "^[a-zA-Z][\\w]{7,29}$", message = "Username starts with a lowercase letter, then a lowercase letter or number.")
+    @Pattern(regexp = "^[a-z][\\w]$", message = "Username starts with a lowercase letter, then a lowercase letter or number.")
+    @Size(min = 6, max = 29, message = "Username must have at least 6 characters.")
     private String username;
 
     @NotEmpty(message = "Password must not be null or empty!")
