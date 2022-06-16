@@ -15,6 +15,7 @@ let locatedMarkerIds = [];
 let resultMarkers = [];
 let infowindow = null;
 let searchMap;
+let body = document.getElementsByTagName('body')[0];
 
 function initialize() {
 	var center = new google.maps.LatLng(53.470692, -2.220328);
@@ -149,6 +150,22 @@ function loadResultsGrid(items) {
 				rating += '<i class="far fa-star"></i>';
 			}
 		} 
+
+		let favoriteBtn = '';
+		if (body.classList.contains('ROLE_PATIENT')) {
+			favoriteBtn = `<a href="javascript:void(0)" class="fav-btn ${item.isFavorite ? 'fav-active' : ''}" data-doctor="${item.id}">
+				<i class="far fa-bookmark"></i>
+			</a>`;
+		} else if (body.classList.contains('ROLE_GUEST')) {
+			favoriteBtn = `<a href="javascript:void(0)" class="fav-btn">
+				<i class="far fa-bookmark"></i>
+			</a>`;
+		} else {
+			favoriteBtn = `<a href="javascript:void(0)" class="fav-btn" onclick="alert('Only Patient can be able to add Favorite Doctor')">
+				<i class="far fa-bookmark"></i>
+			</a>`;
+		}
+
 		output += `
 		<div class="col-6 col-md-4 col-xl-6">
 			<div class="profile-widget">
@@ -156,10 +173,7 @@ function loadResultsGrid(items) {
 					<a href="${item.url}">
 						<img class="img-fluid" alt="User Image" src="${item.avatar}">
 					</a>
-					
-					<a href="javascript:void(0)" class="fav-btn ${item.isFavorite ? 'fav-active' : ''}" data-doctor="${item.id}">
-						<i class="far fa-bookmark"></i>
-					</a>
+					${favoriteBtn}
 				</div>
 				<div class="pro-content">
 					<h3 class="title">

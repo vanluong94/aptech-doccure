@@ -50,7 +50,7 @@
     <th:block layout:fragment="headerAfterStyle"></th:block>
 
 </head>
-<body>
+<body th:classappend="${userRolesBodyClass}">
 
     <!-- Main Wrapper -->
     <div class="main-wrapper">
@@ -91,6 +91,14 @@
                 $('#preloader').fadeOut()
             }, 300)
         });
+
+        document.querySelectorAll('.fav-btn').forEach((btn) => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                let $btn = jQuery(btn);
+                favoriteDoctorToggle($btn)
+            }
+        })
     </script>
 
 </body>

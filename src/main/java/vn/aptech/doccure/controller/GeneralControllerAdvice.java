@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,8 +18,10 @@ import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.model.DoctorDTO;
 import vn.aptech.doccure.model.PatientDTO;
 import vn.aptech.doccure.service.UserService;
+import vn.aptech.doccure.utils.SecurityUtils;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GeneralControllerAdvice {
@@ -27,6 +30,15 @@ public class GeneralControllerAdvice {
 
     @Autowired
     private UserService userService;
+
+    @ModelAttribute(name = "userRolesBodyClass")
+    public String userRoleBodyClass(Authentication authentication) {
+        if (SecurityUtils.isAuthenticated()) {
+            return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
+        } else {
+            return "ROLE_GUEST";
+        }
+    }
 
     @ModelAttribute
     public void userModelAttribute(Authentication auth, Model model) {

@@ -47,29 +47,33 @@ const removeLoadingOverlay = ($el) => {
  * @param {*} callback 
  */
 const favoriteDoctorToggle = ($btn, callback) => {
-    $.ajax({
-        url: `/ajax/favorite/${$btn.data('doctor')}`,
-        method: 'post',
-        headers: {
-            ...getAjaxCsrfTokenHeader(),
-        },
-        beforeSend() {
-            $btn.addClass('disabled');
-        },
-        success(resp) {
-            $btn.toggleClass('fav-active', resp.data.isFavorite);
-            if (callback instanceof Function) {
-                callback(resp);
+    if (document.getElementsByTagName('body')[0].classList.contains('ROLE_GUEST')) { 
+        window.location.href = '/login';
+    } else {
+        $.ajax({
+            url: `/ajax/favorite/${$btn.data('doctor')}`,
+            method: 'post',
+            headers: {
+                ...getAjaxCsrfTokenHeader(),
+            },
+            beforeSend() {
+                $btn.addClass('disabled');
+            },
+            success(resp) {
+                $btn.toggleClass('fav-active', resp.data.isFavorite);
+                if (callback instanceof Function) {
+                    callback(resp);
+                }
+            },
+            complete(xhr) {
+                $btn.removeClass('disabled');
+    
+                if (xhr.responseJSON && !xhr.responseJSON.isSuccess && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } 
             }
-        },
-        complete(xhr) {
-            $btn.removeClass('disabled');
-
-            if (xhr.responseJSON && !xhr.responseJSON.isSuccess && xhr.responseJSON.message) {
-                alert(xhr.responseJSON.message);
-            } 
-        }
-    });
+        });
+    }
 }
 
 const gMapHelpers = {

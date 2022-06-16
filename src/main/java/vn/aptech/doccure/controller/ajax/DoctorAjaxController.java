@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import vn.aptech.doccure.common.AjaxResponse;
 import vn.aptech.doccure.entities.DoctorClinic;
-import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.model.DoctorDTO;
 import vn.aptech.doccure.service.ClinicService;
 import vn.aptech.doccure.service.PatientFavoriteService;
@@ -41,15 +40,12 @@ public class DoctorAjaxController {
         Map<String, Object> response = new LinkedHashMap<>();
         List<Object> doctorResults = new LinkedList<>();
 
-        User currentUser = (User) authentication.getPrincipal();
-
         for (DoctorClinic clinic : clinicService.findAllByMapBound(fromLat, toLat, fromLng, toLng)) {
             Map<String, Object> item = new LinkedHashMap<>();
 
             item.put("doctor", DoctorDTO.from(clinic.getDoctor()));
             item.put("lat", clinic.getLat());
             item.put("lng", clinic.getLng());
-            item.put("isFavorite", authentication.isAuthenticated() ? favoriteService.isDoctorFavorited(clinic.getDoctor(), currentUser) : 0);
 
             doctorResults.add(item);
         }

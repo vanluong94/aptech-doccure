@@ -8,9 +8,11 @@ import vn.aptech.doccure.entities.Service;
 import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.service.AppointmentService;
+import vn.aptech.doccure.service.PatientFavoriteService;
 import vn.aptech.doccure.service.ServiceService;
 import vn.aptech.doccure.service.TimeSlotService;
 import vn.aptech.doccure.utils.DoctorUtils;
+import vn.aptech.doccure.utils.SecurityUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -79,6 +81,13 @@ public class DoctorDTO {
 
     public String getBookingUrl() {
         return DoctorUtils.getDoctorBookingUrl(this.user);
+    }
+
+    public boolean isFavorite() {
+        if (SecurityUtils.isAuthenticated()) {
+            return SpringContext.getBean(PatientFavoriteService.class).isDoctorFavorited(this.user, SecurityUtils.getUser());
+        }
+        return false;
     }
 
     @JsonIgnore
