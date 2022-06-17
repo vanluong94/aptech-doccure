@@ -18,7 +18,7 @@
                 </a>
             </th:block>
             <th:block sec:authorize="isFullyAuthenticated() && !hasRole('ROLE_PATIENT')">
-                <a href="javascript:void(0)" class="fav-btn" tabindex="0" onclick="alert('Only Patient can be able to add Favorite Doctor')"> 
+                <a href="javascript:void(0)" class="fav-btn" tabindex="0"> 
                     <i class="far fa-bookmark"></i>
                 </a>
             </th:block>

@@ -539,16 +539,6 @@
 	<th:block layout:fragment="customScripts">
 		<!-- Fancybox JS -->
 		<script src="/assets/plugins/fancybox/jquery.fancybox.min.js"></script>
-
-		<script>
-			jQuery(function($){
-				$('.fav-btn').on('click', function(e){
-					let $btn = $(this);
-					e.preventDefault();
-					favoriteDoctorToggle($btn)
-				})
-			})
-		</script>
 	</th:block>
 
 </body>

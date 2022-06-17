@@ -47,32 +47,38 @@ const removeLoadingOverlay = ($el) => {
  * @param {*} callback 
  */
 const favoriteDoctorToggle = ($btn, callback) => {
-    if (document.getElementsByTagName('body')[0].classList.contains('ROLE_GUEST')) { 
+    let body = document.getElementsByTagName('body')[0];
+    if (body.classList.contains('ROLE_GUEST')) { 
         window.location.href = '/login';
+    } else if (!body.classList.contains('ROLE_PATIENT')) {
+        alert('Only Patient can be able to add Favorite Doctor');
     } else {
-        $.ajax({
-            url: `/ajax/favorite/${$btn.data('doctor')}`,
-            method: 'post',
-            headers: {
-                ...getAjaxCsrfTokenHeader(),
-            },
-            beforeSend() {
-                $btn.addClass('disabled');
-            },
-            success(resp) {
-                $btn.toggleClass('fav-active', resp.data.isFavorite);
-                if (callback instanceof Function) {
-                    callback(resp);
+        let doctorId = $btn.data('doctor');
+        if (doctorId) {
+            $.ajax({
+                url: `/ajax/favorite/${doctorId}`,
+                method: 'post',
+                headers: {
+                    ...getAjaxCsrfTokenHeader(),
+                },
+                beforeSend() {
+                    $btn.addClass('disabled');
+                },
+                success(resp) {
+                    $btn.toggleClass('fav-active', resp.data.isFavorite);
+                    if (callback instanceof Function) {
+                        callback(resp);
+                    }
+                },
+                complete(xhr) {
+                    $btn.removeClass('disabled');
+        
+                    if (xhr.responseJSON && !xhr.responseJSON.isSuccess && xhr.responseJSON.message) {
+                        alert(xhr.responseJSON.message);
+                    } 
                 }
-            },
-            complete(xhr) {
-                $btn.removeClass('disabled');
-    
-                if (xhr.responseJSON && !xhr.responseJSON.isSuccess && xhr.responseJSON.message) {
-                    alert(xhr.responseJSON.message);
-                } 
-            }
-        });
+            });
+        }
     }
 }
 
