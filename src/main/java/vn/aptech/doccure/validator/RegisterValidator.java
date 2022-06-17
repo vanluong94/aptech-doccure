@@ -28,5 +28,9 @@ public class RegisterValidator implements Validator {
         if (userService.existByEmail(user.getEmail())) {
             errors.rejectValue("email", "", "Email is Already Registered");
         }
+
+        if (userService.existsByUsername(user.getUsername())) {
+            errors.rejectValue("username", "", "Username is Already Registered");
+        }
     }
 }
