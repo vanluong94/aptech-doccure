@@ -7,7 +7,7 @@
 >
 <head>
 	<link rel="stylesheet" href="/assets/plugins/fancybox/jquery.fancybox.min.css">
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv7gg5JpgHOkRbRh1ErJmOxBtorq4fDrk&callback=initMap&v=weekly" defer></script>
 </head>
 <body class="page-doctor-profile">
 
@@ -113,8 +113,7 @@
 										</div>
 									</div>
 									<div class="clinic-booking">
-										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" th:if="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}">Book Appointment</a>
-										<a class="apt-btn" href="#" th:unless="${#authorization.expression('hasRole(''ROLE_PATIENT'')')}" onclick="alert('Only Patients can be able to book appointment')">Book Appointment</a>
+										<a class="apt-btn" th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}">Book Appointment</a>
 									</div>
 								</div>
 							</div>
@@ -467,7 +466,7 @@
 									<!-- /Review Listing -->
 
 									<!-- Write Review -->
-									<div class="write-review" sec:authorize="isAuthenticated()">
+									<div class="write-review" sec:authorize="isAuthenticated() && hasRole('ROLE_PATIENT')">
 										<h4>Write a review for <strong th:text="${doctor.fullName}"></strong></h4>
 
 										<div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
@@ -540,16 +539,6 @@
 	<th:block layout:fragment="customScripts">
 		<!-- Fancybox JS -->
 		<script src="/assets/plugins/fancybox/jquery.fancybox.min.js"></script>
-
-		<script>
-			jQuery(function($){
-				$('.fav-btn').on('click', function(e){
-					let $btn = $(this);
-					e.preventDefault();
-					favoriteDoctorToggle($btn)
-				})
-			})
-		</script>
 	</th:block>
 
 </body>

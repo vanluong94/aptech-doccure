@@ -8616,6 +8616,10 @@ body.search-nearby footer {
     outline: none;
 }
 
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    margin-right: 5px;
+}
+
 /* CUSTOM SPECIALTY LIST */
 .speicality-item {
     display: flex;

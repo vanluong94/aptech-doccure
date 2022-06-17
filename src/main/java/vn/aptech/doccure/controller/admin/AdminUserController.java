@@ -19,7 +19,6 @@ import vn.aptech.doccure.storage.StorageException;
 import vn.aptech.doccure.storage.StorageService;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/users")
@@ -88,7 +87,7 @@ public class AdminUserController {
     @PostMapping("/delete")
     public String update(@RequestParam("id") Long id, RedirectAttributes redirect) {
         userService.deleteById(id);
-        redirect.addFlashAttribute("globalMessage", "Successfully deleted a user");
-        return "redirect:/admin/doctors";
+        redirect.addFlashAttribute("successMessage", "Successfully deleted a user");
+        return "redirect:/admin/users";
     }
 }

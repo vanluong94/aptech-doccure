@@ -1,4 +1,7 @@
 jQuery(function($){
+
+    let deletedTimeSlots = [];
+    
     $.ajax({
         url: "/ajax/timeSlots/getAll",
         method: "get",
@@ -50,17 +53,13 @@ jQuery(function($){
 
         e.preventDefault();
         
-        let postData = $('form.time-slots-form .hours-cont').map((i, el) => {
-            let $el = $(el);
-            return {
-                weekday  : $el.parents('form').data('weekday'),
-                status   : $el.find('input[name="status"]').is(':checked') ? 1: 0,
-                timeStart: $el.find('input[name="timeStart"]').val(),
-                timeEnd  : $el.find('input[name="timeEnd"]').val()
-            }
-        }).toArray();
-
+        let postData = {
+            update: $('form.time-slots-form .hours-cont').map((i, el) => getTimeSlotData($(el))).toArray(),
+            delete: deletedTimeSlots
+        };
+        
         let $wrapper = $('.card.schedule-widget');
+        let $alerts = $('#alerts');
 
         $.ajax({
             url: `/ajax/timeSlots/saveAll`,
@@ -72,14 +71,15 @@ jQuery(function($){
             },
             beforeSend() {
                 addLoadingOverlay($wrapper);
+                $alerts.empty();
             },
             success(resp) {
                 if (resp.isSuccess) {
-                    if (resp.data.timeSlots) {
-                        renderAllTimeSlots(resp.data.timeSlots);
-                    }
+                    renderAllTimeSlots(resp.data.timeSlots);
+                    $alerts.append(`<div class="alert alert-success">Update successfully!</div>`);
+                    deletedTimeSlots = [];
                 } else {
-                    alert(resp.message);
+                    $alerts.append(`<div class="alert alert-danger">${resp.message}</div>`);
                 }
             },
             complete(xhr) {
@@ -87,6 +87,9 @@ jQuery(function($){
 
                 if (xhr.responseJSON && !xhr.responseJSON.isSuccess) {
                     alert(xhr.responseJSON.message);
+                    $alerts.append(`<div class="alert alert-danger">${resp.message}</div>`);
+                } else if (xhr.status != 200) {
+                    $alerts.append(`<div class="alert alert-danger">Something wrong happened, please try again later</div>`);
                 }
             }
         });
@@ -140,6 +143,23 @@ jQuery(function($){
             } else {
                 $hoursInfo.html(output)
             }
+
+            $hoursInfo.find('.trash').on('click', function (e) {
+                e.preventDefault();
+                let $timeSlot = $(this).closest('.hours-cont');
+                deletedTimeSlots.push(getTimeSlotData($timeSlot))
+                $(this).closest('.hours-cont').remove();
+                return false;
+            });
         }
+    }
+
+    const getTimeSlotData = ($el) => {
+        return {
+            weekday  : $el.parents('form').data('weekday'),
+            status   : $el.find('input[name="status"]').is(':checked') ? 1: 0,
+            timeStart: $el.find('input[name="timeStart"]').val(),
+            timeEnd  : $el.find('input[name="timeEnd"]').val()
+        };
     }
 })

@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
                                         @ColumnResult(name = "doctor_id", type = Long.class),
                                         @ColumnResult(name = "time_start", type = LocalDateTime.class),
                                         @ColumnResult(name = "time_end", type = LocalDateTime.class),
+                                        @ColumnResult(name = "status", type = Integer.class),
                                 }
                         )
                 }
@@ -86,10 +87,14 @@ public class TimeSlot {
     @LastModifiedDate
     private LocalDateTime modifiedDate = LocalDateTime.now();
 
-    public TimeSlot(Long id, Long appointmentId, Long doctorId, LocalDateTime timeStart, LocalDateTime timeEnd) {
+    @Transient
+    private Integer status;
+
+    public TimeSlot(Long id, Long appointmentId, Long doctorId, LocalDateTime timeStart, LocalDateTime timeEnd, Integer status) {
         this.id = id;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
+        this.status = status;
 
         this.doctor = new User();
         this.doctor.setId(doctorId);
@@ -112,6 +117,11 @@ public class TimeSlot {
         return timeStart.isBefore(LocalDateTime.now());
     }
 
+    @JsonIgnore
+    public boolean isOn () {
+        return this.status != null && this.status == 1;
+    }
+
     public String getTimeText() {
         return DateUtils.toStandardTime(timeStart);
     }
@@ -119,10 +129,11 @@ public class TimeSlot {
     @Override
     public String toString() {
         return String.format(
-                "[id=%d, appointment_id=%d, doctorId=%d, timeStart=%s, timeEnd=%s, createdDate=%s, modifiedDate=%s]",
+                "[id=%d, appointment_id=%d, doctorId=%d, status=%d, timeStart=%s, timeEnd=%s, createdDate=%s, modifiedDate=%s]",
                 this.id,
                 this.appointment != null ? this.appointment.getId() : null,
                 this.doctor.getId(),
+                this.status,
                 this.timeStart.toString(),
                 this.timeEnd.toString(),
                 this.createdDate.toString(),

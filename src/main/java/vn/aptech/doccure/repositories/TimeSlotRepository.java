@@ -16,7 +16,7 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
             value = "SELECT * FROM time_slots WHERE doctor_id = :doctorId AND CAST(time_start AS DATE) = CAST(:theDate AS DATE)",
             nativeQuery = true
     )
-    List<TimeSlot> findAllByDoctorOnDate(@Param("doctorId") Long doctorId, @Param("theDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime date);
+    List<TimeSlot> findAvailableTimeSlotByDoctorOnDate(@Param("doctorId") Long doctorId, @Param("theDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime date);
 
     TimeSlot findFirstByDoctorAndTimeStartAfterAndAppointmentIsNullOrderByTimeStartAsc(User doctor, LocalDateTime datetime);
 }

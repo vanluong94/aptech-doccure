@@ -5,7 +5,7 @@
       layout:decorate="~{layout}"
  lang="en">
 <head>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj6hY-uY2Ecs4irQeUuvApAXSoOCNbHZg&callback=googleMapInit&libraries=places" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv7gg5JpgHOkRbRh1ErJmOxBtorq4fDrk&callback=googleMapInit&libraries=places" defer></script>
 </head>
 <body>
     <div class="home-content" layout:fragment="layoutContent">
@@ -55,7 +55,7 @@
                     <div class="col-md-12">No data to display.</div>
                 </div>
                 <div class="row" th:unless="${#lists.isEmpty(specialities)}">
-                    <div class="col-lg-2" th:each="speciality : ${specialities}">
+                    <div class="col w-20" th:each="speciality : ${specialities}">
                         <div class="speicality-item">
                             <a th:href="@{/speciality/{slug}(slug=${speciality.slug})}">
                                 <div class="speicality-img">
@@ -86,35 +86,8 @@
                     <div class="col-lg-12">
                         <div class="doctor-slider slider">
                             <!-- Doctor Widget -->
-                            <div class="profile-widget" th:each="doctor : ${doctors}">
-                                <div class="doc-img">
-                                    <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}">
-                                        <img class="img-fluid" src="#" th:src="${doctor.theAvatar}" alt="User Image">
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a th:href="@{/doctor/profile/{id}(id=${doctor.id})}" th:text="${doctor.fullName}"></a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality" th:if="${doctor?.clinic?.specialities != null}" th:text="${doctor?.clinic?.specialities}"></p>
-                                    <div class="rating" th:unless="${#lists.isEmpty(doctor?.doctorReviews)}">
-                                        <th:block th:each="i : ${#numbers.sequence(1,5)}">
-                                            <i class="fas fa-star filled" th:if="${i - doctor.avgReview < 0.5}"></i>
-                                            <i class="fas fa-star-half-alt filled" th:if="${i - doctor.avgReview == 0.5}"></i>
-                                            <i class="far fa-star" th:if="${i - doctor.avgReview > 0.5}"></i>
-                                        </th:block>
-                                        <span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li th:if="${doctor?.clinic?.city != null}"> <i class="fas fa-map-marker-alt"></i> <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span></li>
-                                        <li> <i class="far fa-clock"></i> Available on Fri, 22 Mar</li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-sm-6 mb-1 mb-sm-0"> <a class="btn view-btn" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">View Profile</a></div>
-                                        <div class="col-sm-6"> <a th:href="@{/doctor/profile/{id}/booking(id=${doctor.id})}" class="btn book-btn">Book Now</a></div>
-                                    </div>
-                                </div>
+                            <div th:each="doctor : ${doctors}">
+                                <div th:replace="fragments/doctorItem :: item(doctorDto=${doctor})"></div>
                             </div>
                             <!-- /Doctor Widget -->
                         </div>

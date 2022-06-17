@@ -179,15 +179,6 @@
                                         </div>
                                     </div>
                                     <div class="doc-info-right">
-                                        <div class="clini-infos">
-                                            <ul>
-                                                <li><i class="fas fa-map-marker-alt"></i>
-                                                    <span th:if="${doctor?.clinic?.city != null}"
-                                                        th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
-                                                    <span th:if="${doctor?.clinic?.city == null}">Unknown</span>
-                                                </li>
-                                            </ul>
-                                        </div>
                                         <div class="clinic-booking">
                                             <a class="view-pro-btn" th:href="@{/doctor/profile/{id}(id=${doctor.id})}">View
                                                 Profile</a>

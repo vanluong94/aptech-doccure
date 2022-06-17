@@ -100,7 +100,7 @@ public class AdminServiceController {
     @PostMapping("/delete")
     public String update(@RequestParam("id") Long id, RedirectAttributes redirect) {
         serviceService.deleteById(id);
-        redirect.addFlashAttribute("globalMessage", "Successfully deleted a service");
+        redirect.addFlashAttribute("successMessage", "Successfully deleted a service");
         return "redirect:/admin/services";
     }
 }

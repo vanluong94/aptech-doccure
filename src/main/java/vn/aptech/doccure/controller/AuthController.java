@@ -23,7 +23,6 @@ import vn.aptech.doccure.utils.StringUtils;
 import vn.aptech.doccure.validator.RegisterValidator;
 
 import javax.mail.MessagingException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -91,7 +90,7 @@ class AuthController {
             } catch (MessagingException e) {
                 throw new RuntimeException(e);
             }
-            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Register successfully.");
+            redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "Register successfully.");
         } else {
             redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Register fail.");
         }

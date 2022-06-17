@@ -101,14 +101,7 @@
 											<span class="d-inline-block average-rating" th:text="'(' + ${doctor?.doctorReviews?.size()} + ')'">(0)</span>
                                         </div>
 
-                                        <p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i>
-                                            <th:block th:if="${doctor?.clinic?.city != null}">
-                                                <span th:text="${doctor?.clinic?.city} + ', ' + ${doctor?.clinic?.country}"></span>
-                                            </th:block>
-                                            <th:block th:if="${doctor?.clinic?.city == null}">
-                                                <span>Unknown</span>
-                                            </th:block>
-                                        </p>
+                                        <p class="text-muted mb-0" th:if="${doctor?.clinic?.stateCountry}"><i class="fas fa-map-marker-alt"></i> <th:block th:text="${doctor?.clinic?.stateCountry}"></th:block></p>
                                     </div>
                                 </div>
                             </div>

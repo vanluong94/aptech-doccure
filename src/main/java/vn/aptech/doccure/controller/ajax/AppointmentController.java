@@ -12,7 +12,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vn.aptech.doccure.common.AjaxResponse;
-import vn.aptech.doccure.common.Constants;
 import vn.aptech.doccure.entities.Appointment;
 import vn.aptech.doccure.entities.AppointmentLog;
 import vn.aptech.doccure.entities.User;
@@ -79,7 +78,7 @@ public class AppointmentController {
 
             weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
             weekdayData.put("textDate", theDate.format(dateFormatter));
-            weekdayData.put("slots", timeSlotService.findAllByDoctorOnDate(doctorId, theDate));
+            weekdayData.put("slots", timeSlotService.findAvailableTimeSlotByDoctorOnDate(doctorId, theDate));
 
             weekdays.add(weekdayData);
         }
@@ -233,7 +232,7 @@ public class AppointmentController {
         User user = (User) authentication.getPrincipal();
         Appointment appointment = appointmentOptional.get();
 
-        if (!user.hasRole(Constants.Roles.ROLE_ADMIN) && !appointment.getDoctor().equals(user) && !appointment.getPatient().equals(user) ) {
+        if (!user.isAdmin() && !appointment.getDoctor().equals(user) && !appointment.getPatient().equals(user) ) {
             return AjaxResponse.responseFail(response, "you are not allowed to perform action on this appointment");
         }
 

@@ -32,7 +32,8 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "username", nullable = false, length = 30, unique = true)
-    @Pattern(regexp = "^[a-zA-Z][\\w]{7,29}$", message = "Username starts with a lowercase letter, then a lowercase letter or number.")
+    @Pattern(regexp = "^[a-z][\\w]+$", message = "Username starts with a lowercase letter, then a lowercase letter or number.")
+    @Size(min = 6, max = 29, message = "Username must have at least 6 characters.")
     private String username;
 
     @NotEmpty(message = "Password must not be null or empty!")
@@ -205,16 +206,16 @@ public class User implements UserDetails {
         } else {
             String filename;
             if (hasRole(Constants.Roles.ROLE_DOCTOR)) {
-                if (gender != null && gender.equals(Constants.Genders.MALE)) {
-                    filename = "avatar-doctor-male.png";
-                } else {
+                if (gender != null && gender.equals(Constants.Genders.FEMALE)) {
                     filename = "avatar-doctor-female.png";
+                } else {
+                    filename = "avatar-doctor-male.png";
                 }
             } else if (this.hasRole(Constants.Roles.ROLE_PATIENT)) {
-                if (gender != null && gender.equals(Constants.Genders.MALE)) {
-                    filename = "avatar-patient-male.png";
-                } else {
+                if (gender != null && gender.equals(Constants.Genders.FEMALE)) {
                     filename = "avatar-patient-female.png";
+                } else {
+                    filename = "avatar-patient-male.png";
                 }
             } else {
                 filename = "avatar-admin.png";

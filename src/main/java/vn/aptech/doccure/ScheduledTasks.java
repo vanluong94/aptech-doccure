@@ -29,7 +29,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 60*60*24*1000)
     public void timeSlotsGenerator() {
 
-        LocalDateTime now = LocalDateTime.now().plusDays(1);
+        LocalDateTime now = LocalDateTime.now();
 
         logger.info("==================== [Time Slots Generator - BEGIN] =============================");
         logger.info("Task: Generate Time Slots for the next 2 weeks");
@@ -39,11 +39,16 @@ public class ScheduledTasks {
         for (int i=0; i<14; i++) {
             LocalDateTime theDate = now.plusDays(i);
             List<TimeSlot> timeSlots = timeSlotService.findAllByDate(theDate);
-
             for (TimeSlot timeSlot : timeSlots) {
                 if (!timeSlot.exists()) {
                     timeSlotService.saveAndFlush(timeSlot);
                     count++;
+                } else if (!timeSlot.isOn()) {
+                    if (!timeSlot.isBooked()) {
+                        timeSlotService.delete(timeSlot);
+                    } else {
+                        // this should be handled
+                    }
                 }
             }
         }

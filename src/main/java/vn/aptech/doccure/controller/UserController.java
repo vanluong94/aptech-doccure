@@ -100,7 +100,7 @@ public class UserController {
                     // do nothing, no need to set default avatar
                 }
 
-                if (user.hasRole(Constants.Roles.ROLE_DOCTOR)) {
+                if (user.isDoctor()) {
                     user.getBio().setDoctor(user);
                     user.getBio().setDoctorId(user.getId());
                     user.setModifiedDate(LocalDateTime.now());

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="https://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+   
+</head>
+<body>
+    <div class="profile-widget" th:fragment="item (doctorDto)">
+        <div class="doc-img">
+            <a th:href="@{/doctor/profile/{id}(id=${doctorDto.user.id})}">
+                <img class="img-fluid" alt="User Image" th:src="${doctorDto.user.theAvatar}">
+            </a>
+            <th:block sec:authorize="isFullyAuthenticated() && hasRole('ROLE_PATIENT')">
+                <a href="javascript:void(0)" class="fav-btn" th:attr="data-doctor=${doctorDto.user.id}" th:classappend="${doctorDto.isFavorite ? 'fav-active' : ''}">
+                    <i class="far fa-bookmark"></i>
+                </a>
+            </th:block>
+            <th:block sec:authorize="isFullyAuthenticated() && !hasRole('ROLE_PATIENT')">
+                <a href="javascript:void(0)" class="fav-btn" tabindex="0"> 
+                    <i class="far fa-bookmark"></i>
+                </a>
+            </th:block>
+            <th:block sec:authorize="!isFullyAuthenticated()">
+                <a href="javascript:void(0)" class="fav-btn" tabindex="0"> 
+                    <i class="far fa-bookmark"></i>
+                </a>
+            </th:block>
+        </div>
+        <div class="pro-content">
+            <h3 class="title">
+                <a th:href="@{/doctor/profile/{id}(id=${doctorDto.user.id})}" th:text="${doctorDto.title}"></a>
+                <i class="fas fa-check-circle verified"></i>
+            </h3>
+            <p class="speciality" th:text="${doctorDto.specialtiesText}"></p>
+            <div class="rating">
+                <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                    <i class="fas fa-star filled" th:if="${i - doctorDto.avgRating < 0.5}"></i>
+                    <i class="fas fa-star-half-alt filled" th:if="${i - doctorDto.avgRating == 0.5}"></i>
+                    <i class="far fa-star" th:if="${i - doctorDto.avgRating > 0.5}"></i>
+                </th:block>
+                <span class="d-inline-block average-rating">(<th:block th:text="${doctorDto.totalReviews}"></th:block>)</span>
+            </div>
+            <ul class="available-info">
+                <li th:if="${doctorDto.city}">
+                    <i class="fas fa-map-marker-alt"></i> <span th:text="${doctorDto.city}"></span>
+                </li>
+                <li th:if="${doctorDto.upcomingAvailableDate}">
+                    <i class="far fa-clock"></i> <span th:if="${doctorDto.upcomingAvailableDate != null}">Available on <span th:text="${doctorDto.upcomingAvailableDate}"></span></span> 
+                </li>
+            </ul>
+            <div class="row row-sm">
+                <div class="col-sm-6 mb-1 mb-sm-0">
+                    <a th:href="@{/doctor/profile/{id}(id=${doctorDto.user.id})}" class="btn view-btn">View Profile</a>
+                </div>
+                <div class="col-sm-6">
+                    <a th:href="@{/doctor/profile/{id}/booking(id=${doctorDto.user.id})}" class="btn book-btn">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+    

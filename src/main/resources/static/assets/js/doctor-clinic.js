@@ -170,7 +170,7 @@ const clinicMapInit = () => {
 
 			// 1. Get international city name workaround
 			if (place.plus_code) {
-				address.state = place.plus_code.split(', ').at(-2);
+				address.state = place.plus_code.compound_code.split(', ').at(-2);
 			} else if (searchAddress.value) {
 				address.state = searchAddress.value.split(', ').at(-2);
 			}

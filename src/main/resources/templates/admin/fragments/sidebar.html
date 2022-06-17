@@ -34,18 +34,14 @@
                             <li><a th:href="@{/admin/services/create}">Add new Service</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/doctors' ? 'active' : ''}">
                         <a th:href="@{/admin/doctors}"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                     </li>
-                    <li>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/patients' ? 'active' : ''}">
                         <a th:href="@{/admin/patients}"><i class="fa fa-user-plus"></i> <span>Patients</span></a>
                     </li>
-                    <li class="submenu">
-                        <a href="#"><i class="fa fa-users"></i> <span>Users</span> <span class="menu-arrow"></span></a>
-                        <ul style="display: none;">
-                            <li><a th:href="@{/admin/users}">All Users</a></li>
-<!--                            <li><a href="/admin/user-edit.html">Add new User</a></li>-->
-                        </ul>
+                    <li th:classappend="${#request.getRequestURI() == '/admin/users' ? 'active' : ''}">
+                        <a th:href="@{/admin/users}"><i class="fa fa-users"></i> <span>Users</span></a>
                     </li>
                     <li th:classappend="${#request.getRequestURI() == '/admin/reviews' ? 'active' : ''}">
                         <a href="/admin/reviews"><i class="fa fa-star"></i> <span>Reviews</span></a>
