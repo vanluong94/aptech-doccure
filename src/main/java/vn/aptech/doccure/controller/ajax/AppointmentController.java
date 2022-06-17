@@ -78,7 +78,7 @@ public class AppointmentController {
 
             weekdayData.put("textWeekday", theDate.format(weekdayFormatter));
             weekdayData.put("textDate", theDate.format(dateFormatter));
-            weekdayData.put("slots", timeSlotService.findAllByDoctorOnDate(doctorId, theDate));
+            weekdayData.put("slots", timeSlotService.findAvailableTimeSlotByDoctorOnDate(doctorId, theDate));
 
             weekdays.add(weekdayData);
         }

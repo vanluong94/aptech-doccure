@@ -8,11 +8,14 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vn.aptech.doccure.common.AjaxResponse;
+import vn.aptech.doccure.entities.TimeSlot;
 import vn.aptech.doccure.entities.TimeSlotDefault;
 import vn.aptech.doccure.entities.User;
-import vn.aptech.doccure.repositories.TimeSlotDefaultRepository;
 import vn.aptech.doccure.repositories.UserRepository;
+import vn.aptech.doccure.service.TimeSlotDefaultService;
+import vn.aptech.doccure.service.TimeSlotService;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -27,36 +30,44 @@ public class TimeSlotController {
     UserRepository userRepository;
 
     @Autowired
-    TimeSlotDefaultRepository timeSlotDefaultRepository;
+    TimeSlotDefaultService timeSlotDefaultService;
+
+    @Autowired
+    TimeSlotService timeSlotService;
 
     @GetMapping("getAll")
     @ResponseBody
     public ResponseEntity<Object> getAll(Authentication auth) {
         User doctor = (User) auth.getPrincipal();
         Map<String, Object> respData = new HashMap<>();
-        respData.put("timeSlots", timeSlotDefaultRepository.findAllByDoctor(doctor));
+        respData.put("timeSlots", timeSlotDefaultService.findAllByDoctor(doctor));
         return AjaxResponse.responseSuccess(respData, "success");
     }
 
     @PostMapping("saveAll")
     @ResponseBody
-    public ResponseEntity<Object> updateAll(Authentication auth, @RequestBody(required = false) List<TimeSlotDefault> postedTimeSlots) {
+    public ResponseEntity<Object> updateAll(Authentication auth, @RequestBody(required = false) Map<String, List<TimeSlotDefault>> postedData) {
 
         Map<String, Object> results = new LinkedHashMap<>();
+
+        List<TimeSlotDefault> postedOnes = postedData.get("update");
+        List<TimeSlotDefault> deleteOnes = postedData.get("delete");
 
         User doctor = (User) auth.getPrincipal();
 
         Set<TimeSlotDefault> updateOnes = new TreeSet<>(new Comparator<TimeSlotDefault>() {
             @Override
             public int compare(TimeSlotDefault o1, TimeSlotDefault o2) {
-                if (o1.getWeekday() < o2.getWeekday()) {
+                if (o1.getWeekday().equals(o2.getWeekday())) {
+
+                    if (o1.getTimeStart().isBefore(o2.getTimeStart())) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+
+                } else if (o1.getWeekday() < o2.getWeekday()) {
                     return -1;
-                } else if (o1.getWeekday() > o2.getWeekday()) {
-                    return 1;
-                } else if (o1.getTimeStart().isBefore(o2.getTimeStart())) {
-                    return -1;
-                } else if (o1.getTimeStart().equals(o2.getTimeEnd())) {
-                    return 0;
                 } else {
                     return 1;
                 }
@@ -73,7 +84,7 @@ public class TimeSlotController {
                 new ArrayList<>() //sun
         );
 
-        for (TimeSlotDefault apmtDefault : postedTimeSlots) {
+        for (TimeSlotDefault apmtDefault : postedOnes) {
             if (apmtDefault.isTimeRangeValid()) {
                 apmtDefault.setDoctor(doctor);
                 apmtDefault.setDoctorId(doctor.getId());
@@ -83,7 +94,9 @@ public class TimeSlotController {
 
         // check for overlap time range
         for (List<TimeSlotDefault> slotsWeekday : slotsGroupedByWeekday) {
+
             for (TimeSlotDefault aSlot : slotsWeekday) {
+
                 boolean isOverlapped = false;
 
                 comparingloop:
@@ -99,8 +112,11 @@ public class TimeSlotController {
                     LocalTime b = bSlot.getTimeEnd();
 
                     if (
-                            (s.compareTo(a) <= 0 && e.compareTo(a) >= 0)
-                            || (s.compareTo(a) >= 0 && e.compareTo(b) <= 0)
+                            (
+                                    (s.compareTo(a) <= 0 && e.compareTo(a) > 0)
+                                    || (s.compareTo(a) >= 0 && e.compareTo(b) <= 0)
+                            )
+                            && updateOnes.stream().anyMatch(slot -> slot.equals(bSlot))
                     ) {
                         isOverlapped = true;
                         break comparingloop;
@@ -110,19 +126,40 @@ public class TimeSlotController {
                 if (!isOverlapped) {
                     updateOnes.add(aSlot);
                 }
-            }
-        }
-        
-        List<TimeSlotDefault> deleteOnes = new ArrayList<>();
-        for (TimeSlotDefault apmtDefault : timeSlotDefaultRepository.findAllByDoctor(doctor)) {
-            if (updateOnes.stream().noneMatch(ad -> ad.equals(apmtDefault))) {
-                deleteOnes.add(apmtDefault);
+
             }
         }
 
+        System.out.println(updateOnes.size());
+
+        // handle delete ones
+        if (deleteOnes.size() > 0) {
+            deleteOnes.forEach(apmtDefault -> {
+                apmtDefault.setDoctor(doctor);
+                apmtDefault.setDoctorId(doctor.getId());
+            });
+            timeSlotDefaultService.deleteAll(deleteOnes);
+        }
+
         doctor.setTimeSlotsDefault(updateOnes);
-        timeSlotDefaultRepository.deleteAll(deleteOnes);
-        timeSlotDefaultRepository.saveAll(updateOnes);
+        timeSlotDefaultService.saveAll(updateOnes);
+
+        LocalDateTime now = LocalDateTime.now();
+        for (int i=0; i<14; i++) {
+            LocalDateTime theDate = now.plusDays(i);
+            List<TimeSlot> timeSlots = timeSlotService.findAllByDoctorOnDate(doctor, theDate);
+            for (TimeSlot timeSlot : timeSlots) {
+                if (!timeSlot.exists()) {
+                    timeSlotService.saveAndFlush(timeSlot);
+                } else if (!timeSlot.isOn()) {
+                    if (!timeSlot.isBooked()) {
+                        timeSlotService.delete(timeSlot);
+                    } else {
+                        // this should be handled
+                    }
+                }
+            }
+        }
 
         results.put("timeSlots", doctor.getTimeSlotsDefault());
 

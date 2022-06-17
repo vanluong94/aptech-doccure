@@ -122,11 +122,6 @@ Version      : 1.3
 	
 	// Add More Hours
 	
-    $(".hours-info").on('click','.trash', function () {
-		$(this).closest('.hours-cont').remove();
-		return false;
-    });
-	
 	// Content div min height set
 	
 	function resizeInnerDiv() {

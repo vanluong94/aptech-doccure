@@ -120,7 +120,7 @@ public class DoctorController {
 
             weekdayData.put("textWeekday", DateUtils.toShortenWeekday(theDate));
             weekdayData.put("textDate", DateUtils.toStandardDate(theDate));
-            weekdayData.put("slots", timeSlotService.findAllByDoctorOnDate(user.get().getId(), theDate));
+            weekdayData.put("slots", timeSlotService.findAvailableTimeSlotByDoctorOnDate(user.get().getId(), theDate));
 
             weekdays.add(weekdayData);
         }
