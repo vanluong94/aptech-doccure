@@ -20,7 +20,6 @@ import vn.aptech.doccure.model.PatientDTO;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.utils.SecurityUtils;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -77,15 +76,14 @@ public class GeneralControllerAdvice {
 
     public void addUserModelAttribute(Model model, Authentication auth) {
         if (auth != null && auth.isAuthenticated()) {
-            User user = (User) auth.getPrincipal();
-            Optional<User> doctor = userService.findByUsername(user.getUsername());
-            if (doctor.isPresent()) {
-                model.addAttribute("user", doctor.get());
+            User user = SecurityUtils.getAuthenticatedUser();
+            if (user != null) {
+                model.addAttribute("user", user);
 
                 if (user.isDoctor()) {
-                    model.addAttribute("doctorDto", DoctorDTO.from(doctor.get()));
+                    model.addAttribute("doctorDto", DoctorDTO.from(user));
                 } else if (user.isPatient()) {
-                    model.addAttribute("patientDto", PatientDTO.from(doctor.get()));
+                    model.addAttribute("patientDto", PatientDTO.from(user));
                 }
             }
         }

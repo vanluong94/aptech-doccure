@@ -17,6 +17,7 @@ import vn.aptech.doccure.model.DoctorDTO;
 import vn.aptech.doccure.model.ReviewRequestDTO;
 import vn.aptech.doccure.service.*;
 import vn.aptech.doccure.utils.DateUtils;
+import vn.aptech.doccure.utils.SecurityUtils;
 
 import javax.xml.bind.ValidationException;
 import java.time.LocalDateTime;
@@ -61,13 +62,17 @@ public class DoctorController {
         Iterable<Review> reviews = reviewService.findAllByDoctorId(user.get().getId());
         modelAndView.addObject("reviews", reviews);
 
-        if (authentication != null) {
+        if (SecurityUtils.isAuthenticated()) {
             User currentUser = (User) authentication.getPrincipal();
-            ReviewRequestDTO review = new ReviewRequestDTO();
-            review.setDoctorId(id);
-            review.setPatientId(currentUser.getId());
-            modelAndView.addObject("review", review);
-            modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
+            if (!user.get().equals(currentUser)) {
+                ReviewRequestDTO review = new ReviewRequestDTO();
+                review.setDoctorId(id);
+                review.setPatientId(currentUser.getId());
+                modelAndView.addObject("review", review);
+                modelAndView.addObject("isDoctorFavorite", favoriteService.isDoctorFavorited(user.get(), currentUser));
+            } else {
+                modelAndView.addObject("isDoctorFavorite", false);
+            }
         } else {
             modelAndView.addObject("isDoctorFavorite", false);
         }

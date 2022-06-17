@@ -154,7 +154,7 @@
                                 <tr>
                                     <th>Patient Name</th>
                                     <th>Phone</th>
-                                    <th>Last Appointment</th>
+                                    <th>Email</th>
                                 </tr>
                                 </thead>
                                 <tbody th:if="${#lists.isEmpty(listPatients)}">
@@ -172,8 +172,8 @@
                                             <a th:href="@{/doctor/profile/{id}(id=${patient.id})}" th:text="${patient.fullName}"></a>
                                         </h2>
                                     </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                                    <td><th:block th:text="${patient.phone}"></th:block></td>
+                                    <td><th:block th:text="${patient.email}"></th:block></td>
                                 </tr>
                                 </tbody>
                             </table>

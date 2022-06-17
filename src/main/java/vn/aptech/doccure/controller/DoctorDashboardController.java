@@ -24,8 +24,11 @@ import vn.aptech.doccure.service.ClinicService;
 import vn.aptech.doccure.service.UserService;
 import vn.aptech.doccure.storage.StorageService;
 import vn.aptech.doccure.utils.LocaleUtils;
+import vn.aptech.doccure.utils.SecurityUtils;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -53,7 +56,7 @@ public class DoctorDashboardController {
     public ModelAndView clinicPage(Authentication auth) {
 
         ModelAndView modelAndView = new ModelAndView("/pages/dashboard/doctorClinic");
-        User user = (User) auth.getPrincipal();
+        User user = SecurityUtils.getAuthenticatedUser();
         DoctorClinic clinic;
 
         if (user.getClinic() == null) {
@@ -72,7 +75,6 @@ public class DoctorDashboardController {
     public ModelAndView clinicPageSave(
             @Validated @ModelAttribute("clinic") DoctorClinic clinic,
             BindingResult result,
-            Authentication auth,
             RedirectAttributes redirect
     ) {
 
@@ -83,7 +85,7 @@ public class DoctorDashboardController {
             modelAndView.addObject("locales", LocaleUtils.getAvailableCountries());
         } else {
 
-            User doctor = (User) auth.getPrincipal();
+            User doctor = SecurityUtils.getAuthenticatedUser();
 
             List<String> images;
 

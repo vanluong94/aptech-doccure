@@ -206,16 +206,16 @@ public class User implements UserDetails {
         } else {
             String filename;
             if (hasRole(Constants.Roles.ROLE_DOCTOR)) {
-                if (gender != null && gender.equals(Constants.Genders.MALE)) {
-                    filename = "avatar-doctor-male.png";
-                } else {
+                if (gender != null && gender.equals(Constants.Genders.FEMALE)) {
                     filename = "avatar-doctor-female.png";
+                } else {
+                    filename = "avatar-doctor-male.png";
                 }
             } else if (this.hasRole(Constants.Roles.ROLE_PATIENT)) {
-                if (gender != null && gender.equals(Constants.Genders.MALE)) {
-                    filename = "avatar-patient-male.png";
-                } else {
+                if (gender != null && gender.equals(Constants.Genders.FEMALE)) {
                     filename = "avatar-patient-female.png";
+                } else {
+                    filename = "avatar-patient-male.png";
                 }
             } else {
                 filename = "avatar-admin.png";

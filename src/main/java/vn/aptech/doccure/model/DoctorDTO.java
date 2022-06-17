@@ -85,7 +85,7 @@ public class DoctorDTO {
 
     public boolean isFavorite() {
         if (SecurityUtils.isAuthenticated()) {
-            return SpringContext.getBean(PatientFavoriteService.class).isDoctorFavorited(this.user, SecurityUtils.getUser());
+            return SpringContext.getBean(PatientFavoriteService.class).isDoctorFavorited(this.user, SecurityUtils.getAuthenticatedUser());
         }
         return false;
     }

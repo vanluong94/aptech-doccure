@@ -117,8 +117,9 @@ public class TimeSlot {
         return timeStart.isBefore(LocalDateTime.now());
     }
 
+    @JsonIgnore
     public boolean isOn () {
-        return this.status == 1;
+        return this.status != null && this.status == 1;
     }
 
     public String getTimeText() {

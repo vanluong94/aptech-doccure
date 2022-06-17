@@ -14,6 +14,7 @@ import vn.aptech.doccure.entities.User;
 import vn.aptech.doccure.repositories.UserRepository;
 import vn.aptech.doccure.service.TimeSlotDefaultService;
 import vn.aptech.doccure.service.TimeSlotService;
+import vn.aptech.doccure.utils.SecurityUtils;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -53,7 +54,7 @@ public class TimeSlotController {
         List<TimeSlotDefault> postedOnes = postedData.get("update");
         List<TimeSlotDefault> deleteOnes = postedData.get("delete");
 
-        User doctor = (User) auth.getPrincipal();
+        User doctor = SecurityUtils.getAuthenticatedUser();
 
         Set<TimeSlotDefault> updateOnes = new TreeSet<>(new Comparator<TimeSlotDefault>() {
             @Override
@@ -129,8 +130,6 @@ public class TimeSlotController {
 
             }
         }
-
-        System.out.println(updateOnes.size());
 
         // handle delete ones
         if (deleteOnes.size() > 0) {
