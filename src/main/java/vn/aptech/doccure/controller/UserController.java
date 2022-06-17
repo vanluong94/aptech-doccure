@@ -3,7 +3,9 @@ package vn.aptech.doccure.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -112,6 +114,10 @@ public class UserController {
                 User saveUser = userService.save(user);
                 if (saveUser != null) {
                     redirect.addFlashAttribute("successMessage", "Profile updated successfully");
+
+                    // replace the current instance in security context
+                    Authentication newAuth = new UsernamePasswordAuthenticationToken(saveUser, saveUser.getPassword(), userLogin.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(newAuth);
                 } else {
                     redirect.addFlashAttribute("errorMessage", "Profile update failure");
                 }
