@@ -166,10 +166,10 @@
                                 <tr th:each="patient : ${listPatients}">
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a th:href="@{/doctor/profile/{id}(id=${patient.id})}" class="avatar avatar-sm mr-2">
+                                            <a href="#" class="avatar avatar-sm mr-2">
                                                 <img class="avatar-img rounded-circle" th:src="${patient.theAvatar}" alt="User Image">
                                             </a>
-                                            <a th:href="@{/doctor/profile/{id}(id=${patient.id})}" th:text="${patient.fullName}"></a>
+                                            <a href="#" th:text="${patient.fullName}"></a>
                                         </h2>
                                     </td>
                                     <td><th:block th:text="${patient.phone}"></th:block></td>
