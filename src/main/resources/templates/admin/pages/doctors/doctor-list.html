@@ -19,9 +19,6 @@
 								<li class="breadcrumb-item active">Doctors</li>
 							</ul>
 						</div>
-<!--							<div class="col-sm-5 col">-->
-<!--								<a th:href="@{/admin/doctors/create}" class="btn btn-primary float-right mt-2">Add</a>-->
-<!--							</div>-->
 					</div>
 				</div>
 				<!-- /Page Header -->
@@ -47,7 +44,7 @@
 												</tr>
 											</thead>
 											<tbody th:if="${#lists.isEmpty(doctors)}">
-												<tr>No Data</tr>
+												<tr><td colspan="8">No Data</td></tr>
 											</tbody>
 											<tbody th:unless="${#lists.isEmpty(doctors)}">
 												<tr th:each="doctor : ${doctors}">
@@ -74,7 +71,7 @@
 													<td class="text-right">
 														<div class="actions">
 															<a class="btn btn-sm bg-success-light"
-															   th:href="@{/admin/users/edit/{id}(id=${doctor.id})}"
+															   th:href="@{/admin/users/{id}(id=${doctor.id})}"
 															   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
 															<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
 																	data-target="#confirmModal"
@@ -98,7 +95,7 @@
 					<div class="modal-content">
 						<form action="#" th:action="@{/admin/users/delete}" method="post">
 							<div class="modal-body">
-								<div class="form-content p-2">
+								<div class="form-content p-2 text-center">
 									<h4 class="modal-title">Delete</h4>
 									<p class="mb-4">Are you sure want to delete?</p>
 									<input type="hidden" name="id" id="id">

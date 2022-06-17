@@ -19,9 +19,6 @@
 								<li class="breadcrumb-item active">Patients</li>
 							</ul>
 						</div>
-	<!--					<div class="col-sm-5 col">-->
-	<!--						<a th:href="@{/admin/doctors/create}" class="btn btn-primary float-right mt-2">Add</a>-->
-	<!--					</div>-->
 					</div>
 				</div>
 				<!-- /Page Header -->
@@ -47,7 +44,7 @@
 												</tr>
 											</thead>
 											<tbody th:if="${#lists.isEmpty(patients)}">
-												<tr>No Data</tr>
+												<tr><td colspan="8">No Data</td></tr>
 											</tbody>
 											<tbody th:unless="${#lists.isEmpty(patients)}">
 												<tr th:each="patient : ${patients}">
@@ -74,7 +71,7 @@
 													<td class="text-right">
 														<div class="actions">
 															<a class="btn btn-sm bg-success-light"
-															   th:href="@{/admin/users/edit/{id}(id=${patient.id})}"
+															   th:href="@{/admin/users/{id}(id=${patient.id})}"
 															   th:utext="'<i class=\'fa fa-pencil\'></i> Edit'">Edit</a>
 															<button type="button" class="btn btn-sm bg-danger-light" data-toggle="modal"
 																	data-target="#confirmModal"
@@ -93,19 +90,20 @@
 					</div>
 				</div>
 			</div>
-        </div>
 		<div class="modal fade" id="confirmModal" aria-hidden="true" role="dialog">
 			<div class="modal-dialog modal-dialog-centered" role="document" >
 				<div class="modal-content">
-					<div class="modal-body">
-						<div class="form-content p-2">
-							<h4 class="modal-title">Delete</h4>
-							<p class="mb-4">Are you sure want to delete?</p>
-							<input type="hidden" name="id" id="id">
-							<button type="button" class="btn btn-primary">Confirm</button>
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					<form action="#" th:action="@{/admin/users/delete}" th:method="delete">
+						<div class="modal-body">
+							<div class="form-content p-2 text-center">
+								<h4 class="modal-title">Delete</h4>
+								<p class="mb-4">Are you sure want to delete?</p>
+								<input type="hidden" name="id" id="id">
+								<button type="submit" class="btn btn-primary">Confirm</button>
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>

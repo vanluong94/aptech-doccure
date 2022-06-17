@@ -28,9 +28,8 @@
                             <div class="card-body">
                                 <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
                                 <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
-                                <form action="#" th:action="@{/admin/users/edit}" th:object="${editUser}" method="post" enctype="multipart/form-data">
+                                <form action="#" th:action="@{/admin/users/{id}(id=${editUser.id})}" th:object="${editUser}" th:method="put" enctype="multipart/form-data">
                                     <input type="hidden" th:field="*{id}">
-                                    <input type="hidden" th:field="*{username}">
                                     <input type="hidden" th:field="*{password}">
                                     <input type="hidden" th:field="*{avatar}">
                                     <div th:if="${#fields.hasAnyErrors()}">
@@ -49,6 +48,21 @@
                                             <div class="row form-row">
                                                 <div class="col-12 col-sm-6">
                                                     <div class="form-group">
+                                                        <label>Username</label>
+                                                        <input type="text" class="form-control" th:field="*{username}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <label>Status</label>
+                                                    <div class="form-group">
+                                                        <select class="form-control" th:field="*{status}">
+                                                            <option value="1">Activated</option>
+                                                            <option value="0">Locked</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <div class="form-group">
                                                         <label>First Name</label>
                                                         <input type="text" class="form-control" th:field="*{firstName}">
                                                     </div>
@@ -62,9 +76,7 @@
                                                 <div class="col-12 col-sm-6">
                                                     <div class="form-group">
                                                         <label>Date of Birth</label>
-                                                        <div class="cal-icon">
-                                                            <input type="date" class="form-control" th:field="*{dob}">
-                                                        </div>
+                                                        <input type="date" class="form-control datetimepicker-input" th:field="*{dob}"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-sm-6">
@@ -72,17 +84,8 @@
                                                     <div class="form-group">
                                                         <select class="form-control" th:field="*{gender}" required="required">
                                                             <option value="" disabled="disabled">----- Select Gender -----</option>
-                                                            <option th:value="0" th:text="Male"></option>
-                                                            <option th:value="1" th:text="Female"></option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-sm-6">
-                                                    <label>Status</label>
-                                                    <div class="form-group">
-                                                        <select class="form-control" th:field="*{status}">
-                                                            <option value="1">Activated</option>
-                                                            <option value="0">Locked</option>
+                                                            <option th:value="1" th:text="Male"></option>
+                                                            <option th:value="0" th:text="Female"></option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -129,21 +132,21 @@
                                         <div class="col-12 col-sm-6">
                                             <div class="form-group">
                                                 <label>Zip Code</label>
-                                                <input type="text" class="form-control" th:field="*{patientAddress.postalCode}">
+                                                <input type="number" class="form-control" th:field="*{patientAddress.postalCode}">
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-6">
                                             <div class="form-group">
                                                 <label>Country</label>
-                                                <input type="text" class="form-control" th:field="*{patientAddress.Country}">
+                                                <input type="text" class="form-control" th:field="*{patientAddress.country}">
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label>Role</label>
-                                                <select class="form-control" th:field="*{roles}" multiple="multiple" required="required">
+                                                <select class="form-control roles-multiple" th:field="*{roles}" multiple="multiple" required="required">
                                                     <option value="" disabled="disabled">----- Select Role -----</option>
-                                                    <option th:each="role : ${UserRoles}"
+                                                    <option th:each="role : ${userRoles}"
                                                             th:value="${role.getRoleValueText()}"
                                                             th:text="${role.getRoleText()}"
                                                             th:selected="${user.roles.contains(role)}">
@@ -153,10 +156,8 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
+                                        <a th:href="@{/admin/users}" class="btn btn-link"><i class="fa fa-chevron-left"></i> Back</a>
                                         <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                                        <a class="btn bg-danger-light"
-                                           th:href="@{/admin/users}"
-                                           th:utext="'<i class=\'fa fa-trash\'></i> Cancel'"> Cancel</a>
                                     </div>
                                 </form>
                             </div>
@@ -165,5 +166,12 @@
                 </div>
             </div>
         </div>
+        <th:block layout:fragment="customScripts">
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('.roles-multiple').select2();
+                });
+            </script>
+        </th:block>
     </body>
 </html>

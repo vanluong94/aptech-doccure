@@ -40,17 +40,17 @@ public class AdminUserController {
         return modelAndView;
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}")
     public ModelAndView editUser(@PathVariable("id") Long id) {
         User user = userService.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         ModelAndView modelAndView = new ModelAndView("admin/pages/users/user-edit");
         modelAndView.addObject("editUser", user);
-        modelAndView.addObject("UserRoles", roleService.findAll());
+        modelAndView.addObject("userRoles", roleService.findAll());
         return modelAndView;
     }
 
-    @PostMapping("/edit")
-    public String update(@Validated @ModelAttribute("editUser") User user, BindingResult result, RedirectAttributes redirect) {
+    @PutMapping("/{id}")
+    public String update(@PathVariable("id") Long id, @Validated @ModelAttribute("editUser") User user, BindingResult result, RedirectAttributes redirect) {
         if (result.hasErrors()) {
             return "admin/pages/users/user-edit";
         }
@@ -59,8 +59,8 @@ public class AdminUserController {
         try {
             if (file.getSize() > 0) {
                 if (file.getSize() > Constants.MAX_FILE_SIZE) {
-                    redirect.addFlashAttribute("errorMessage", "Max size of 2MB");
-                    return "redirect:/admin/users/edit/" + user.getId();
+                    redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Max size of 2MB");
+                    return "redirect:/admin/users/" + user.getId();
                 }
                 storageService.store(file);
                 user.setAvatar(fileName);
@@ -71,23 +71,27 @@ public class AdminUserController {
         user.getPatientAddress().setUser(user);
         user.getPatientAddress().setUserId(user.getId());
         try {
-            User userSave = userService.save(user);
-            if (userSave != null) {
-                redirect.addFlashAttribute("successMessage", "Update successfully.");
+            if (userService.save(user) != null) {
+                redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "Successfully updated user profile.");
             } else {
-                redirect.addFlashAttribute("errorMessage", "Error.");
+                redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Something wrong happened, please try again later.");
             }
         } catch (Exception e) {
-            logger.error("Exception when /admin/users/edit", e);
-            redirect.addFlashAttribute("errorMessage", "Error. Details: " + e.getMessage());
+            logger.error("Exception when /admin/users/" + id, e);
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Something wrong happened, please try again later. Details: " + e.getMessage());
         }
-        return "redirect:/admin/users/edit/" + user.getId();
+        return "redirect:/admin/users/" + user.getId();
     }
 
-    @PostMapping("/delete")
-    public String update(@RequestParam("id") Long id, RedirectAttributes redirect) {
-        userService.deleteById(id);
-        redirect.addFlashAttribute("successMessage", "Successfully deleted a user");
+    @DeleteMapping("/delete")
+    public String delete(@RequestParam("id") Long id, RedirectAttributes redirect) {
+        try {
+            userService.deleteById(id);
+            redirect.addFlashAttribute(Constants.MESSAGE.SUCCESS, "Successfully deleted a user");
+        } catch (Exception e) {
+            logger.error("Exception when /admin/users/delete", e);
+            redirect.addFlashAttribute(Constants.MESSAGE.ERROR, "Something wrong happened, please try again later. Details: " + e.getMessage());
+        }
         return "redirect:/admin/users";
     }
 }
