@@ -59,15 +59,15 @@
                                     <h4>Gender</h4>
                                     <div>
                                         <label class="custom_check">
-                                            <input type="checkbox" th:name="gender" value="0"
-                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '0')}">
+                                            <input type="checkbox" th:name="gender" value="1"
+                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '1')}">
                                             <span class="checkmark"></span> Male Doctor
                                         </label>
                                     </div>
                                     <div>
                                         <label class="custom_check">
-                                            <input type="checkbox" th:name="gender" value="1"
-                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '1')}">
+                                            <input type="checkbox" th:name="gender" value="0"
+                                                   th:checked="${param.gender != null && #arrays.contains(param.gender, '0')}">
                                             <span class="checkmark"></span> Female Doctor
                                         </label>
                                     </div>
